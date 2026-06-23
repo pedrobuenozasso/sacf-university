@@ -9,6 +9,12 @@
   - Pode ser escondida se o acesso vier pelo Hub.
   - Deve apresentar a SACF University como produto do ecossistema SACF, com Zasso como primeiro caso de uso.
 
+- `/login`
+  - Login mockado no MVP.
+  - Usuário escolhe um perfil de teste.
+  - O perfil define empresa, papel e grupos.
+  - Depois será substituído pelo login real do SACF Hub.
+
 ### Dashboard
 
 - `/inicio`
@@ -24,6 +30,7 @@
   - Cards visuais por curso.
   - Filtros por vertical, nível, idioma, duração, certificação e status.
   - Busca por título, função, módulo, instrutor ou dúvida recorrente.
+  - No MVP, filtra cursos de acordo com o usuário mockado selecionado.
 
 - `/catalogo/[slug]`
   - Página de apresentação do curso.
@@ -110,12 +117,16 @@
 
 ## Fluxo: aluno descobre curso
 
-1. Aluno entra em `/catalogo`.
-2. Filtra por vertical, idioma, nível ou certificação.
-3. Abre `/catalogo/[slug]`.
-4. Vê módulos, objetivos, duração, certificado e requisitos.
-5. Inicia ou continua o curso.
-6. Sistema leva para o player em `/aprender/[courseId]`.
+1. Aluno entra em `/login`.
+2. Escolhe um perfil de teste no MVP.
+3. Sistema identifica empresa, papel e grupos.
+4. Aluno entra em `/catalogo`.
+5. Catálogo mostra apenas cursos liberados para aquele perfil.
+6. Filtra por vertical, idioma, nível ou certificação.
+7. Abre `/catalogo/[slug]`.
+8. Vê módulos, objetivos, duração, certificado e requisitos.
+9. Inicia ou continua o curso.
+10. Sistema leva para o player em `/aprender/[courseId]`.
 
 ## Fluxo: aluno conclui curso
 

@@ -45,6 +45,7 @@ Experiência desejada:
 - [Banco de Dados](docs/database-schema.md)
 - [Páginas e Fluxos](docs/pages-flows.md)
 - [Roadmap MVP](docs/roadmap.md)
+- [Brief para Apresentação](docs/presentation-brief.md)
 
 ## Repositório
 

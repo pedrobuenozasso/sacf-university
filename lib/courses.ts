@@ -1,6 +1,9 @@
 export type Course = {
   slug: string;
   title: string;
+  organizationSlugs: string[];
+  accessGroups: string[];
+  assignedUserIds?: string[];
   vertical: string;
   level: string;
   language: string;
@@ -17,6 +20,16 @@ export type Course = {
     title: string;
     lessons: string[];
   }[];
+};
+
+export type MockUser = {
+  id: string;
+  name: string;
+  email: string;
+  organization: string;
+  organizationSlug: string;
+  role: "sacf_admin" | "org_admin" | "instructor" | "manager" | "student" | "external_partner";
+  groups: string[];
 };
 
 export type Organization = {
@@ -42,6 +55,8 @@ export const courses: Course[] = [
   {
     slug: "operador-eletroherb",
     title: "Operacao segura do sistema Eletroherb",
+    organizationSlugs: ["zasso", "zasso-latam"],
+    accessGroups: ["operadores", "treinadores", "representantes"],
     vertical: "Operador",
     level: "Essencial",
     language: "PT-BR",
@@ -73,6 +88,8 @@ export const courses: Course[] = [
   {
     slug: "mecanica-preventiva",
     title: "Manutencao mecanica preventiva",
+    organizationSlugs: ["zasso"],
+    accessGroups: ["mecanicos", "treinadores"],
     vertical: "Mecanico",
     level: "Intermediario",
     language: "PT-BR",
@@ -100,6 +117,8 @@ export const courses: Course[] = [
   {
     slug: "alta-tensao-seguranca",
     title: "Seguranca em alta tensao",
+    organizationSlugs: ["zasso"],
+    accessGroups: ["eletrico", "treinadores"],
     vertical: "Eletrico",
     level: "Avancado",
     language: "PT-BR",
@@ -127,6 +146,8 @@ export const courses: Course[] = [
   {
     slug: "formacao-treinadores",
     title: "Formacao de treinadores Zasso",
+    organizationSlugs: ["zasso", "zasso-latam"],
+    accessGroups: ["treinadores", "representantes"],
     vertical: "Treinador",
     level: "Avancado",
     language: "PT-BR",
@@ -150,6 +171,54 @@ export const courses: Course[] = [
         lessons: ["Criterios de aprovacao", "Registro de evidencias", "Reciclagem"]
       }
     ]
+  }
+];
+
+export const mockUsers: MockUser[] = [
+  {
+    id: "ana-admin",
+    name: "Ana Ribeiro",
+    email: "ana@zasso.com",
+    organization: "Zasso",
+    organizationSlug: "zasso",
+    role: "org_admin",
+    groups: ["administradores", "treinadores"]
+  },
+  {
+    id: "carlos-operador",
+    name: "Carlos Mendes",
+    email: "carlos@zasso.com",
+    organization: "Zasso",
+    organizationSlug: "zasso",
+    role: "student",
+    groups: ["operadores"]
+  },
+  {
+    id: "marina-eletrica",
+    name: "Marina Costa",
+    email: "marina@zasso.com",
+    organization: "Zasso",
+    organizationSlug: "zasso",
+    role: "student",
+    groups: ["eletrico"]
+  },
+  {
+    id: "diego-parceiro",
+    name: "Diego Silva",
+    email: "diego@latam-partner.com",
+    organization: "Representantes Zasso LATAM",
+    organizationSlug: "zasso-latam",
+    role: "external_partner",
+    groups: ["representantes"]
+  },
+  {
+    id: "sacf-admin",
+    name: "Admin SACF",
+    email: "admin@sacf.io",
+    organization: "SACF",
+    organizationSlug: "sacf",
+    role: "sacf_admin",
+    groups: ["sacf-admin"]
   }
 ];
 
@@ -220,4 +289,24 @@ export const adminUsers: AdminUser[] = [
 
 export function getCourse(slug: string) {
   return courses.find((course) => course.slug === slug) ?? courses[0];
+}
+
+export function canAccessCourse(course: Course, user: MockUser) {
+  if (user.role === "sacf_admin") return true;
+
+  const sameOrganization = course.organizationSlugs.includes(user.organizationSlug);
+  if (!sameOrganization) return false;
+
+  if (user.role === "org_admin" || user.role === "instructor" || user.role === "manager") {
+    return true;
+  }
+
+  const directlyAssigned = course.assignedUserIds?.includes(user.id);
+  const groupAllowed = course.accessGroups.some((group) => user.groups.includes(group));
+
+  return Boolean(directlyAssigned || groupAllowed);
+}
+
+export function getMockUser(userId: string | null) {
+  return mockUsers.find((user) => user.id === userId) ?? null;
 }

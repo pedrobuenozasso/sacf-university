@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { UserChip } from "@/components/user-chip";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -36,7 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 </Link>
               ))}
             </nav>
-            <div className="profilePill">Zasso</div>
+            <UserChip />
           </header>
           <main>{children}</main>
         </div>
