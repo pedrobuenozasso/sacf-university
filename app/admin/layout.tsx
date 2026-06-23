@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AdminGuard } from "@/components/access-panels";
 
 const adminLinks = [
   { href: "/admin", label: "Visao geral" },
@@ -11,15 +12,17 @@ const adminLinks = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <section className="adminLayout">
-      <aside className="adminRail" aria-label="Menu administrativo">
-        {adminLinks.map((link) => (
-          <Link href={link.href} key={link.href}>
-            {link.label}
-          </Link>
-        ))}
-      </aside>
-      <div className="adminContent">{children}</div>
-    </section>
+    <AdminGuard>
+      <section className="adminLayout">
+        <aside className="adminRail" aria-label="Menu administrativo">
+          {adminLinks.map((link) => (
+            <Link href={link.href} key={link.href}>
+              {link.label}
+            </Link>
+          ))}
+        </aside>
+        <div className="adminContent">{children}</div>
+      </section>
+    </AdminGuard>
   );
 }

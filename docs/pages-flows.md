@@ -37,6 +37,7 @@
   - Filtros por vertical, nível, idioma, duração, certificação e status.
   - Busca por título, função, módulo, instrutor ou dúvida recorrente.
   - No MVP, filtra cursos de acordo com o usuário mockado selecionado.
+  - Se não houver login, mostra pedido de autenticação.
 
 - `/catalogo/[slug]`
   - Página de apresentação do curso.
@@ -47,6 +48,7 @@
   - Área do aluno.
   - Cursos matriculados.
   - Progresso, próximos passos, prazos e certificados pendentes.
+  - Deve exigir login.
 
 - `/aprender/[courseId]`
   - Player do curso estilo Udemy.
@@ -56,6 +58,7 @@
   - Certificados do usuário ou da organização.
   - Status de validade.
   - Alertas de reciclagem.
+  - Deve exigir login.
 
 - `/reciclagens`
   - Certificações vencidas ou próximas do vencimento.
@@ -79,6 +82,7 @@
   - Lista administrativa de cursos.
   - Filtros por status, vertical, idioma, nível e certificação.
   - Ações: criar, editar, publicar, arquivar.
+  - Deve exigir papel `org_admin`, `instructor` ou `sacf_admin`.
 
 - `/admin/cursos/novo`
   - Criação de curso.

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CoursePreviewPanel } from "@/components/course-card";
 import { getCourse } from "@/lib/courses";
 
 export default async function LearnPage({ params }: { params: Promise<{ courseId: string }> }) {
@@ -27,11 +28,7 @@ export default async function LearnPage({ params }: { params: Promise<{ courseId
         ))}
       </aside>
       <div className="playerMain">
-        <div className="mockPlayer">
-          <div className="videoFrame">
-            <span className="playButton">▶</span>
-          </div>
-        </div>
+        <CoursePreviewPanel label="Player privado" />
         <div className="sectionHead">
           <div>
             <p className="eyebrow">Aula atual</p>

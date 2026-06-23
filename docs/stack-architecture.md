@@ -235,6 +235,12 @@ Regra importante:
 - Certificados devem ter código único e validação contra banco.
 - Progresso e conclusão devem ser gravados no servidor.
 - Eventos críticos devem entrar em auditoria: matrícula, conclusão, emissão, revogação e vencimento de certificado.
+- Não confiar apenas em guards de frontend.
+- Revalidar permissões em Route Handlers/server actions.
+- Separar acesso por usuário, organização, grupo e papel.
+- Admin da empresa nunca pode alterar dados de outra empresa.
+- Links de vídeo e arquivos devem expirar.
+- Ações administrativas devem registrar `actor_user_id`, entidade alterada e metadados.
 
 ## Ambientes
 

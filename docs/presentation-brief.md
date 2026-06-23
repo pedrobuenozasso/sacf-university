@@ -109,6 +109,15 @@ Login de empresa:
 - Também consegue alterar foto/capa do curso, conteúdo, módulos, aulas, idioma e regras de acesso.
 - A SACF mantém controle superior para suporte, auditoria, planos e governança.
 
+Segurança:
+
+- Telas públicas mostram apenas apresentação da plataforma e chamada para login.
+- Catálogo real, cursos, certificados e admin ficam atrás de autenticação.
+- No MVP visual, o bloqueio é simulado no navegador.
+- Na produção, toda permissão deve ser validada também no servidor e no banco.
+- Nunca confiar apenas em esconder botão ou rota no frontend.
+- Toda query deve checar usuário, empresa, grupo e papel.
+
 Futuro:
 
 9. O usuário também pode ver cursos públicos liberados fora da empresa.

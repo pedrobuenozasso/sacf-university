@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CoursePreviewPanel } from "@/components/course-card";
 import { getCourse } from "@/lib/courses";
 
 export default async function CourseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -41,11 +42,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
       </div>
 
       <aside className="detailPanel">
-        <div className="mockPlayer">
-          <div className="videoFrame">
-            <span className="playButton">▶</span>
-          </div>
-        </div>
+        <CoursePreviewPanel label="Resumo do curso" />
         <h3>Incluido neste curso</h3>
         <div className="meta">
           <span>{course.duration}</span>

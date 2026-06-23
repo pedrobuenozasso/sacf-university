@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { MainNav } from "@/components/main-nav";
 import { UserChip } from "@/components/user-chip";
 import "./globals.css";
 
@@ -7,16 +8,6 @@ export const metadata: Metadata = {
   title: "SACF University",
   description: "Plataforma corporativa de cursos, certificacoes e reciclagens."
 };
-
-const navItems = [
-  { href: "/", label: "Produto" },
-  { href: "/home", label: "Home" },
-  { href: "/catalogo", label: "Catalogo" },
-  { href: "/meus-cursos", label: "Meus cursos" },
-  { href: "/certificados", label: "Certificados" },
-  { href: "/admin", label: "Admin" },
-  { href: "/ajuda", label: "Ajuda" }
-];
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
@@ -31,13 +22,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <small>University</small>
               </span>
             </Link>
-            <nav className="nav" aria-label="Navegacao principal">
-              {navItems.map((item) => (
-                <Link key={item.href} href={item.href}>
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+            <MainNav />
             <UserChip />
           </header>
           <main>{children}</main>

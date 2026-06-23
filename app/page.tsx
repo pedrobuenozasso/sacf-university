@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { CourseCard, CoursePreviewPanel } from "@/components/course-card";
 import { courses } from "@/lib/courses";
 
 export default function Home() {
@@ -26,16 +26,7 @@ export default function Home() {
           </div>
         </div>
         <div className="panel heroPreview" aria-label="Previa do player">
-          <div className="mockPlayer">
-            <div className="videoFrame">
-              <span className="playButton">▶</span>
-            </div>
-            <div className="lessonStrip">
-              <span />
-              <span />
-              <span />
-            </div>
-          </div>
+          <CoursePreviewPanel label="Preview institucional" />
         </div>
       </section>
 
@@ -70,24 +61,7 @@ export default function Home() {
         </div>
         <div className="grid">
           {courses.slice(0, 4).map((course) => (
-            <Link className="courseCard" data-accent={course.accent} href={`/catalogo/${course.slug}`} key={course.slug}>
-              <div className="courseCover">
-                <Image className="courseLogo" src="/brand/zasso-logo.png" alt="Zasso" width={74} height={74} />
-                <span>{course.vertical}</span>
-              </div>
-              <div className="courseBody">
-                <h3>{course.title}</h3>
-                <p>{course.summary}</p>
-                <div className="meta">
-                  <span>{course.level}</span>
-                  <span>{course.duration}</span>
-                  <span>{course.certificate}</span>
-                </div>
-                <div className="progressTrack">
-                  <div className="progressFill" style={{ width: `${course.progress}%` }} />
-                </div>
-              </div>
-            </Link>
+            <CourseCard course={course} href={`/catalogo/${course.slug}`} key={course.slug} />
           ))}
         </div>
       </section>

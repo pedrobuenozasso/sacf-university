@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
+import { CourseCard } from "@/components/course-card";
 import { useMockUser } from "@/components/use-mock-user";
 import { canAccessCourse, type Course } from "@/lib/courses";
 
@@ -65,33 +65,7 @@ export function CatalogView({ courses }: { courses: Course[] }) {
 
       <section className="grid">
         {visibleCourses.map((course) => (
-          <Link
-            className="courseCard"
-            data-accent={course.accent}
-            href={`/catalogo/${course.slug}`}
-            key={course.slug}
-          >
-            <div className="courseCover">
-              <Image className="courseLogo" src="/brand/zasso-logo.png" alt="Zasso" width={74} height={74} />
-              <span>{course.vertical}</span>
-            </div>
-            <div className="courseBody">
-              <div className="meta">
-                <span>{course.status}</span>
-                <span>{course.language}</span>
-              </div>
-              <h3>{course.title}</h3>
-              <p>{course.summary}</p>
-              <div className="meta">
-                <span>{course.level}</span>
-                <span>{course.duration}</span>
-                <span>{course.lessons} aulas</span>
-              </div>
-              <div className="progressTrack">
-                <div className="progressFill" style={{ width: `${course.progress}%` }} />
-              </div>
-            </div>
-          </Link>
+          <CourseCard course={course} href={`/catalogo/${course.slug}`} key={course.slug} />
         ))}
       </section>
     </>
