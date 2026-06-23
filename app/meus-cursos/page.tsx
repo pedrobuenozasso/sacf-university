@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { courses } from "@/lib/courses";
 
@@ -16,6 +17,7 @@ export default function MyCoursesPage() {
         {courses.map((course) => (
           <Link className="courseCard" data-accent={course.accent} href={`/aprender/${course.slug}`} key={course.slug}>
             <div className="courseCover">
+              <Image className="courseLogo" src="/brand/zasso-logo.png" alt="Zasso" width={74} height={74} />
               <span>{course.status}</span>
             </div>
             <div className="courseBody">

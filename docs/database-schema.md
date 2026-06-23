@@ -18,6 +18,8 @@ Campos:
 - logo_url
 - primary_color
 - secondary_color
+- default_locale
+- allowed_locales_json
 - status
 - created_at
 - updated_at
@@ -38,6 +40,7 @@ Campos:
 - email
 - name
 - avatar_url
+- preferred_locale
 - hub_user_id
 - created_at
 - updated_at
@@ -72,6 +75,41 @@ Roles:
 - student
 - external_partner
 
+### groups
+
+Grupos internos de uma organização.
+
+Campos:
+
+- id
+- organization_id
+- name
+- slug
+- description
+- created_at
+- updated_at
+
+Exemplos:
+
+- operadores
+- mecanicos
+- eletrico
+- treinadores
+- representantes
+- prestadores
+
+### group_members
+
+Relaciona usuários aos grupos de uma empresa.
+
+Campos:
+
+- id
+- organization_id
+- group_id
+- user_id
+- created_at
+
 ### courses
 
 Cursos criados por uma organização.
@@ -99,6 +137,11 @@ Campos:
 - certificate_enabled
 - certificate_validity_days
 - mandatory
+- visibility_scope
+- marketplace_enabled
+- price_cents
+- currency
+- revenue_share_percent
 - created_by
 - published_at
 - created_at
@@ -109,6 +152,14 @@ Status:
 - draft
 - published
 - archived
+
+Escopos de visibilidade:
+
+- private_org: curso privado de uma empresa.
+- group: curso liberado para grupos específicos.
+- assigned: curso por matrícula direta.
+- public_marketplace: curso público do marketplace SACF.
+- sacf_template: curso modelo criado pela SACF para ser copiado/usado por empresas.
 
 Verticais iniciais para Zasso:
 
@@ -122,8 +173,74 @@ Verticais iniciais para Zasso:
 Idiomas iniciais:
 
 - pt-BR
+- pt-PT
 - en
 - es
+- de
+- fr
+
+### course_translations
+
+Traduções de cursos.
+
+Campos:
+
+- id
+- course_id
+- locale
+- title
+- description
+- short_description
+- target_audience
+- learning_goals_json
+- requirements_json
+- created_at
+- updated_at
+
+### lesson_translations
+
+Traduções de aulas.
+
+Campos:
+
+- id
+- lesson_id
+- locale
+- title
+- description
+- content
+- attachment_url
+- captions_url
+- created_at
+- updated_at
+
+### course_visibility_rules
+
+Regras que definem quem pode ver ou acessar cada curso.
+
+Campos:
+
+- id
+- course_id
+- organization_id
+- group_id
+- user_id
+- rule_type
+- created_at
+
+Tipos:
+
+- organization
+- group
+- user
+- public_marketplace
+
+Uso:
+
+- Curso liberado para toda empresa.
+- Curso liberado só para um grupo.
+- Curso liberado só para usuários específicos.
+- Curso público visível no marketplace futuro.
 
 ### course_modules
 
@@ -332,6 +449,62 @@ Status:
 
 ## Tabelas futuras
 
+### instructors
+
+Profissionais/instrutores que podem publicar cursos públicos.
+
+Campos:
+
+- id
+- user_id
+- display_name
+- bio
+- status
+- payout_provider
+- payout_account_id
+- created_at
+- updated_at
+
+### course_purchases
+
+Compras de cursos públicos por usuários ou empresas.
+
+Campos:
+
+- id
+- course_id
+- organization_id
+- user_id
+- buyer_type
+- seats
+- amount_cents
+- currency
+- status
+- provider
+- provider_payment_id
+- created_at
+
+Buyer types:
+
+- user
+- organization
+
+### instructor_payouts
+
+Repasse financeiro para instrutores.
+
+Campos:
+
+- id
+- instructor_id
+- course_id
+- gross_amount_cents
+- sacf_fee_cents
+- net_amount_cents
+- currency
+- status
+- created_at
+
 ### course_reviews
 
 Avaliações simples estilo marketplace interno.
@@ -377,10 +550,18 @@ Campos:
 
 - organizations(slug)
 - organization_members(organization_id, user_id)
+- groups(organization_id, slug)
+- group_members(group_id, user_id)
 - courses(organization_id, status)
 - courses(organization_id, vertical)
 - courses(organization_id, language)
+- course_translations(course_id, locale)
+- lesson_translations(lesson_id, locale)
 - courses(organization_id, certificate_enabled)
+- courses(visibility_scope)
+- course_visibility_rules(course_id, organization_id)
+- course_visibility_rules(group_id)
+- course_visibility_rules(user_id)
 - enrollments(organization_id, user_id, status)
 - enrollments(course_id, status)
 - lesson_progress(enrollment_id, lesson_id)

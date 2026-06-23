@@ -5,15 +5,21 @@
 ### Público / entrada
 
 - `/`
-  - Landing/entrada da SACF University.
-  - Pode ser escondida se o acesso vier pelo Hub.
+  - Vitrine pública da SACF University.
+  - Apresenta o produto, proposta de valor e acesso à plataforma.
   - Deve apresentar a SACF University como produto do ecossistema SACF, com Zasso como primeiro caso de uso.
 
 - `/login`
-  - Login mockado no MVP.
-  - Usuário escolhe um perfil de teste.
-  - O perfil define empresa, papel e grupos.
+  - Login com aparência real no MVP.
+  - Email/senha ainda mockados.
+  - Perfis de demonstração ficam separados como recurso temporário para testar permissões.
+  - O perfil demo define empresa, papel e grupos.
   - Depois será substituído pelo login real do SACF Hub.
+
+- `/home`
+  - Dashboard pós-login.
+  - Mostra informações do usuário, empresa, grupos e cursos liberados.
+  - Deve ser a primeira tela depois de autenticar.
 
 ### Dashboard
 
@@ -103,30 +109,33 @@
 
 1. Admin acessa SACF University.
 2. Cria um curso.
-3. Define vertical: operador, mecânico, elétrico/alta tensão, treinador ou representante.
-4. Define idioma, nível, carga horária e validade do certificado.
-5. Adiciona módulos.
-6. Adiciona aulas em vídeo, texto, arquivo ou quiz.
-7. Configura avaliação.
-8. Publica curso no catálogo da organização.
-9. Matricula funcionários, representantes ou prestadores.
-10. Usuários recebem convite/email.
-11. Usuários completam curso.
-12. Sistema emite certificado.
-13. Admin acompanha relatório e vencimentos.
+3. Adiciona foto/capa do curso.
+4. Define vertical: operador, mecânico, elétrico/alta tensão, treinador ou representante.
+5. Define idioma, nível, carga horária e validade do certificado.
+6. Adiciona módulos.
+7. Adiciona aulas em vídeo, texto, arquivo ou quiz.
+8. Configura avaliação.
+9. Define regras de acesso por empresa, grupo ou usuário.
+10. Publica curso no catálogo da organização.
+11. Matricula funcionários, representantes ou prestadores.
+12. Usuários recebem convite/email.
+13. Usuários completam curso.
+14. Sistema emite certificado.
+15. Admin acompanha relatório e vencimentos.
 
 ## Fluxo: aluno descobre curso
 
 1. Aluno entra em `/login`.
-2. Escolhe um perfil de teste no MVP.
+2. Entra com email/senha ou usa perfil de demonstração no MVP.
 3. Sistema identifica empresa, papel e grupos.
-4. Aluno entra em `/catalogo`.
-5. Catálogo mostra apenas cursos liberados para aquele perfil.
-6. Filtra por vertical, idioma, nível ou certificação.
-7. Abre `/catalogo/[slug]`.
-8. Vê módulos, objetivos, duração, certificado e requisitos.
-9. Inicia ou continua o curso.
-10. Sistema leva para o player em `/aprender/[courseId]`.
+4. Aluno cai em `/home`.
+5. Aluno entra em `/catalogo`.
+6. Catálogo mostra apenas cursos liberados para aquele perfil.
+7. Filtra por vertical, idioma, nível ou certificação.
+8. Abre `/catalogo/[slug]`.
+9. Vê módulos, objetivos, duração, certificado e requisitos.
+10. Inicia ou continua o curso.
+11. Sistema leva para o player em `/aprender/[courseId]`.
 
 ## Fluxo: aluno conclui curso
 

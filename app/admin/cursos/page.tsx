@@ -1,4 +1,5 @@
 import { courses } from "@/lib/courses";
+import { supportedLocales } from "@/lib/i18n";
 
 export default function AdminCoursesPage() {
   return (
@@ -37,6 +38,10 @@ export default function AdminCoursesPage() {
         <form className="detailPanel">
           <h2>Novo curso</h2>
           <input className="field" placeholder="Titulo do curso" />
+          <label className="fileField">
+            Foto/capa do curso
+            <input className="field" type="file" accept="image/*" />
+          </label>
           <select className="field" defaultValue="">
             <option value="" disabled>
               Vertical
@@ -47,15 +52,63 @@ export default function AdminCoursesPage() {
             <option>Treinador</option>
             <option>Representante</option>
           </select>
+          <input className="field" placeholder="Instrutor ou responsavel tecnico" />
           <div className="formGrid">
             <input className="field" placeholder="Carga horaria" />
             <input className="field" placeholder="Validade do certificado" />
           </div>
+          <select className="field" defaultValue="pt-BR">
+            {supportedLocales.map((locale) => (
+              <option key={locale.code} value={locale.code}>
+                {locale.label}
+              </option>
+            ))}
+          </select>
           <textarea className="field" placeholder="Resumo do curso" />
-          <button className="button" type="button">
-            Salvar rascunho
-          </button>
+          <textarea className="field" placeholder="Conteudo programatico / modulos / aulas" />
+          <div className="actions noTopMargin">
+            <button className="button" type="button">
+              Salvar rascunho
+            </button>
+            <button className="buttonGhost" type="button">
+              Publicar
+            </button>
+            <button className="dangerButton" type="button">
+              Apagar
+            </button>
+          </div>
         </form>
+      </section>
+
+      <section className="detailPanel adminEditorPreview">
+        <div className="sectionHead">
+          <div>
+            <p className="eyebrow">Editor da empresa</p>
+            <h2>Controle completo do curso</h2>
+            <p>
+              O admin da empresa podera editar identidade, capa, conteudo, permissoes, publicacao e
+              historico do curso sem depender da SACF para ajustes simples.
+            </p>
+          </div>
+        </div>
+        <div className="grid">
+          <div className="moduleItem">
+            <h3>Identidade</h3>
+            <p>Editar capa, titulo, vertical, idioma, carga horaria, instrutor e nivel.</p>
+          </div>
+          <div className="moduleItem">
+            <h3>Conteudo</h3>
+            <p>Adicionar modulos, aulas, videos, anexos, textos, quiz e prova final.</p>
+          </div>
+          <div className="moduleItem">
+            <h3>Acesso</h3>
+            <p>Definir se o curso e da empresa inteira, grupo especifico ou usuarios selecionados.</p>
+          </div>
+          <div className="moduleItem">
+            <h3>Governanca</h3>
+            <p>Salvar rascunho, publicar, arquivar, apagar e acompanhar alteracoes.</p>
+          </div>
+        </div>
       </section>
     </>
   );

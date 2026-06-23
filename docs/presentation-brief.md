@@ -12,6 +12,30 @@ Uma plataforma corporativa de cursos, certificações e reciclagens para empresa
 
 A SACF University funciona como uma Udemy corporativa privada. Cada empresa tem seu próprio ambiente, seus próprios usuários, grupos, cursos, certificados e relatórios. A SACF administra a plataforma e cada empresa administra seus treinamentos.
 
+## Visão de evolução
+
+O MVP nasce como uma plataforma para empresas. Primeiro resolvemos o problema B2B: cada empresa treina e certifica seus próprios colaboradores, representantes e prestadores.
+
+No futuro, a SACF University pode evoluir para uma plataforma híbrida:
+
+- cursos privados por empresa;
+- cursos públicos no marketplace SACF;
+- instrutores/profissionais vendendo cursos;
+- empresas comprando cursos públicos para seus colaboradores;
+- usuários corporativos acessando cursos internos e também adquirindo cursos públicos;
+- SACF cobrando uma porcentagem sobre vendas;
+- empresas mantendo áreas privadas, mesmo dentro de uma plataforma maior.
+
+Exemplo:
+
+- Todo usuário com email `@zasso.com` entra automaticamente no ambiente Zasso.
+- Esse usuário vê os cursos internos obrigatórios da Zasso.
+- Além disso, pode acessar ou comprar cursos públicos do marketplace SACF.
+- A empresa pode pagar por cursos públicos para equipes específicas.
+- Um profissional externo pode publicar um curso aprovado pela SACF e vender para empresas ou usuários.
+
+Essa visão permite começar com um produto corporativo seguro e evoluir para um ecossistema maior de educação profissional.
+
 ## Problema
 
 Empresas que operam equipes técnicas precisam garantir que pessoas certas tenham feito treinamentos certos, dentro do prazo certo.
@@ -39,6 +63,8 @@ Uma plataforma SaaS onde a empresa pode:
 - emitir certificados;
 - controlar vencimentos e reciclagens;
 - gerar relatórios para liderança.
+
+Em uma fase futura, a mesma base poderá permitir venda de cursos públicos, com curadoria e comissão para a SACF.
 
 ## Público-alvo
 
@@ -74,6 +100,21 @@ Verticais iniciais:
 6. O catálogo mostra apenas os cursos liberados para aquele usuário.
 7. O aluno faz curso, prova e recebe certificado.
 8. O admin acompanha progresso e vencimentos.
+
+Login de empresa:
+
+- Cada empresa terá administradores próprios.
+- O admin da empresa acessa um painel privado.
+- Esse admin consegue criar, editar, publicar, arquivar e apagar cursos.
+- Também consegue alterar foto/capa do curso, conteúdo, módulos, aulas, idioma e regras de acesso.
+- A SACF mantém controle superior para suporte, auditoria, planos e governança.
+
+Futuro:
+
+9. O usuário também pode ver cursos públicos liberados fora da empresa.
+10. A empresa pode adquirir cursos públicos para grupos internos.
+11. Instrutores/profissionais podem publicar cursos mediante aprovação.
+12. A SACF pode cobrar percentual sobre vendas.
 
 ## Divisão de permissões
 
@@ -152,15 +193,29 @@ O painel admin tem:
 - relatórios;
 - fila de atenção com certificados vencendo, convites pendentes e cursos em revisão.
 
+O admin da empresa deve conseguir:
+
+- adicionar novos cursos;
+- alterar fotos/capas;
+- editar descrições e conteúdo programático;
+- adicionar vídeos, anexos, textos, quizzes e provas;
+- definir idioma do curso;
+- liberar cursos por empresa, grupo ou usuário;
+- publicar, arquivar ou apagar cursos;
+- acompanhar progresso, certificados e vencimentos.
+
 ## Diferenciais
 
 - Não é só hospedagem de vídeo.
 - Controla certificação e vencimento.
 - Divide acesso por empresa e grupo.
 - Pode treinar funcionários, representantes e prestadores.
+- Suporte internacional planejado: inglês, português Brasil, português Portugal, espanhol, alemão e francês.
 - Tem visão operacional para administradores.
 - Permite escalar para vários clientes SACF.
 - Fica integrada futuramente ao SACF Hub.
+- Pode evoluir para marketplace de cursos profissionais.
+- Permite combinar cursos internos privados e cursos públicos pagos.
 
 ## Stack proposta
 
@@ -200,6 +255,23 @@ Já existe protótipo navegável com:
 9. Implementar emails de convite, conclusão e reciclagem.
 10. Preparar piloto real com cursos da Zasso.
 
+## Objetivo futuro: marketplace SACF University
+
+Depois do MVP corporativo, a plataforma pode evoluir para um marketplace de cursos profissionais.
+
+Modelo:
+
+- Empresas continuam com ambientes privados.
+- Usuários corporativos acessam cursos internos obrigatórios.
+- Usuários podem adquirir cursos públicos complementares.
+- Empresas podem comprar cursos públicos para times.
+- Instrutores/profissionais podem vender cursos na plataforma.
+- A SACF aprova conteúdos antes de publicar.
+- A SACF cobra comissão por venda.
+- Certificados podem ser emitidos tanto para cursos privados quanto públicos.
+
+Essa evolução transforma a SACF University de uma plataforma de treinamento corporativo em um ecossistema de capacitação profissional.
+
 ## Prompt para gerar apresentação
 
 Use o prompt abaixo em uma IA de apresentações:
@@ -208,7 +280,10 @@ Use o prompt abaixo em uma IA de apresentações:
 Crie uma apresentação profissional, moderna e objetiva sobre a plataforma SACF University.
 
 Contexto:
-A SACF University é uma plataforma SaaS de educação corporativa, inspirada na experiência da Udemy, mas privada por empresa. O objetivo é permitir que empresas criem, organizem, distribuam e monitorem cursos profissionalizantes para funcionários, representantes, prestadores de serviço e equipes técnicas.
+A SACF University é uma plataforma SaaS de educação corporativa, inspirada na experiência da Udemy, mas inicialmente privada por empresa. O objetivo é permitir que empresas criem, organizem, distribuam e monitorem cursos profissionalizantes para funcionários, representantes, prestadores de serviço e equipes técnicas.
+
+Visão futura:
+No futuro, além dos cursos privados por empresa, a SACF University poderá evoluir para um marketplace de cursos profissionais. Usuários corporativos, como pessoas com email @zasso.com, entram automaticamente no ambiente da empresa e acessam os cursos internos da Zasso, mas também podem adquirir cursos públicos da plataforma. Empresas poderão comprar cursos públicos para grupos internos. Profissionais/instrutores poderão publicar cursos aprovados pela SACF, e a SACF poderá cobrar uma porcentagem sobre as vendas.
 
 Primeiro cliente/tenant:
 Zasso.
@@ -231,8 +306,19 @@ Funcionalidades principais:
 - Controle de vencimento e reciclagem.
 - Treinamento de funcionários, representantes e prestadores.
 - Painel admin para empresas.
+- Login de empresa com permissões para criar, editar, publicar e apagar cursos.
+- Edição de capa/foto, conteúdo, módulos, aulas, vídeos, anexos e avaliações.
 - Painel SACF para gerenciar clientes.
 - Relatórios de progresso, conclusão e certificações.
+- Suporte multilíngue: inglês, português Brasil, português Portugal, espanhol, alemão e francês.
+
+Objetivo futuro:
+- Marketplace de cursos profissionais.
+- Cursos públicos pagos.
+- Instrutores externos aprovados.
+- Empresas comprando cursos para times.
+- Usuários corporativos acessando cursos internos e cursos públicos.
+- Comissão da SACF sobre vendas.
 
 Papéis:
 - SACF Admin: controla toda a plataforma.
@@ -278,7 +364,8 @@ Crie uma apresentação de 10 a 12 slides:
 9. Caso de uso Zasso.
 10. Arquitetura técnica resumida.
 11. Roadmap MVP.
-12. Próximos passos.
+12. Visão futura: marketplace de cursos.
+13. Próximos passos.
 
 Tom visual:
 Profissional, futurista, clean, corporativo, escuro com azul SACF, visual premium, sem parecer genérico.

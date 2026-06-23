@@ -9,7 +9,8 @@ export const metadata: Metadata = {
 };
 
 const navItems = [
-  { href: "/", label: "Inicio" },
+  { href: "/", label: "Produto" },
+  { href: "/home", label: "Home" },
   { href: "/catalogo", label: "Catalogo" },
   { href: "/meus-cursos", label: "Meus cursos" },
   { href: "/certificados", label: "Certificados" },

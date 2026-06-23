@@ -16,6 +16,64 @@ A experiência do aluno deve seguir uma referência próxima da **Udemy**, mas c
 - Certificado ao concluir.
 - Administração privada por empresa, sem marketplace público no MVP.
 
+## Idiomas obrigatórios
+
+A plataforma deve ser preparada para operar em:
+
+- Inglês.
+- Português Brasil.
+- Português Portugal.
+- Espanhol.
+- Alemão.
+- Francês.
+
+No MVP, a interface pode começar em português, mas o modelo precisa nascer preparado para tradução de interface, cursos, legendas, certificados e emails.
+
+Requisitos:
+
+- Preferência de idioma por usuário.
+- Idioma padrão por organização.
+- Idioma por curso.
+- Aulas e materiais com idioma definido.
+- Certificados emitidos no idioma do usuário ou da organização.
+- Emails transacionais traduzíveis.
+- Separar textos fixos da interface em arquivos de tradução.
+
+## Visão de produto
+
+### Fase atual: plataforma para empresas
+
+O MVP deve focar em empresas que precisam treinar colaboradores, representantes e prestadores com controle de progresso, avaliações e certificados.
+
+Cada empresa tem:
+
+- usuários próprios;
+- grupos próprios;
+- cursos internos;
+- certificados;
+- relatórios;
+- permissões;
+- catálogo privado.
+
+### Futuro: marketplace de cursos profissionais
+
+A plataforma pode evoluir para um modelo híbrido:
+
+- cursos privados por empresa;
+- cursos públicos disponíveis para compra;
+- usuários corporativos acessando cursos internos e cursos públicos;
+- empresas comprando cursos públicos para grupos;
+- instrutores/profissionais publicando cursos aprovados pela SACF;
+- SACF cobrando percentual sobre vendas.
+
+Exemplo:
+
+- Usuários com email `@zasso.com` entram no ambiente Zasso.
+- Eles veem cursos internos obrigatórios da Zasso.
+- Também podem adquirir cursos públicos do marketplace SACF.
+- A Zasso pode comprar cursos públicos para grupos internos.
+- A SACF mantém a curadoria, a plataforma, os pagamentos e os certificados.
+
 ## Cliente piloto
 
 Primeiro cliente:
@@ -65,6 +123,17 @@ Equipe interna da SACF que gerencia clientes, ambientes, planos, módulos e supo
 ### Company Admin
 
 Responsável da empresa cliente. Cria cursos, convida usuários, define trilhas e acompanha relatórios.
+
+Permissões esperadas:
+
+- Criar cursos.
+- Editar foto/capa do curso.
+- Editar título, descrição, idioma, nível, carga horária e instrutor.
+- Adicionar módulos e aulas.
+- Adicionar vídeos, anexos, textos, quizzes e provas.
+- Definir grupos ou usuários com acesso ao curso.
+- Publicar, arquivar ou apagar cursos.
+- Acompanhar progresso, certificados e vencimentos.
 
 ### Instructor / Content Manager
 
@@ -151,6 +220,9 @@ O MVP deve resolver o básico com qualidade:
 ### Cursos
 
 - Criar curso.
+- Editar curso.
+- Apagar curso.
+- Alterar foto/capa do curso.
 - Título, descrição, categoria, carga horária, nível.
 - Vertical do curso.
 - Idioma.
@@ -161,6 +233,7 @@ O MVP deve resolver o básico com qualidade:
 - Requisitos.
 - Publicado ou rascunho.
 - Curso obrigatório ou opcional.
+- Regras de acesso por empresa, grupo ou usuário.
 
 Verticais MVP:
 

@@ -9,18 +9,50 @@ export default function LoginPage() {
 
   function login(userId: string) {
     setMockUser(userId);
-    router.push("/catalogo");
+    router.push("/home");
   }
 
   return (
     <section className="loginShell">
-      <div className="detailPanel">
-        <p className="eyebrow">Login mockado</p>
-        <h1>Escolha um perfil para testar os acessos.</h1>
-        <p className="lead">
-          Por enquanto nao tem banco nem senha. Cada perfil simula uma empresa, papel e grupo
-          diferente para validarmos a logica do MVP.
-        </p>
+      <div className="loginHero">
+        <div>
+          <p className="eyebrow">SACF University</p>
+          <h1>Acesse sua universidade corporativa.</h1>
+          <p className="lead">
+            Cada conta pertence a uma empresa, grupos e permissoes. No MVP, o acesso e simulado
+            para validarmos a experiencia antes de ligar banco e autenticacao real.
+          </p>
+        </div>
+
+        <form className="loginForm">
+          <h2>Entrar</h2>
+          <label>
+            Email
+            <input className="field" placeholder="nome@empresa.com" type="email" />
+          </label>
+          <label>
+            Senha
+            <input className="field" placeholder="••••••••" type="password" />
+          </label>
+          <button className="button" type="button" onClick={() => login("carlos-operador")}>
+            Entrar como aluno demo
+          </button>
+          <button className="buttonGhost fullButton" type="button" onClick={() => login("ana-admin")}>
+            Entrar como admin da empresa
+          </button>
+          <p>Login real sera conectado ao SACF Hub ou provedor de identidade da empresa.</p>
+        </form>
+      </div>
+
+      <div className="sectionHead compactHead">
+        <div>
+          <p className="eyebrow">Demonstração</p>
+          <h2>Perfis para testar permissões</h2>
+          <p>
+            Esta área é temporária para o protótipo. Ela mostra como empresa, papel e grupo mudam o
+            catálogo de cursos.
+          </p>
+        </div>
       </div>
 
       <div className="loginGrid">

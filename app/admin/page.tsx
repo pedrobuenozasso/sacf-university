@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { adminUsers, courses, organizations } from "@/lib/courses";
+import { adminUsers, organizations } from "@/lib/courses";
+import { supportedLocales } from "@/lib/i18n";
 
 export default function AdminPage() {
   const totalUsers = organizations.reduce((sum, org) => sum + org.users, 0);
@@ -32,8 +33,8 @@ export default function AdminPage() {
           <span>Usuarios</span>
         </div>
         <div className="metric">
-          <strong>{courses.length}</strong>
-          <span>Cursos ativos</span>
+          <strong>{supportedLocales.length}</strong>
+          <span>Idiomas previstos</span>
         </div>
         <div className="metric">
           <strong>{totalCertificates}</strong>

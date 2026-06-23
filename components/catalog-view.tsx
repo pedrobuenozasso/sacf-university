@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
 import { useMockUser } from "@/components/use-mock-user";
@@ -71,6 +72,7 @@ export function CatalogView({ courses }: { courses: Course[] }) {
             key={course.slug}
           >
             <div className="courseCover">
+              <Image className="courseLogo" src="/brand/zasso-logo.png" alt="Zasso" width={74} height={74} />
               <span>{course.vertical}</span>
             </div>
             <div className="courseBody">

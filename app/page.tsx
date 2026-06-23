@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { courses } from "@/lib/courses";
 
@@ -16,11 +17,11 @@ export default function Home() {
             reciclagens em um so lugar.
           </p>
           <div className="actions">
-            <Link className="button" href="/catalogo">
-              Explorar catalogo
+            <Link className="button" href="/login">
+              Acessar plataforma
             </Link>
-            <Link className="buttonGhost" href="/meus-cursos">
-              Ver meus cursos
+            <Link className="buttonGhost" href="/catalogo">
+              Ver catalogo demo
             </Link>
           </div>
         </div>
@@ -71,6 +72,7 @@ export default function Home() {
           {courses.slice(0, 4).map((course) => (
             <Link className="courseCard" data-accent={course.accent} href={`/catalogo/${course.slug}`} key={course.slug}>
               <div className="courseCover">
+                <Image className="courseLogo" src="/brand/zasso-logo.png" alt="Zasso" width={74} height={74} />
                 <span>{course.vertical}</span>
               </div>
               <div className="courseBody">

@@ -18,6 +18,27 @@ Motivo:
 - CSS/Tailwind ou CSS Modules, seguindo o padrão visual SACF
 - Componentes próprios SACF
 - Experiência de catálogo/player inspirada em Udemy, mas privada por organização
+- Internacionalização desde a base: pt-BR, pt-PT, en, es, de e fr
+
+### Internacionalização
+
+Idiomas obrigatórios:
+
+- Português Brasil (`pt-BR`)
+- Português Portugal (`pt-PT`)
+- Inglês (`en`)
+- Espanhol (`es`)
+- Alemão (`de`)
+- Francês (`fr`)
+
+Recomendação técnica:
+
+- Usar rotas ou middleware de locale quando a autenticação real estiver definida.
+- Manter textos fixos da interface em arquivos de tradução.
+- Guardar preferência de idioma no usuário.
+- Guardar idioma padrão na organização.
+- Permitir curso, aula, email e certificado com idioma próprio.
+- Não duplicar a regra de negócio por idioma; traduzir apenas conteúdo e interface.
 
 ### Backend
 
