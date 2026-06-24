@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CoursePreviewPanel } from "@/components/course-card";
-import { getCourse } from "@/lib/courses";
+import { getCourseBySlug } from "@/lib/data";
+
+export const dynamic = "force-dynamic";
 
 export default async function CourseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const course = getCourse(slug);
+  const course = await getCourseBySlug(slug);
 
   if (!course) {
     notFound();
