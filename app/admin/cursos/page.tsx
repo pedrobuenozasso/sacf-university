@@ -8,8 +8,22 @@ export default function AdminCoursesPage() {
         <div>
           <p className="eyebrow">Cursos</p>
           <h1>Crie, publique e acompanhe treinamentos.</h1>
-          <p>Gerencie conteudos por vertical, idioma, validade de certificado e status.</p>
+          <p>Gerencie conteúdos por vertical, idioma, validade de certificado e status.</p>
         </div>
+      </div>
+
+      <div className="adminToolbar">
+        <input className="field" placeholder="Buscar curso" />
+        <select className="field" defaultValue="todos">
+          <option value="todos">Todas as verticais</option>
+          <option>Operador</option>
+          <option>Mecânico</option>
+          <option>Elétrico</option>
+          <option>Treinador</option>
+        </select>
+        <button className="buttonGhost" type="button">
+          Exportar
+        </button>
       </div>
 
       <section className="split">
@@ -17,7 +31,7 @@ export default function AdminCoursesPage() {
           <div className="tableHead">
             <span>Curso</span>
             <span>Vertical</span>
-            <span>Nivel</span>
+            <span>Nível</span>
             <span>Aulas</span>
             <span>Status</span>
           </div>
@@ -36,8 +50,15 @@ export default function AdminCoursesPage() {
         </div>
 
         <form className="detailPanel">
+          <div className="formStatus">
+            <span className="statusDot" />
+            <div>
+              <strong>Editor de curso</strong>
+              <small>Rascunhos, publicação e permissões em um único fluxo</small>
+            </div>
+          </div>
           <h2>Novo curso</h2>
-          <input className="field" placeholder="Titulo do curso" />
+          <input className="field" placeholder="Título do curso" />
           <label className="fileField">
             Foto/capa do curso
             <input className="field" type="file" accept="image/*" />
@@ -47,14 +68,14 @@ export default function AdminCoursesPage() {
               Vertical
             </option>
             <option>Operador</option>
-            <option>Mecanico</option>
-            <option>Eletrico / alta tensao</option>
+            <option>Mecânico</option>
+            <option>Elétrico / alta tensão</option>
             <option>Treinador</option>
             <option>Representante</option>
           </select>
-          <input className="field" placeholder="Instrutor ou responsavel tecnico" />
+          <input className="field" placeholder="Instrutor ou responsável técnico" />
           <div className="formGrid">
-            <input className="field" placeholder="Carga horaria" />
+            <input className="field" placeholder="Carga horária" />
             <input className="field" placeholder="Validade do certificado" />
           </div>
           <select className="field" defaultValue="pt-BR">
@@ -65,7 +86,7 @@ export default function AdminCoursesPage() {
             ))}
           </select>
           <textarea className="field" placeholder="Resumo do curso" />
-          <textarea className="field" placeholder="Conteudo programatico / modulos / aulas" />
+          <textarea className="field" placeholder="Conteúdo programático / módulos / aulas" />
           <div className="actions noTopMargin">
             <button className="button" type="button">
               Salvar rascunho
@@ -77,6 +98,7 @@ export default function AdminCoursesPage() {
               Apagar
             </button>
           </div>
+          <p className="formHint">Alterações ficam vinculadas à empresa, idioma e regra de acesso.</p>
         </form>
       </section>
 
@@ -86,27 +108,27 @@ export default function AdminCoursesPage() {
             <p className="eyebrow">Editor da empresa</p>
             <h2>Controle completo do curso</h2>
             <p>
-              O admin da empresa podera editar identidade, capa, conteudo, permissoes, publicacao e
-              historico do curso sem depender da SACF para ajustes simples.
+              O admin da empresa poderá editar identidade, capa, conteúdo, permissões, publicação e
+              histórico do curso sem depender da SACF para ajustes simples.
             </p>
           </div>
         </div>
         <div className="grid">
           <div className="moduleItem">
             <h3>Identidade</h3>
-            <p>Editar capa, titulo, vertical, idioma, carga horaria, instrutor e nivel.</p>
+            <p>Editar capa, título, vertical, idioma, carga horária, instrutor e nível.</p>
           </div>
           <div className="moduleItem">
-            <h3>Conteudo</h3>
-            <p>Adicionar modulos, aulas, videos, anexos, textos, quiz e prova final.</p>
+            <h3>Conteúdo</h3>
+            <p>Adicionar módulos, aulas, vídeos, anexos, textos, quiz e prova final.</p>
           </div>
           <div className="moduleItem">
             <h3>Acesso</h3>
-            <p>Definir se o curso e da empresa inteira, grupo especifico ou usuarios selecionados.</p>
+            <p>Definir se o curso é da empresa inteira, grupo específico ou usuários selecionados.</p>
           </div>
           <div className="moduleItem">
-            <h3>Governanca</h3>
-            <p>Salvar rascunho, publicar, arquivar, apagar e acompanhar alteracoes.</p>
+            <h3>Governança</h3>
+            <p>Salvar rascunho, publicar, arquivar, apagar e acompanhar alterações.</p>
           </div>
         </div>
       </section>

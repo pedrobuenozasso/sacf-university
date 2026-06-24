@@ -5,7 +5,7 @@ import { useMockUser } from "@/components/use-mock-user";
 
 export function LoginRequiredPanel({
   title = "Entre para continuar.",
-  description = "Esta area pertence ao ambiente privado da empresa. Faca login para acessar cursos, certificados e relatorios."
+  description = "Esta área pertence ao ambiente privado da empresa. Faça login para acessar cursos, certificados e relatórios."
 }: {
   title?: string;
   description?: string;
@@ -31,7 +31,7 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
     return (
       <LoginRequiredPanel
         title="Entre como admin da empresa."
-        description="O painel administrativo exige uma conta com permissao de empresa ou SACF."
+        description="O painel administrativo exige uma conta com permissão de empresa ou SACF."
       />
     );
   }
@@ -39,11 +39,10 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
   if (!canManage) {
     return (
       <section className="authGate">
-        <p className="eyebrow">Permissao necessaria</p>
-        <h1>Seu perfil atual nao administra cursos.</h1>
+        <p className="eyebrow">Permissão necessária</p>
+        <h1>Seu perfil atual não administra cursos.</h1>
         <p className="lead">
-          No produto real, esta verificacao tambem acontecera no servidor. O controle visual aqui e
-          apenas para simular os papeis do MVP.
+          A administração de cursos exige uma conta com permissão de empresa, instrutor ou SACF.
         </p>
         <Link className="button" href="/login">
           Trocar perfil

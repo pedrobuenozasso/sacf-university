@@ -1,43 +1,41 @@
 import Link from "next/link";
-import { CourseCard, CoursePreviewPanel } from "@/components/course-card";
+import { CourseCard } from "@/components/course-card";
+import { HeroShowcase } from "@/components/hero-showcase";
 import { courses } from "@/lib/courses";
 
 export default function Home() {
-  const activeCourses = courses.filter((course) => course.status !== "Concluido").length;
+  const activeCourses = courses.filter((course) => course.status !== "Concluído").length;
 
   return (
     <>
       <section className="hero">
         <div>
           <p className="eyebrow">SACF University</p>
-          <h1>Treinamento corporativo com controle real de certificacao.</h1>
+          <h1>Treine, certifique e acompanhe equipes em uma plataforma privada.</h1>
           <p className="lead">
-            Uma plataforma privada de cursos para empresas treinarem operadores, mecanicos,
-            tecnicos eletricos, treinadores e representantes com progresso, provas, certificados e
-            reciclagens em um so lugar.
+            Cursos internos, progresso por pessoa, provas, certificados e reciclagens em uma
+            experiência pensada para operação corporativa.
           </p>
           <div className="actions">
             <Link className="button" href="/login">
               Acessar plataforma
             </Link>
             <Link className="buttonGhost" href="/catalogo">
-              Ver catalogo demo
+              Ver catálogo
             </Link>
           </div>
         </div>
-        <div className="panel heroPreview" aria-label="Previa do player">
-          <CoursePreviewPanel label="Preview institucional" />
-        </div>
+        <HeroShowcase />
       </section>
 
       <section className="metrics" aria-label="Indicadores">
         <div className="metric">
           <strong>{courses.length}</strong>
-          <span>Cursos no catalogo</span>
+          <span>Cursos no catálogo</span>
         </div>
         <div className="metric">
           <strong>{activeCourses}</strong>
-          <span>Disponiveis agora</span>
+          <span>Disponíveis agora</span>
         </div>
         <div className="metric">
           <strong>4</strong>
@@ -45,18 +43,18 @@ export default function Home() {
         </div>
         <div className="metric">
           <strong>12m</strong>
-          <span>Reciclagem padrao</span>
+          <span>Reciclagem padrão</span>
         </div>
       </section>
 
       <section>
         <div className="sectionHead">
           <div>
-            <p className="eyebrow">Catalogo Zasso</p>
-            <h2>Cursos com cara de produto, nao de planilha.</h2>
+            <p className="eyebrow">Catálogo SACF University</p>
+            <h2>Cursos corporativos com controle de progresso e certificação.</h2>
           </div>
           <Link className="buttonGhost" href="/catalogo">
-            Abrir catalogo
+            Abrir catálogo
           </Link>
         </div>
         <div className="grid">

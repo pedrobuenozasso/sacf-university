@@ -1,10 +1,15 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { CoursePreviewPanel } from "@/components/course-card";
 import { getCourse } from "@/lib/courses";
 
 export default async function CourseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const course = getCourse(slug);
+
+  if (!course) {
+    notFound();
+  }
 
   return (
     <section className="split">
@@ -22,11 +27,11 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
 
         <h2>O que o aluno vai aprender</h2>
         <p>
-          Procedimentos padronizados, criterios de seguranca, validacao teorica e boas praticas para
+          Procedimentos padronizados, critérios de segurança, validação teórica e boas práticas para
           reduzir erros operacionais.
         </p>
 
-        <h2>Conteudo do curso</h2>
+        <h2>Conteúdo do curso</h2>
         <div className="moduleList">
           {course.modules.map((module) => (
             <div className="moduleItem" key={module.title}>
@@ -50,9 +55,9 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
           <span>{course.certificate}</span>
         </div>
         <p>
-          Publico-alvo: {course.audience}
+          Público-alvo: {course.audience}
           <br />
-          Responsavel: {course.instructor}
+          Responsável: {course.instructor}
         </p>
         <Link className="button" href={`/aprender/${course.slug}`}>
           Iniciar curso

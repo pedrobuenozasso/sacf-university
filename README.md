@@ -40,6 +40,7 @@ Experiência desejada:
 
 ## Documentação
 
+- [Funcionalidades — Estado Atual](docs/funcionalidades.md)
 - [Product Spec](docs/product-spec.md)
 - [Stack e Arquitetura](docs/stack-architecture.md)
 - [Banco de Dados](docs/database-schema.md)

@@ -12,9 +12,9 @@ export default function AdminPage() {
       <div className="sectionHead">
         <div>
           <p className="eyebrow">Admin SACF University</p>
-          <h1>Painel de controle para operar empresas, cursos e certificacoes.</h1>
+          <h1>Painel de controle para operar empresas, cursos e certificações.</h1>
           <p>
-            Visao interna da SACF para acompanhar clientes, conteudo, alunos, certificados e
+            Visão interna da SACF para acompanhar clientes, conteúdo, alunos, certificados e
             reciclagens.
           </p>
         </div>
@@ -30,7 +30,7 @@ export default function AdminPage() {
         </div>
         <div className="metric">
           <strong>{totalUsers}</strong>
-          <span>Usuarios</span>
+          <span>Usuários</span>
         </div>
         <div className="metric">
           <strong>{supportedLocales.length}</strong>
@@ -46,32 +46,32 @@ export default function AdminPage() {
         <div className="detailPanel">
           <div className="sectionHead">
             <div>
-              <p className="eyebrow">Operacao</p>
-              <h2>Fila que precisa de atencao</h2>
+              <p className="eyebrow">Operação</p>
+              <h2>Fila que precisa de atenção</h2>
             </div>
           </div>
           <div className="checklist">
             <div className="checkItem">
-              <span>{expiring} certificados vencendo nos proximos 30 dias</span>
+              <span>{expiring} certificados vencendo nos próximos 30 dias</span>
               <span>Alto</span>
             </div>
             <div className="checkItem">
-              <span>3 usuarios ainda nao aceitaram convite</span>
-              <span>Medio</span>
+              <span>3 usuários ainda não aceitaram convite</span>
+              <span>Médio</span>
             </div>
             <div className="checkItem">
-              <span>2 cursos aguardando revisao tecnica</span>
-              <span>Medio</span>
+              <span>2 cursos aguardando revisão técnica</span>
+              <span>Médio</span>
             </div>
             <div className="checkItem">
-              <span>Relatorio mensal da Zasso pronto para envio</span>
+              <span>Relatório mensal do cliente piloto pronto para envio</span>
               <span>Baixo</span>
             </div>
           </div>
         </div>
 
         <div className="detailPanel">
-          <p className="eyebrow">Usuarios recentes</p>
+          <p className="eyebrow">Usuários recentes</p>
           <div className="moduleList">
             {adminUsers.slice(0, 4).map((user) => (
               <div className="moduleItem" key={user.email}>

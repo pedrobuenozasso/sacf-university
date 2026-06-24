@@ -5,8 +5,8 @@ export default function AdminUsersPage() {
     <>
       <div className="sectionHead">
         <div>
-          <p className="eyebrow">Usuarios</p>
-          <h1>Convites, papeis e progresso por pessoa.</h1>
+          <p className="eyebrow">Usuários</p>
+          <h1>Convites, papéis e progresso por pessoa.</h1>
           <p>Controle alunos internos, treinadores, administradores e parceiros externos.</p>
         </div>
       </div>
@@ -14,7 +14,7 @@ export default function AdminUsersPage() {
       <section className="split">
         <div className="tablePanel">
           <div className="tableHead">
-            <span>Usuario</span>
+            <span>Usuário</span>
             <span>Empresa</span>
             <span>Papel</span>
             <span>Status</span>
@@ -35,7 +35,14 @@ export default function AdminUsersPage() {
         </div>
 
         <form className="detailPanel">
-          <h2>Convidar usuario</h2>
+          <div className="formStatus">
+            <span className="statusDot" />
+            <div>
+              <strong>Convite corporativo</strong>
+              <small>Papel, empresa e grupos definem o catálogo do usuário</small>
+            </div>
+          </div>
+          <h2>Convidar usuário</h2>
           <input className="field" placeholder="Nome" />
           <input className="field" placeholder="Email" />
           <select className="field" defaultValue="">
@@ -50,6 +57,7 @@ export default function AdminUsersPage() {
           <button className="button" type="button">
             Enviar convite
           </button>
+          <p className="formHint">O convite cria vínculo de organização antes do primeiro acesso.</p>
         </form>
       </section>
     </>

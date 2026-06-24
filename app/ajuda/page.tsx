@@ -6,19 +6,19 @@ export default function HelpPage() {
           <p className="eyebrow">Ajuda</p>
           <h1>Suporte para alunos, administradores e treinadores.</h1>
           <p>
-            Espaco para duvidas sobre acesso, certificados, reciclagem, cursos obrigatorios e
-            sugestoes de novos conteudos.
+            Espaço para dúvidas sobre acesso, certificados, reciclagem, cursos obrigatórios e
+            sugestões de novos conteúdos.
           </p>
         </div>
       </section>
 
       <section className="supportGrid">
         <div className="supportCard">
-          <h2>Duvidas frequentes</h2>
+          <h2>Dúvidas frequentes</h2>
           <div className="moduleList">
             <div className="moduleItem">
               <h3>Como libero um certificado?</h3>
-              <p>Conclua todas as aulas obrigatorias e atinja a nota minima da avaliacao.</p>
+              <p>Conclua todas as aulas obrigatórias e atinja a nota mínima da avaliação.</p>
             </div>
             <div className="moduleItem">
               <h3>O que acontece quando vence?</h3>
@@ -36,7 +36,7 @@ export default function HelpPage() {
           <input className="field" placeholder="Nome" />
           <input className="field" placeholder="Email" />
           <input className="field" placeholder="Assunto" />
-          <textarea className="field" placeholder="Descreva sua duvida ou sugestao" />
+          <textarea className="field" placeholder="Descreva sua dúvida ou sugestão" />
           <button className="button" type="button">
             Enviar
           </button>

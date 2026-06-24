@@ -11,7 +11,7 @@ export type Course = {
   lessons: number;
   progress: number;
   certificate: string;
-  status: "Em andamento" | "Disponivel" | "Concluido";
+  status: "Em andamento" | "Disponível" | "Concluído";
   accent: string;
   summary: string;
   audience: string;
@@ -40,6 +40,8 @@ export type Organization = {
   courses: number;
   certificates: number;
   expiring: number;
+  accent: string;
+  brandLogo?: string;
 };
 
 export type AdminUser = {
@@ -54,7 +56,7 @@ export type AdminUser = {
 export const courses: Course[] = [
   {
     slug: "operador-eletroherb",
-    title: "Operacao segura do sistema Eletroherb",
+    title: "Operação segura do sistema Eletroherb",
     organizationSlugs: ["zasso", "zasso-latam"],
     accessGroups: ["operadores", "treinadores", "representantes"],
     vertical: "Operador",
@@ -67,108 +69,108 @@ export const courses: Course[] = [
     status: "Em andamento",
     accent: "blue",
     summary:
-      "Treinamento base para operar o equipamento com seguranca, rotina correta e leitura dos principais indicadores de campo.",
-    audience: "Operadores, lideres de campo e novos representantes tecnicos.",
-    instructor: "Equipe tecnica Zasso",
+      "Treinamento base para operar o equipamento com segurança, rotina correta e leitura dos principais indicadores de campo.",
+    audience: "Operadores, líderes de campo e novos representantes técnicos.",
+    instructor: "Equipe técnica SACF",
     modules: [
       {
         title: "Fundamentos do equipamento",
-        lessons: ["Visao geral do sistema", "Componentes principais", "Riscos operacionais"]
+        lessons: ["Visão geral do sistema", "Componentes principais", "Riscos operacionais"]
       },
       {
-        title: "Operacao em campo",
-        lessons: ["Checklist antes da aplicacao", "Parametros de trabalho", "Erros comuns"]
+        title: "Operação em campo",
+        lessons: ["Checklist antes da aplicação", "Parâmetros de trabalho", "Erros comuns"]
       },
       {
-        title: "Validacao teorica",
-        lessons: ["Revisao final", "Prova de certificacao"]
+        title: "Validação teórica",
+        lessons: ["Revisão final", "Prova de certificação"]
       }
     ]
   },
   {
     slug: "mecanica-preventiva",
-    title: "Manutencao mecanica preventiva",
+    title: "Manutenção mecânica preventiva",
     organizationSlugs: ["zasso"],
     accessGroups: ["mecanicos", "treinadores"],
-    vertical: "Mecanico",
-    level: "Intermediario",
+    vertical: "Mecânico",
+    level: "Intermediário",
     language: "PT-BR",
     duration: "2h 45min",
     lessons: 14,
     progress: 0,
     certificate: "Certificado",
-    status: "Disponivel",
+    status: "Disponível",
     accent: "cyan",
     summary:
-      "Procedimentos de inspecao, conservacao e troca de componentes para reduzir paradas e padronizar a manutencao.",
-    audience: "Mecanicos, assistencia tecnica e prestadores de servico autorizados.",
+      "Procedimentos de inspeção, conservação e troca de componentes para reduzir paradas e padronizar a manutenção.",
+    audience: "Mecânicos, assistência técnica e prestadores de serviço autorizados.",
     instructor: "Engenharia de campo",
     modules: [
       {
         title: "Rotina preventiva",
-        lessons: ["Inspecao visual", "Pontos de desgaste", "Lubrificacao e limpeza"]
+        lessons: ["Inspeção visual", "Pontos de desgaste", "Lubrificação e limpeza"]
       },
       {
-        title: "Diagnostico",
-        lessons: ["Sintomas frequentes", "Registro de ocorrencias", "Plano de acao"]
+        title: "Diagnóstico",
+        lessons: ["Sintomas frequentes", "Registro de ocorrências", "Plano de ação"]
       }
     ]
   },
   {
     slug: "alta-tensao-seguranca",
-    title: "Seguranca em alta tensao",
+    title: "Segurança em alta tensão",
     organizationSlugs: ["zasso"],
     accessGroups: ["eletrico", "treinadores"],
-    vertical: "Eletrico",
-    level: "Avancado",
+    vertical: "Elétrico",
+    level: "Avançado",
     language: "PT-BR",
     duration: "4h 10min",
     lessons: 22,
     progress: 0,
-    certificate: "Obrigatorio",
-    status: "Disponivel",
+    certificate: "Obrigatório",
+    status: "Disponível",
     accent: "violet",
     summary:
-      "Curso critico para tecnicos eletricos que atuam com procedimentos de alta tensao, protecao individual e protocolos de isolamento.",
-    audience: "Tecnicos eletricos, equipe de alta tensao e treinadores certificados.",
-    instructor: "Especialistas de seguranca Zasso",
+      "Curso crítico para técnicos elétricos que atuam com procedimentos de alta tensão, proteção individual e protocolos de isolamento.",
+    audience: "Técnicos elétricos, equipe de alta tensão e treinadores certificados.",
+    instructor: "Especialistas SACF",
     modules: [
       {
-        title: "Base de seguranca",
-        lessons: ["Risco eletrico", "EPIs obrigatorios", "Zona controlada"]
+        title: "Base de segurança",
+        lessons: ["Risco elétrico", "EPIs obrigatórios", "Zona controlada"]
       },
       {
         title: "Procedimentos",
-        lessons: ["Bloqueio e etiquetagem", "Teste de ausencia de tensao", "Plano de emergencia"]
+        lessons: ["Bloqueio e etiquetagem", "Teste de ausência de tensão", "Plano de emergência"]
       }
     ]
   },
   {
     slug: "formacao-treinadores",
-    title: "Formacao de treinadores Zasso",
+    title: "Formação de treinadores corporativos",
     organizationSlugs: ["zasso", "zasso-latam"],
     accessGroups: ["treinadores", "representantes"],
     vertical: "Treinador",
-    level: "Avancado",
+    level: "Avançado",
     language: "PT-BR",
     duration: "5h",
     lessons: 26,
     progress: 100,
     certificate: "Validade 24 meses",
-    status: "Concluido",
+    status: "Concluído",
     accent: "green",
     summary:
-      "Padronizacao para multiplicadores internos: como ensinar, validar conhecimento e manter registros de certificacao.",
-    audience: "Treinadores, coordenadores de operacao e representantes master.",
-    instructor: "Academia Zasso",
+      "Padronização para multiplicadores internos: como ensinar, validar conhecimento e manter registros de certificação.",
+    audience: "Treinadores, coordenadores de operação e representantes master.",
+    instructor: "SACF University",
     modules: [
       {
         title: "Metodologia",
-        lessons: ["Como conduzir treinamento", "Avaliacao pratica", "Gestao de duvidas recorrentes"]
+        lessons: ["Como conduzir treinamento", "Avaliação prática", "Gestão de dúvidas recorrentes"]
       },
       {
-        title: "Certificacao",
-        lessons: ["Criterios de aprovacao", "Registro de evidencias", "Reciclagem"]
+        title: "Certificação",
+        lessons: ["Critérios de aprovação", "Registro de evidências", "Reciclagem"]
       }
     ]
   }
@@ -230,7 +232,9 @@ export const organizations: Organization[] = [
     users: 86,
     courses: 4,
     certificates: 31,
-    expiring: 8
+    expiring: 8,
+    accent: "blue",
+    brandLogo: "/brand/zasso-logo.png"
   },
   {
     name: "Representantes Zasso LATAM",
@@ -239,16 +243,18 @@ export const organizations: Organization[] = [
     users: 24,
     courses: 2,
     certificates: 12,
-    expiring: 3
+    expiring: 3,
+    accent: "cyan"
   },
   {
-    name: "Cliente demonstracao",
-    slug: "demo",
+    name: "Cliente Industrial Sul",
+    slug: "industrial-sul",
     status: "Pausada",
     users: 12,
     courses: 1,
     certificates: 4,
-    expiring: 1
+    expiring: 1,
+    accent: "violet"
   }
 ];
 
@@ -288,7 +294,11 @@ export const adminUsers: AdminUser[] = [
 ];
 
 export function getCourse(slug: string) {
-  return courses.find((course) => course.slug === slug) ?? courses[0];
+  return courses.find((course) => course.slug === slug) ?? null;
+}
+
+export function getOrganization(slug: string) {
+  return organizations.find((organization) => organization.slug === slug) ?? null;
 }
 
 export function canAccessCourse(course: Course, user: MockUser) {

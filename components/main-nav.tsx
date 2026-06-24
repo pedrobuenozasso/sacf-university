@@ -10,7 +10,7 @@ const publicNav = [
 
 const privateNav = [
   { href: "/home", label: "Home" },
-  { href: "/catalogo", label: "Catalogo" },
+  { href: "/catalogo", label: "Catálogo" },
   { href: "/meus-cursos", label: "Meus cursos" },
   { href: "/certificados", label: "Certificados" }
 ];
@@ -24,7 +24,7 @@ export function MainNav() {
     : publicNav;
 
   return (
-    <nav className="nav" aria-label="Navegacao principal">
+    <nav className="nav" aria-label="Navegação principal">
       {items.map((item) => (
         <Link key={item.href} href={item.href}>
           {item.label}

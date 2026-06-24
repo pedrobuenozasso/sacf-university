@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { setMockUser } from "@/components/use-mock-user";
 import { mockUsers } from "@/lib/courses";
@@ -16,15 +17,30 @@ export default function LoginPage() {
     <section className="loginShell">
       <div className="loginHero">
         <div>
+          <Image
+            className="loginBrand"
+            src="/brand/sacf-lockup-dark.jpg"
+            alt="SACF"
+            width={330}
+            height={210}
+            priority
+          />
           <p className="eyebrow">SACF University</p>
           <h1>Acesse sua universidade corporativa.</h1>
           <p className="lead">
-            Cada conta pertence a uma empresa, grupos e permissoes. No MVP, o acesso e simulado
-            para validarmos a experiencia antes de ligar banco e autenticacao real.
+            Cada conta pertence a uma empresa, grupos e permissões. A plataforma direciona o usuário
+            para cursos, certificados e relatórios conforme seu papel operacional.
           </p>
         </div>
 
         <form className="loginForm">
+          <div className="formStatus">
+            <span className="statusDot" />
+            <div>
+              <strong>Acesso SACF University</strong>
+              <small>Ambiente privado por organização</small>
+            </div>
+          </div>
           <h2>Entrar</h2>
           <label>
             Email
@@ -35,22 +51,21 @@ export default function LoginPage() {
             <input className="field" placeholder="••••••••" type="password" />
           </label>
           <button className="button" type="button" onClick={() => login("carlos-operador")}>
-            Entrar como aluno demo
+            Acessar área do aluno
           </button>
           <button className="buttonGhost fullButton" type="button" onClick={() => login("ana-admin")}>
-            Entrar como admin da empresa
+            Acessar administração
           </button>
-          <p>Login real sera conectado ao SACF Hub ou provedor de identidade da empresa.</p>
+          <p>Autorização aplicada por empresa, papel e grupos de treinamento.</p>
         </form>
       </div>
 
       <div className="sectionHead compactHead">
         <div>
-          <p className="eyebrow">Demonstração</p>
-          <h2>Perfis para testar permissões</h2>
+          <p className="eyebrow">Acesso operacional</p>
+          <h2>Perfis operacionais</h2>
           <p>
-            Esta área é temporária para o protótipo. Ela mostra como empresa, papel e grupo mudam o
-            catálogo de cursos.
+            Contas com permissões diferentes acessam ambientes, cursos e relatórios diferentes.
           </p>
         </div>
       </div>
@@ -63,6 +78,7 @@ export default function LoginPage() {
             <small>{user.organization}</small>
             <span className="statusTag">{user.role}</span>
             <p>{user.groups.join(" · ")}</p>
+            <span className="loginCardAction">Acessar ambiente</span>
           </button>
         ))}
       </div>

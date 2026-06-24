@@ -5,39 +5,43 @@ export default function AdminReportsPage() {
     <>
       <div className="sectionHead">
         <div>
-          <p className="eyebrow">Relatorios</p>
+          <p className="eyebrow">Relatórios</p>
           <h1>Indicadores para SACF e para cada empresa.</h1>
-          <p>Base para export CSV, relatorio mensal e acompanhamento executivo.</p>
+          <p>Base para export CSV, relatório mensal e acompanhamento executivo.</p>
         </div>
       </div>
 
       <section className="grid">
-        <div className="detailPanel">
+        <div className="detailPanel reportCard">
+          <span className="reportStatus">Semanal</span>
           <h2>Progresso por empresa</h2>
-          <p>Conclusao media, cursos em andamento e alunos atrasados.</p>
+          <p>Conclusão média, cursos em andamento e alunos atrasados.</p>
           <button className="buttonGhost" type="button">
             Exportar CSV
           </button>
         </div>
-        <div className="detailPanel">
+        <div className="detailPanel reportCard">
+          <span className="reportStatus">Crítico</span>
           <h2>Certificados</h2>
-          <p>Emitidos, vencidos, vencendo e reciclados por periodo.</p>
+          <p>Emitidos, vencidos, vencendo e reciclados por período.</p>
           <button className="buttonGhost" type="button">
             Exportar CSV
           </button>
         </div>
-        <div className="detailPanel">
+        <div className="detailPanel reportCard">
+          <span className="reportStatus">Operação</span>
           <h2>Uso da plataforma</h2>
           <p>Acessos, aulas assistidas, provas realizadas e convites pendentes.</p>
           <button className="buttonGhost" type="button">
             Exportar CSV
           </button>
         </div>
-        <div className="detailPanel">
+        <div className="detailPanel reportCard">
+          <span className="reportStatus">Executivo</span>
           <h2>Resumo executivo</h2>
-          <p>Relatorio mensal para lideranca da empresa cliente.</p>
+          <p>Relatório mensal para liderança da empresa cliente.</p>
           <button className="buttonGhost" type="button">
-            Gerar previa
+            Gerar prévia
           </button>
         </div>
       </section>
@@ -51,7 +55,7 @@ export default function AdminReportsPage() {
         <div className="tableHead">
           <span>Empresa</span>
           <span>Status</span>
-          <span>Usuarios</span>
+          <span>Usuários</span>
           <span>Certificados</span>
           <span>Vencendo</span>
         </div>

@@ -17,8 +17,8 @@ export default function HomeDashboardPage() {
         <p className="eyebrow">Acesso privado</p>
         <h1>Entre para acessar sua universidade corporativa.</h1>
         <p className="lead">
-          No produto real, cada usuario entra pela conta da empresa e visualiza apenas cursos,
-          certificados e relatorios liberados para seu perfil.
+          Cada usuário acessa o ambiente da empresa e visualiza apenas cursos, certificados e
+          relatórios liberados para seu perfil.
         </p>
         <Link className="button" href="/login">
           Fazer login
@@ -39,8 +39,34 @@ export default function HomeDashboardPage() {
           </p>
         </div>
         <Link className="button" href="/catalogo">
-          Ver catalogo
+          Ver catálogo
         </Link>
+      </section>
+
+      <section className="tenantBanner">
+        <div>
+          <span className="statusDot" />
+          <p className="eyebrow">Ambiente ativo</p>
+          <h2>{currentOrg?.name ?? user.organization}</h2>
+          <p>
+            Cursos, certificados e relatórios isolados por empresa. Este painel mostra somente o que
+            o perfil atual tem permissão para acessar.
+          </p>
+        </div>
+        <div className="tenantStats">
+          <span>
+            <strong>{currentOrg?.users ?? 0}</strong>
+            usuários
+          </span>
+          <span>
+            <strong>{currentOrg?.courses ?? visibleCourses.length}</strong>
+            cursos
+          </span>
+          <span>
+            <strong>{currentOrg?.expiring ?? 0}</strong>
+            vencendo
+          </span>
+        </div>
       </section>
 
       <section className="metrics">
@@ -66,7 +92,7 @@ export default function HomeDashboardPage() {
         <div className="detailPanel">
           <div className="sectionHead">
             <div>
-              <p className="eyebrow">Proximos cursos</p>
+              <p className="eyebrow">Próximos cursos</p>
               <h2>Continue sua trilha.</h2>
             </div>
             <Link className="buttonGhost" href="/meus-cursos">
@@ -90,7 +116,7 @@ export default function HomeDashboardPage() {
 
         <aside className="detailPanel">
           <p className="eyebrow">Acesso</p>
-          <h2>Como este usuario foi filtrado</h2>
+          <h2>Como este usuário foi filtrado</h2>
           <div className="checklist">
             <div className="checkItem">
               <span>Empresa</span>

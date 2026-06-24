@@ -2,12 +2,12 @@ import Link from "next/link";
 import { AdminGuard } from "@/components/access-panels";
 
 const adminLinks = [
-  { href: "/admin", label: "Visao geral" },
+  { href: "/admin", label: "Visão geral" },
   { href: "/admin/empresas", label: "Empresas" },
   { href: "/admin/cursos", label: "Cursos" },
-  { href: "/admin/usuarios", label: "Usuarios" },
-  { href: "/admin/certificacoes", label: "Certificacoes" },
-  { href: "/admin/relatorios", label: "Relatorios" }
+  { href: "/admin/usuarios", label: "Usuários" },
+  { href: "/admin/certificacoes", label: "Certificações" },
+  { href: "/admin/relatorios", label: "Relatórios" }
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

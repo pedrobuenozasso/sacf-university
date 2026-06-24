@@ -5,10 +5,10 @@ export default function AdminCertificationsPage() {
     <>
       <div className="sectionHead">
         <div>
-          <p className="eyebrow">Certificacoes</p>
+          <p className="eyebrow">Certificações</p>
           <h1>Validade, vencimentos e reciclagens.</h1>
           <p>
-            O diferencial operacional da plataforma: saber quem esta certificado, quem vai vencer e
+            O diferencial operacional da plataforma: saber quem está certificado, quem vai vencer e
             quem precisa reciclar.
           </p>
         </div>
@@ -29,7 +29,7 @@ export default function AdminCertificationsPage() {
         </div>
         <div className="metric">
           <strong>12m</strong>
-          <span>Validade padrao</span>
+          <span>Validade padrão</span>
         </div>
       </section>
 

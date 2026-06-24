@@ -26,3 +26,7 @@ pnpm-debug.log*
 .DS_Store
 *.swp
 .vercel
+
+# Local agent config + brand backup
+.claude/
+/public/brand - cópia/

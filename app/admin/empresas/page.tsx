@@ -7,7 +7,7 @@ export default function AdminCompaniesPage() {
         <div>
           <p className="eyebrow">Empresas</p>
           <h1>Clientes e ambientes de treinamento.</h1>
-          <p>Cadastro das empresas que usam a SACF University, com isolamento por organizacao.</p>
+          <p>Cadastro das empresas que usam a SACF University, com isolamento por organização.</p>
         </div>
       </div>
 
@@ -16,7 +16,7 @@ export default function AdminCompaniesPage() {
           <div className="tableHead">
             <span>Empresa</span>
             <span>Status</span>
-            <span>Usuarios</span>
+            <span>Usuários</span>
             <span>Cursos</span>
             <span>Vencendo</span>
           </div>
@@ -35,6 +35,13 @@ export default function AdminCompaniesPage() {
         </div>
 
         <form className="detailPanel">
+          <div className="formStatus">
+            <span className="statusDot" />
+            <div>
+              <strong>Novo ambiente</strong>
+              <small>Cliente, domínio, admin inicial e idioma padrão</small>
+            </div>
+          </div>
           <h2>Adicionar empresa</h2>
           <input className="field" placeholder="Nome da empresa" />
           <input className="field" placeholder="Slug" />
@@ -42,6 +49,7 @@ export default function AdminCompaniesPage() {
           <button className="button" type="button">
             Criar empresa
           </button>
+          <p className="formHint">Cada empresa mantém catálogo, membros e certificados isolados.</p>
         </form>
       </section>
     </>
