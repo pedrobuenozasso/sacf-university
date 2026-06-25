@@ -13,6 +13,13 @@ const ORGS = [
   { slug: "demo", name: "Cliente demonstração", status: "paused" }
 ];
 
+// Email domains that map a corporate login to its organization (lowercase, unique).
+const ORG_DOMAINS = {
+  zasso: ["zasso.com"],
+  "zasso-latam": ["latam-partner.com"],
+  sacf: ["sacf.io"]
+};
+
 const GROUPS = {
   sacf: ["sacf-admin"],
   zasso: ["administradores", "treinadores", "operadores", "eletrico", "mecanicos", "representantes"],
@@ -102,6 +109,19 @@ async function main() {
       update: { name: o.name, status: o.status, primaryColor: o.primaryColor ?? null },
       create: { name: o.name, slug: o.slug, status: o.status, primaryColor: o.primaryColor ?? null }
     });
+  }
+
+  // 1b. organization email domains (login resolves the org from the email domain)
+  for (const [orgSlug, domains] of Object.entries(ORG_DOMAINS)) {
+    const org = orgBySlug[orgSlug];
+    if (!org) continue;
+    for (const domain of domains) {
+      await prisma.organizationDomain.upsert({
+        where: { domain },
+        update: { organizationId: org.id },
+        create: { organizationId: org.id, domain }
+      });
+    }
   }
 
   // 2. groups (per org)
@@ -203,7 +223,8 @@ async function main() {
     courses: await prisma.course.count(),
     modules: await prisma.courseModule.count(),
     lessons: await prisma.lesson.count(),
-    visibilityRules: await prisma.courseVisibilityRule.count()
+    visibilityRules: await prisma.courseVisibilityRule.count(),
+    organizationDomains: await prisma.organizationDomain.count()
   };
   console.log("Seed concluído:", JSON.stringify(counts, null, 2));
 }
