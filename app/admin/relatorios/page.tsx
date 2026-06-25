@@ -1,6 +1,9 @@
-import { organizations } from "@/lib/courses";
+import { getOrganizations } from "@/lib/data";
 
-export default function AdminReportsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AdminReportsPage() {
+  const organizations = await getOrganizations();
   return (
     <>
       <div className="sectionHead">

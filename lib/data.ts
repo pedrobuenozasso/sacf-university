@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
-import type { Course } from "@/lib/courses";
+import type { AdminUser, Course, Organization } from "@/lib/courses";
 
 const courseInclude = {
   modules: {
@@ -94,4 +94,61 @@ export async function getCourseBySlug(slug: string): Promise<Course | null> {
     include: courseInclude
   });
   return row ? mapCourse(row) : null;
+}
+
+const ORG_ACCENT: Record<string, string> = {
+  zasso: "blue",
+  "zasso-latam": "cyan",
+  demo: "violet"
+};
+
+// Tenant companies shown in the admin — excludes the SACF platform org itself.
+export async function getOrganizations(): Promise<Organization[]> {
+  const rows = await prisma.organization.findMany({
+    where: { slug: { not: "sacf" } },
+    include: { _count: { select: { members: true, courses: true, certificates: true } } },
+    orderBy: { createdAt: "asc" }
+  });
+  return rows.map((org) => ({
+    name: org.name,
+    slug: org.slug,
+    status: org.status === "paused" ? "Pausada" : "Ativa",
+    users: org._count.members,
+    courses: org._count.courses,
+    certificates: org._count.certificates,
+    expiring: 0,
+    accent: ORG_ACCENT[org.slug] ?? "blue",
+    brandLogo: org.logoUrl ?? undefined
+  }));
+}
+
+const ROLE_LABEL: Record<string, string> = {
+  org_admin: "Admin da empresa",
+  instructor: "Instrutor",
+  manager: "Gestor",
+  student: "Aluno",
+  external_partner: "Parceiro externo",
+  sacf_admin: "Admin SACF"
+};
+
+const MEMBER_STATUS_LABEL: Record<string, AdminUser["status"]> = {
+  active: "Ativo",
+  invited: "Pendente",
+  blocked: "Bloqueado"
+};
+
+export async function getAdminUsers(): Promise<AdminUser[]> {
+  const rows = await prisma.organizationMember.findMany({
+    where: { organization: { slug: { not: "sacf" } } },
+    include: { user: true, organization: true },
+    orderBy: { createdAt: "asc" }
+  });
+  return rows.map((member) => ({
+    name: member.user.name,
+    email: member.user.email,
+    organization: member.organization.name,
+    role: ROLE_LABEL[member.role] ?? member.role,
+    status: MEMBER_STATUS_LABEL[member.status] ?? "Ativo",
+    progress: 0
+  }));
 }

@@ -1,7 +1,10 @@
-import { courses } from "@/lib/courses";
+import { getCourses } from "@/lib/data";
 import { supportedLocales } from "@/lib/i18n";
 
-export default function AdminCoursesPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AdminCoursesPage() {
+  const courses = await getCourses();
   return (
     <>
       <div className="sectionHead">

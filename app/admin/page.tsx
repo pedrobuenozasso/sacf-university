@@ -1,8 +1,11 @@
 import Link from "next/link";
-import { adminUsers, organizations } from "@/lib/courses";
+import { getAdminUsers, getOrganizations } from "@/lib/data";
 import { supportedLocales } from "@/lib/i18n";
 
-export default function AdminPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AdminPage() {
+  const [organizations, adminUsers] = await Promise.all([getOrganizations(), getAdminUsers()]);
   const totalUsers = organizations.reduce((sum, org) => sum + org.users, 0);
   const totalCertificates = organizations.reduce((sum, org) => sum + org.certificates, 0);
   const expiring = organizations.reduce((sum, org) => sum + org.expiring, 0);

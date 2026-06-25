@@ -1,6 +1,9 @@
-import { courses, organizations } from "@/lib/courses";
+import { getCourses, getOrganizations } from "@/lib/data";
 
-export default function AdminCertificationsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AdminCertificationsPage() {
+  const [courses, organizations] = await Promise.all([getCourses(), getOrganizations()]);
   return (
     <>
       <div className="sectionHead">

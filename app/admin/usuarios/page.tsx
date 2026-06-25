@@ -1,6 +1,9 @@
-import { adminUsers } from "@/lib/courses";
+import { getAdminUsers } from "@/lib/data";
 
-export default function AdminUsersPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AdminUsersPage() {
+  const adminUsers = await getAdminUsers();
   return (
     <>
       <div className="sectionHead">
