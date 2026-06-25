@@ -2,9 +2,9 @@
 
 import { LoginRequiredPanel } from "@/components/access-panels";
 import { useMockUser } from "@/components/use-mock-user";
-import { canAccessCourse, courses, getOrganization } from "@/lib/courses";
+import { canAccessCourse, getOrganization, type Course } from "@/lib/courses";
 
-export function CertificatesView() {
+export function CertificatesView({ courses }: { courses: Course[] }) {
   const user = useMockUser();
 
   if (!user) {

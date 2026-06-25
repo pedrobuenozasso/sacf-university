@@ -3,9 +3,9 @@
 import { CourseCard } from "@/components/course-card";
 import { LoginRequiredPanel } from "@/components/access-panels";
 import { useMockUser } from "@/components/use-mock-user";
-import { canAccessCourse, courses } from "@/lib/courses";
+import { canAccessCourse, type Course } from "@/lib/courses";
 
-export function MyCoursesView() {
+export function MyCoursesView({ courses }: { courses: Course[] }) {
   const user = useMockUser();
 
   if (!user) {
