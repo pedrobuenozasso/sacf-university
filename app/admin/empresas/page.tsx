@@ -1,4 +1,5 @@
 import { getOrganizations } from "@/lib/data";
+import { createOrganization } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +38,7 @@ export default async function AdminCompaniesPage() {
           ))}
         </div>
 
-        <form className="detailPanel">
+        <form className="detailPanel" action={createOrganization}>
           <div className="formStatus">
             <span className="statusDot" />
             <div>
@@ -46,10 +47,10 @@ export default async function AdminCompaniesPage() {
             </div>
           </div>
           <h2>Adicionar empresa</h2>
-          <input className="field" placeholder="Nome da empresa" />
-          <input className="field" placeholder="Slug" />
-          <input className="field" placeholder="Email do admin" />
-          <button className="button" type="button">
+          <input className="field" name="name" placeholder="Nome da empresa" required />
+          <input className="field" name="slug" placeholder="Slug (opcional)" />
+          <input className="field" name="adminEmail" type="email" placeholder="Email do admin" />
+          <button className="button" type="submit">
             Criar empresa
           </button>
           <p className="formHint">Cada empresa mantém catálogo, membros e certificados isolados.</p>
