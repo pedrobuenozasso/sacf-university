@@ -110,3 +110,30 @@ Verticais iniciais:
 - Treinador.
 
 O conteúdo inicial deve focar nas dúvidas mais recorrentes de campo, operação, manutenção, segurança, alta tensão e treinamento de representantes/prestadores.
+
+## Rodando localmente
+
+1. **Variáveis de ambiente:** copie `.env.example` para `.env.local` e preencha a senha do banco. O `.env.local` é ignorado pelo git — nunca comite a senha.
+
+2. **Ligue o túnel para o banco** (Cloud SQL Auth Proxy) e deixe esse terminal aberto:
+
+   ```bash
+   cloud-sql-proxy cedar-context-456512-b9:us-central1:sacf-db --port 5432
+   ```
+
+   Sem o proxy no ar, as telas que leem do banco (catálogo, admin, home, etc.) dão erro de conexão.
+
+3. **Em outro terminal**, suba o app:
+
+   ```bash
+   npm install
+   npm run db:generate   # gera o Prisma Client
+   npm run dev           # http://localhost:3000
+   ```
+
+### Scripts de banco
+
+- `npm run db:validate` — valida o `schema.prisma`
+- `npm run db:migrate` — aplica migrations pendentes (sempre no banco `sacf_university`)
+- `npm run db:seed` — popula o banco com os dados iniciais
+
