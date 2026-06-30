@@ -39,6 +39,13 @@ function accentFor(vertical: string): string {
   return "blue";
 }
 
+// Demo "vitrine" so the screens look in-use for the CEO walkthrough.
+// TEMPORARY: real per-user progress/status comes from enrollments once login lands.
+const DEMO_PROGRESS: Record<string, { progress: number; status: Course["status"] }> = {
+  "operador-eletroherb": { progress: 64, status: "Em andamento" },
+  "formacao-treinadores": { progress: 100, status: "Concluído" }
+};
+
 function mapCourse(course: CourseRow): Course {
   const organizationSlugs = Array.from(
     new Set(
@@ -65,9 +72,9 @@ function mapCourse(course: CourseRow): Course {
     language: course.language,
     duration: formatDuration(course.workloadMinutes),
     lessons: course._count.lessons,
-    progress: 0,
+    progress: DEMO_PROGRESS[course.slug]?.progress ?? 0,
     certificate: certificateLabel(course),
-    status: "Disponível",
+    status: DEMO_PROGRESS[course.slug]?.status ?? "Disponível",
     accent: accentFor(course.vertical),
     summary: course.shortDescription ?? course.description ?? "",
     audience: course.targetAudience ?? "",
