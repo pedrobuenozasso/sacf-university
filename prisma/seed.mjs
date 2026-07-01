@@ -1,16 +1,24 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import bcrypt from "bcryptjs";
+import { randomBytes } from "crypto";
 
 // Prisma 7 connects via a driver adapter; load the local DB url.
 process.loadEnvFile(".env.local");
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
+// Random, in-memory-only password for the seeded demo accounts — generated fresh
+// on every seed run and printed to the console. NEVER hardcoded or written to a
+// file, since this script is committed to source control.
+const demoPassword = randomBytes(9).toString("base64url");
+const demoPasswordHash = await bcrypt.hash(demoPassword, 12);
+
 const ORGS = [
   { slug: "sacf", name: "SACF", status: "active" },
   { slug: "zasso", name: "Zasso", status: "active", primaryColor: "#2F5BFF" },
   { slug: "zasso-latam", name: "Representantes Zasso LATAM", status: "active" },
-  { slug: "demo", name: "Cliente demonstração", status: "paused" }
+  { slug: "demo", name: "Cliente Industrial Sul", status: "paused" }
 ];
 
 // Email domains that map a corporate login to its organization (lowercase, unique).
@@ -50,7 +58,7 @@ const COURSES = [
     orgs: ["zasso", "zasso-latam"], accessGroups: ["operadores", "treinadores", "representantes"],
     vertical: "Operador", level: "Essencial", language: "PT-BR", workloadMinutes: 200,
     certificateEnabled: true, certificateValidityDays: 365, mandatory: false,
-    instructorName: "Equipe técnica Zasso",
+    instructorName: "Equipe técnica SACF",
     summary: "Treinamento base para operar o equipamento com segurança, rotina correta e leitura dos principais indicadores de campo.",
     audience: "Operadores, líderes de campo e novos representantes técnicos.",
     modules: [
@@ -77,7 +85,7 @@ const COURSES = [
     orgs: ["zasso"], accessGroups: ["eletrico", "treinadores"],
     vertical: "Elétrico", level: "Avançado", language: "PT-BR", workloadMinutes: 250,
     certificateEnabled: true, certificateValidityDays: 365, mandatory: true,
-    instructorName: "Especialistas de segurança Zasso",
+    instructorName: "Especialistas SACF",
     summary: "Curso crítico para técnicos elétricos que atuam com procedimentos de alta tensão, proteção individual e protocolos de isolamento.",
     audience: "Técnicos elétricos, equipe de alta tensão e treinadores certificados.",
     modules: [
@@ -86,11 +94,11 @@ const COURSES = [
     ]
   },
   {
-    slug: "formacao-treinadores", title: "Formação de treinadores Zasso",
+    slug: "formacao-treinadores", title: "Formação de treinadores corporativos",
     orgs: ["zasso", "zasso-latam"], accessGroups: ["treinadores", "representantes"],
     vertical: "Treinador", level: "Avançado", language: "PT-BR", workloadMinutes: 300,
     certificateEnabled: true, certificateValidityDays: 730, mandatory: false,
-    instructorName: "Academia Zasso",
+    instructorName: "SACF University",
     summary: "Padronização para multiplicadores internos: como ensinar, validar conhecimento e manter registros de certificação.",
     audience: "Treinadores, coordenadores de operação e representantes master.",
     modules: [
@@ -99,6 +107,49 @@ const COURSES = [
     ]
   }
 ];
+
+const PRESENTATION_ENROLLMENTS = [
+  {
+    user: "carlos",
+    course: "operador-eletroherb",
+    status: "in_progress",
+    completedLessons: 5,
+    activeLessonPercent: 70,
+    dueInDays: 18
+  },
+  {
+    user: "ana",
+    course: "formacao-treinadores",
+    status: "completed",
+    completedLessons: 999,
+    finalScore: 96,
+    certificateCode: "SACF-ZAS-TRN-1001",
+    expiresInDays: 710
+  },
+  {
+    user: "marina",
+    course: "alta-tensao-seguranca",
+    status: "in_progress",
+    completedLessons: 2,
+    activeLessonPercent: 35,
+    dueInDays: 9
+  },
+  {
+    user: "diego",
+    course: "operador-eletroherb",
+    status: "completed",
+    completedLessons: 999,
+    finalScore: 91,
+    certificateCode: "SACF-LAT-OPR-1002",
+    expiresInDays: 320
+  }
+];
+
+function addDays(days) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return date;
+}
 
 async function main() {
   // 1. organizations
@@ -139,13 +190,21 @@ async function main() {
   }
 
   // 3. users + memberships + group memberships
+  const userByKey = {};
   for (const u of USERS) {
     const org = orgBySlug[u.org];
     const user = await prisma.user.upsert({
       where: { email: u.email },
-      update: { name: u.name },
-      create: { email: u.email, name: u.name, preferredLocale: "pt-BR" }
+      update: { name: u.name, emailVerified: new Date(), passwordHash: demoPasswordHash },
+      create: {
+        email: u.email,
+        name: u.name,
+        preferredLocale: "pt-BR",
+        emailVerified: new Date(),
+        passwordHash: demoPasswordHash
+      }
     });
+    userByKey[u.key] = user;
     await prisma.organizationMember.upsert({
       where: { organizationId_userId: { organizationId: org.id, userId: user.id } },
       update: { role: u.role, status: "active" },
@@ -163,6 +222,7 @@ async function main() {
   }
 
   // 4. courses + modules + lessons + visibility rules
+  const courseBySlug = {};
   for (const c of COURSES) {
     const ownerOrg = orgBySlug[c.orgs[0]];
     const course = await prisma.course.upsert({
@@ -183,6 +243,7 @@ async function main() {
         shortDescription: c.summary, description: c.summary, targetAudience: c.audience, publishedAt: new Date()
       }
     });
+    courseBySlug[c.slug] = course;
 
     // reset children for idempotency
     await prisma.lesson.deleteMany({ where: { courseId: course.id } });
@@ -214,6 +275,102 @@ async function main() {
     await prisma.courseVisibilityRule.createMany({ data: rules });
   }
 
+  // 5. presentation enrollments, lesson progress and certificates
+  for (const item of PRESENTATION_ENROLLMENTS) {
+    const user = userByKey[item.user];
+    const course = courseBySlug[item.course];
+    if (!user || !course) continue;
+
+    const membership = await prisma.organizationMember.findFirst({
+      where: { userId: user.id, organizationId: { in: Object.values(orgBySlug).map((org) => org.id) } },
+      include: { organization: true }
+    });
+    const organization = membership?.organization ?? orgBySlug.zasso;
+    const completed = item.status === "completed";
+
+    const enrollment = await prisma.enrollment.upsert({
+      where: { courseId_userId: { courseId: course.id, userId: user.id } },
+      update: {
+        organizationId: organization.id,
+        status: item.status,
+        assignedAt: addDays(-42),
+        startedAt: addDays(-28),
+        completedAt: completed ? addDays(-12) : null,
+        dueDate: completed ? null : addDays(item.dueInDays ?? 14),
+        finalScore: item.finalScore ?? null,
+        certificateExpiresAt: item.expiresInDays ? addDays(item.expiresInDays) : null,
+        recertificationRequired: false
+      },
+      create: {
+        organizationId: organization.id,
+        courseId: course.id,
+        userId: user.id,
+        status: item.status,
+        assignedAt: addDays(-42),
+        startedAt: addDays(-28),
+        completedAt: completed ? addDays(-12) : null,
+        dueDate: completed ? null : addDays(item.dueInDays ?? 14),
+        finalScore: item.finalScore ?? null,
+        certificateExpiresAt: item.expiresInDays ? addDays(item.expiresInDays) : null,
+        recertificationRequired: false
+      }
+    });
+
+    const modules = await prisma.courseModule.findMany({
+      where: { courseId: course.id },
+      orderBy: { position: "asc" },
+      include: { lessons: { orderBy: { position: "asc" } } }
+    });
+    const lessons = modules.flatMap((module) => module.lessons);
+
+    for (const [index, lesson] of lessons.entries()) {
+      const isCompleted = completed || index < item.completedLessons;
+      const isActive = !completed && index === item.completedLessons;
+      await prisma.lessonProgress.upsert({
+        where: { enrollmentId_lessonId: { enrollmentId: enrollment.id, lessonId: lesson.id } },
+        update: {
+          status: isCompleted ? "completed" : isActive ? "in_progress" : "not_started",
+          progressPercent: isCompleted ? 100 : isActive ? item.activeLessonPercent ?? 35 : 0,
+          completedAt: isCompleted ? addDays(-8 + index) : null,
+          lastSeenAt: isCompleted || isActive ? addDays(-1) : null
+        },
+        create: {
+          enrollmentId: enrollment.id,
+          lessonId: lesson.id,
+          status: isCompleted ? "completed" : isActive ? "in_progress" : "not_started",
+          progressPercent: isCompleted ? 100 : isActive ? item.activeLessonPercent ?? 35 : 0,
+          completedAt: isCompleted ? addDays(-8 + index) : null,
+          lastSeenAt: isCompleted || isActive ? addDays(-1) : null
+        }
+      });
+    }
+
+    if (completed && item.certificateCode) {
+      await prisma.certificate.upsert({
+        where: { certificateCode: item.certificateCode },
+        update: {
+          organizationId: organization.id,
+          courseId: course.id,
+          userId: user.id,
+          enrollmentId: enrollment.id,
+          issuedAt: addDays(-12),
+          expiresAt: item.expiresInDays ? addDays(item.expiresInDays) : null,
+          metadata: { source: "presentation-seed" }
+        },
+        create: {
+          organizationId: organization.id,
+          courseId: course.id,
+          userId: user.id,
+          enrollmentId: enrollment.id,
+          certificateCode: item.certificateCode,
+          issuedAt: addDays(-12),
+          expiresAt: item.expiresInDays ? addDays(item.expiresInDays) : null,
+          metadata: { source: "presentation-seed" }
+        }
+      });
+    }
+  }
+
   const counts = {
     organizations: await prisma.organization.count(),
     users: await prisma.user.count(),
@@ -224,9 +381,14 @@ async function main() {
     modules: await prisma.courseModule.count(),
     lessons: await prisma.lesson.count(),
     visibilityRules: await prisma.courseVisibilityRule.count(),
-    organizationDomains: await prisma.organizationDomain.count()
+    organizationDomains: await prisma.organizationDomain.count(),
+    enrollments: await prisma.enrollment.count(),
+    lessonProgress: await prisma.lessonProgress.count(),
+    certificates: await prisma.certificate.count()
   };
   console.log("Seed concluído:", JSON.stringify(counts, null, 2));
+  console.log(`\nSenha temporária dos usuários de demonstração: ${demoPassword}`);
+  console.log("(gerada agora, só nesta execução — não fica salva em nenhum arquivo)");
 }
 
 main()

@@ -3,10 +3,18 @@ import Link from "next/link";
 import { CourseCover } from "@/components/course-cover";
 import type { Course } from "@/lib/courses";
 
-export function CourseCard({ course, href }: { course: Course; href: string }) {
+export function CourseCard({
+  course,
+  href,
+  showTenantBrand = false
+}: {
+  course: Course;
+  href: string;
+  showTenantBrand?: boolean;
+}) {
   return (
     <Link className="courseCard" data-accent={course.accent} href={href}>
-      <CourseCover course={course} />
+      <CourseCover course={course} showTenantBrand={showTenantBrand} />
       <div className="courseBody">
         <p className="courseInstructor">{course.instructor}</p>
         <h3>{course.title}</h3>

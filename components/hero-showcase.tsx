@@ -1,9 +1,7 @@
 import Image from "next/image";
-import { courses, getOrganization } from "@/lib/courses";
+import type { Course } from "@/lib/courses";
 
-export function HeroShowcase() {
-  const course = courses[0];
-  const ownerOrg = getOrganization(course.organizationSlugs[0]);
+export function HeroShowcase({ course }: { course: Course }) {
   const watched = Math.round((course.lessons * course.progress) / 100);
   const lessons = course.modules.flatMap((module) => module.lessons).slice(0, 3);
 
@@ -23,15 +21,6 @@ export function HeroShowcase() {
                   width={40}
                   height={40}
                 />
-                {ownerOrg?.brandLogo ? (
-                  <Image
-                    className="showcaseBrand showcaseTenantBrand"
-                    src={ownerOrg.brandLogo}
-                    alt={ownerOrg.name}
-                    width={40}
-                    height={40}
-                  />
-                ) : null}
               </span>
               <span className="showcaseTag">{course.vertical}</span>
             </div>

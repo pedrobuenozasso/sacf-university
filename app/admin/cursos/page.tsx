@@ -11,7 +11,10 @@ export default async function AdminCoursesPage() {
         <div>
           <p className="eyebrow">Cursos</p>
           <h1>Crie, publique e acompanhe treinamentos.</h1>
-          <p>Gerencie conteúdos por vertical, idioma, validade de certificado e status.</p>
+          <p>
+            Gerencie cursos privados da empresa e cursos oficiais SACF que podem ser atribuídos ou
+            adaptados para cada operação.
+          </p>
         </div>
       </div>
 
@@ -57,7 +60,7 @@ export default async function AdminCoursesPage() {
             <span className="statusDot" />
             <div>
               <strong>Editor de curso</strong>
-              <small>Rascunhos, publicação e permissões em um único fluxo</small>
+              <small>Conteúdo interno ou curso oficial SACF em um único fluxo</small>
             </div>
           </div>
           <h2>Novo curso</h2>
@@ -77,6 +80,10 @@ export default async function AdminCoursesPage() {
             <option>Representante</option>
           </select>
           <input className="field" placeholder="Instrutor ou responsável técnico" />
+          <select className="field" defaultValue="empresa">
+            <option value="empresa">Curso privado da empresa</option>
+            <option value="sacf">Curso oficial da Biblioteca SACF</option>
+          </select>
           <div className="formGrid">
             <input className="field" placeholder="Carga horária" />
             <input className="field" placeholder="Validade do certificado" />
@@ -101,24 +108,27 @@ export default async function AdminCoursesPage() {
               Apagar
             </button>
           </div>
-          <p className="formHint">Alterações ficam vinculadas à empresa, idioma e regra de acesso.</p>
+          <p className="formHint">
+            Cursos privados ficam restritos à empresa. Cursos oficiais SACF podem ser usados como
+            base e personalizados por cliente.
+          </p>
         </form>
       </section>
 
       <section className="detailPanel adminEditorPreview">
         <div className="sectionHead">
           <div>
-            <p className="eyebrow">Editor da empresa</p>
-            <h2>Controle completo do curso</h2>
+            <p className="eyebrow">Cursos privados e Biblioteca SACF</p>
+            <h2>Controle completo do conteúdo</h2>
             <p>
-              O admin da empresa poderá editar identidade, capa, conteúdo, permissões, publicação e
-              histórico do curso sem depender da SACF para ajustes simples.
+              O admin da empresa poderá configurar cursos internos. A SACF mantém uma biblioteca
+              oficial de cursos assinados, que podem ser atribuídos ou adaptados para cada cliente.
             </p>
           </div>
         </div>
         <div className="grid">
           <div className="moduleItem">
-            <h3>Identidade</h3>
+            <h3>Identidade da empresa</h3>
             <p>Editar capa, título, vertical, idioma, carga horária, instrutor e nível.</p>
           </div>
           <div className="moduleItem">
@@ -126,8 +136,12 @@ export default async function AdminCoursesPage() {
             <p>Adicionar módulos, aulas, vídeos, anexos, textos, quiz e prova final.</p>
           </div>
           <div className="moduleItem">
-            <h3>Acesso</h3>
+            <h3>Acesso privado</h3>
             <p>Definir se o curso é da empresa inteira, grupo específico ou usuários selecionados.</p>
+          </div>
+          <div className="moduleItem">
+            <h3>Biblioteca SACF</h3>
+            <p>Usar cursos oficiais como base para treinamento, certificação e reciclagem.</p>
           </div>
           <div className="moduleItem">
             <h3>Governança</h3>

@@ -1,11 +1,11 @@
 "use client";
 
 import { LoginRequiredPanel } from "@/components/access-panels";
-import { useMockUser } from "@/components/use-mock-user";
+import { useSessionUser } from "@/components/use-session-user";
 import { canAccessCourse, getOrganization, type Course } from "@/lib/courses";
 
 export function CertificatesView({ courses }: { courses: Course[] }) {
-  const user = useMockUser();
+  const user = useSessionUser();
 
   if (!user) {
     return <LoginRequiredPanel title="Entre para acessar certificados." />;

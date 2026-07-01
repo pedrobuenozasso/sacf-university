@@ -1,17 +1,79 @@
-import { Prisma } from "@prisma/client";
-import { prisma } from "@/lib/db";
-import type { AdminUser, Course, Organization } from "@/lib/courses";
+import {
+  adminUsers as fallbackAdminUsers,
+  courses as fallbackCourses,
+  organizations as fallbackOrganizations,
+  type AdminUser,
+  type Course,
+  type Organization
+} from "@/lib/courses";
 
 const courseInclude = {
   modules: {
     orderBy: { position: "asc" },
     include: { lessons: { orderBy: { position: "asc" } } }
   },
+  enrollments: {
+    include: { lessonProgress: true }
+  },
   visibilityRules: { include: { organization: true, group: true } },
   _count: { select: { lessons: true } }
-} satisfies Prisma.CourseInclude;
+} as const;
 
-type CourseRow = Prisma.CourseGetPayload<{ include: typeof courseInclude }>;
+type CourseRow = {
+  slug: string;
+  title: string;
+  description: string | null;
+  shortDescription: string | null;
+  vertical: string;
+  level: string;
+  language: string;
+  instructorName: string | null;
+  targetAudience: string | null;
+  workloadMinutes: number | null;
+  mandatory: boolean;
+  certificateValidityDays: number | null;
+  certificateEnabled: boolean;
+  modules: { title: string; lessons: { title: string }[] }[];
+  enrollments: {
+    status: string;
+    lessonProgress: { status: string; progressPercent: number }[];
+  }[];
+  visibilityRules: {
+    ruleType: string;
+    organization: { slug: string } | null;
+    group: { slug: string } | null;
+  }[];
+  _count: { lessons: number };
+};
+
+type OrganizationRow = {
+  name: string;
+  slug: string;
+  status: string;
+  logoUrl: string | null;
+  _count: { members: number; courses: number; certificates: number };
+};
+
+type AdminMemberRow = {
+  role: string;
+  status: string;
+  user: {
+    name: string;
+    email: string;
+    enrollments: {
+      status: string;
+      lessonProgress: { status: string; progressPercent: number }[];
+      course: { _count: { lessons: number } };
+    }[];
+  };
+  organization: { name: string };
+};
+
+async function getPrisma() {
+  if (!process.env.DATABASE_URL) return null;
+  const db = await import("@/lib/db");
+  return db.prisma;
+}
 
 function formatDuration(minutes: number | null): string {
   if (!minutes) return "";
@@ -39,12 +101,27 @@ function accentFor(vertical: string): string {
   return "blue";
 }
 
-// Demo "vitrine" so the screens look in-use for the CEO walkthrough.
-// TEMPORARY: real per-user progress/status comes from enrollments once login lands.
-const DEMO_PROGRESS: Record<string, { progress: number; status: Course["status"] }> = {
-  "operador-eletroherb": { progress: 64, status: "Em andamento" },
-  "formacao-treinadores": { progress: 100, status: "Concluído" }
-};
+function enrollmentProgress(course: CourseRow): { progress: number; status: Course["status"] } {
+  const totalLessons = Math.max(course._count.lessons, 1);
+  const enrollmentScores = course.enrollments.map((enrollment) => {
+    if (enrollment.status === "completed") return { progress: 100, status: "Concluído" as const };
+
+    const completed = enrollment.lessonProgress.filter((lesson) => lesson.status === "completed").length;
+    const inProgress = enrollment.lessonProgress.filter((lesson) => lesson.status === "in_progress");
+    const partial = inProgress.reduce((sum, lesson) => sum + lesson.progressPercent / 100, 0);
+    const progress = Math.min(99, Math.round(((completed + partial) / totalLessons) * 100));
+
+    return {
+      progress,
+      status: progress > 0 ? ("Em andamento" as const) : ("Disponível" as const)
+    };
+  });
+
+  return enrollmentScores.reduce(
+    (best, current) => (current.progress > best.progress ? current : best),
+    { progress: 0, status: "Disponível" as const }
+  );
+}
 
 function mapCourse(course: CourseRow): Course {
   const organizationSlugs = Array.from(
@@ -62,6 +139,8 @@ function mapCourse(course: CourseRow): Course {
     )
   );
 
+  const enrollment = enrollmentProgress(course);
+
   return {
     slug: course.slug,
     title: course.title,
@@ -72,9 +151,9 @@ function mapCourse(course: CourseRow): Course {
     language: course.language,
     duration: formatDuration(course.workloadMinutes),
     lessons: course._count.lessons,
-    progress: DEMO_PROGRESS[course.slug]?.progress ?? 0,
+    progress: enrollment.progress,
     certificate: certificateLabel(course),
-    status: DEMO_PROGRESS[course.slug]?.status ?? "Disponível",
+    status: enrollment.status,
     accent: accentFor(course.vertical),
     summary: course.shortDescription ?? course.description ?? "",
     audience: course.targetAudience ?? "",
@@ -87,6 +166,9 @@ function mapCourse(course: CourseRow): Course {
 }
 
 export async function getCourses(): Promise<Course[]> {
+  const prisma = await getPrisma();
+  if (!prisma) return fallbackCourses;
+
   const rows = await prisma.course.findMany({
     where: { status: "published" },
     include: courseInclude,
@@ -96,6 +178,9 @@ export async function getCourses(): Promise<Course[]> {
 }
 
 export async function getCourseBySlug(slug: string): Promise<Course | null> {
+  const prisma = await getPrisma();
+  if (!prisma) return fallbackCourses.find((course) => course.slug === slug) ?? null;
+
   const row = await prisma.course.findFirst({
     where: { slug, status: "published" },
     include: courseInclude
@@ -111,11 +196,14 @@ const ORG_ACCENT: Record<string, string> = {
 
 // Tenant companies shown in the admin — excludes the SACF platform org itself.
 export async function getOrganizations(): Promise<Organization[]> {
-  const rows = await prisma.organization.findMany({
+  const prisma = await getPrisma();
+  if (!prisma) return fallbackOrganizations;
+
+  const rows = (await prisma.organization.findMany({
     where: { slug: { not: "sacf" } },
     include: { _count: { select: { members: true, courses: true, certificates: true } } },
     orderBy: { createdAt: "asc" }
-  });
+  })) as OrganizationRow[];
   return rows.map((org) => ({
     name: org.name,
     slug: org.slug,
@@ -145,17 +233,44 @@ const MEMBER_STATUS_LABEL: Record<string, AdminUser["status"]> = {
 };
 
 export async function getAdminUsers(): Promise<AdminUser[]> {
-  const rows = await prisma.organizationMember.findMany({
+  const prisma = await getPrisma();
+  if (!prisma) return fallbackAdminUsers;
+
+  const rows = (await prisma.organizationMember.findMany({
     where: { organization: { slug: { not: "sacf" } } },
-    include: { user: true, organization: true },
+    include: {
+      user: {
+        include: {
+          enrollments: {
+            include: { lessonProgress: true, course: { select: { id: true, _count: { select: { lessons: true } } } } }
+          }
+        }
+      },
+      organization: true
+    },
     orderBy: { createdAt: "asc" }
+  })) as AdminMemberRow[];
+  return rows.map((member) => {
+    const progressValues = member.user.enrollments.map((enrollment) => {
+      if (enrollment.status === "completed") return 100;
+      const totalLessons = Math.max(enrollment.course._count.lessons, 1);
+      const completed = enrollment.lessonProgress.filter((lesson) => lesson.status === "completed").length;
+      const partial = enrollment.lessonProgress
+        .filter((lesson) => lesson.status === "in_progress")
+        .reduce((sum, lesson) => sum + lesson.progressPercent / 100, 0);
+      return Math.min(99, Math.round(((completed + partial) / totalLessons) * 100));
+    });
+    const averageProgress = progressValues.length
+      ? Math.round(progressValues.reduce((sum, progress) => sum + progress, 0) / progressValues.length)
+      : 0;
+
+    return {
+      name: member.user.name,
+      email: member.user.email,
+      organization: member.organization.name,
+      role: ROLE_LABEL[member.role] ?? member.role,
+      status: MEMBER_STATUS_LABEL[member.status] ?? "Ativo",
+      progress: averageProgress
+    };
   });
-  return rows.map((member) => ({
-    name: member.user.name,
-    email: member.user.email,
-    organization: member.organization.name,
-    role: ROLE_LABEL[member.role] ?? member.role,
-    status: MEMBER_STATUS_LABEL[member.status] ?? "Ativo",
-    progress: 0
-  }));
 }

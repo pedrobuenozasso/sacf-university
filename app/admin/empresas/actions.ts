@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/db";
 
 function slugify(input: string): string {
   return input
@@ -16,6 +15,9 @@ function slugify(input: string): string {
 // NOTE: this write is currently unguarded (behind the client-side admin gate only).
 // When real auth lands, restrict it to SACF-admin sessions before doing anything.
 export async function createOrganization(formData: FormData) {
+  if (!process.env.DATABASE_URL) return;
+  const { prisma } = await import("@/lib/db");
+
   const name = String(formData.get("name") ?? "").trim();
   const slugInput = String(formData.get("slug") ?? "").trim();
   const adminEmail = String(formData.get("adminEmail") ?? "").trim().toLowerCase();

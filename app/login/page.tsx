@@ -1,16 +1,34 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { setMockUser } from "@/components/use-mock-user";
-import { mockUsers } from "@/lib/courses";
+import { FormEvent, useState } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  function login(userId: string) {
-    setMockUser(userId);
+  async function loginWithEmail(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError(null);
+    setSubmitting(true);
+
+    const result = await signIn("credentials", { email, password, redirect: false });
+
+    setSubmitting(false);
+
+    if (result?.error) {
+      setError("Email ou senha incorretos.");
+      return;
+    }
+
     router.push("/home");
+    router.refresh();
   }
 
   return (
@@ -33,7 +51,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <form className="loginForm">
+        <form className="loginForm" onSubmit={loginWithEmail}>
           <div className="formStatus">
             <span className="statusDot" />
             <div>
@@ -44,43 +62,38 @@ export default function LoginPage() {
           <h2>Entrar</h2>
           <label>
             Email
-            <input className="field" placeholder="nome@empresa.com" type="email" />
+            <input
+              className="field"
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="nome@empresa.com"
+              type="email"
+              value={email}
+              required
+            />
           </label>
           <label>
             Senha
-            <input className="field" placeholder="••••••••" type="password" />
+            <input
+              className="field"
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="Senha"
+              type="password"
+              value={password}
+              required
+            />
           </label>
-          <button className="button" type="button" onClick={() => login("carlos-operador")}>
-            Acessar área do aluno
+          {error ? <p className="formError">{error}</p> : null}
+          <button className="button" type="submit" disabled={submitting}>
+            {submitting ? "Entrando..." : "Entrar na plataforma"}
           </button>
-          <button className="buttonGhost fullButton" type="button" onClick={() => login("ana-admin")}>
-            Acessar administração
-          </button>
-          <p>Autorização aplicada por empresa, papel e grupos de treinamento.</p>
-        </form>
-      </div>
-
-      <div className="sectionHead compactHead">
-        <div>
-          <p className="eyebrow">Acesso operacional</p>
-          <h2>Perfis operacionais</h2>
           <p>
-            Contas com permissões diferentes acessam ambientes, cursos e relatórios diferentes.
+            Ainda não tem senha?{" "}
+            <Link href="/cadastro" className="loginInlineLink">
+              Confirme seu email corporativo
+            </Link>
+            .
           </p>
-        </div>
-      </div>
-
-      <div className="loginGrid">
-        {mockUsers.map((user) => (
-          <button className="loginCard" key={user.id} type="button" onClick={() => login(user.id)}>
-            <span className="userAvatar">{user.name.slice(0, 1)}</span>
-            <strong>{user.name}</strong>
-            <small>{user.organization}</small>
-            <span className="statusTag">{user.role}</span>
-            <p>{user.groups.join(" · ")}</p>
-            <span className="loginCardAction">Acessar ambiente</span>
-          </button>
-        ))}
+        </form>
       </div>
     </section>
   );

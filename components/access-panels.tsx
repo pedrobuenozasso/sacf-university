@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMockUser } from "@/components/use-mock-user";
+import { useSessionUser } from "@/components/use-session-user";
 
 export function LoginRequiredPanel({
   title = "Entre para continuar.",
@@ -23,7 +23,7 @@ export function LoginRequiredPanel({
 }
 
 export function AdminGuard({ children }: { children: React.ReactNode }) {
-  const user = useMockUser();
+  const user = useSessionUser();
   const canManage =
     user?.role === "sacf_admin" || user?.role === "org_admin" || user?.role === "instructor";
 

@@ -50,7 +50,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
 
       <aside className="detailPanel">
         <CoursePreviewPanel label="Resumo do curso" />
-        <h3>Incluido neste curso</h3>
+        <h3>Incluído neste curso</h3>
         <div className="meta">
           <span>{course.duration}</span>
           <span>{course.lessons} aulas</span>

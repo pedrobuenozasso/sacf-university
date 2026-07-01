@@ -60,7 +60,7 @@ function verticalIcon(vertical: string, className: string): ReactElement {
   );
 }
 
-export function CourseCover({ course }: { course: Course }) {
+export function CourseCover({ course, showTenantBrand = false }: { course: Course; showTenantBrand?: boolean }) {
   const ownerOrg = getOrganization(course.organizationSlugs[0]);
   const orgName = ownerOrg?.name ?? "SACF";
 
@@ -74,7 +74,7 @@ export function CourseCover({ course }: { course: Course }) {
           <span className="coverBrand">
             <Image src="/brand/sacf-app-icon-v2.png" alt="SACF University" width={26} height={26} />
           </span>
-          {ownerOrg?.brandLogo ? (
+          {showTenantBrand && ownerOrg?.brandLogo ? (
             <span className="coverBrand coverBrandTenant">
               <Image src={ownerOrg.brandLogo} alt={orgName} width={26} height={26} />
             </span>

@@ -1,18 +1,21 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CoursePreviewPanel } from "@/components/course-card";
-import { getCourse, getOrganization } from "@/lib/courses";
+import { getOrganization } from "@/lib/courses";
+import { getCourseBySlug } from "@/lib/data";
+
+export const dynamic = "force-dynamic";
 
 export default async function LearnPage({ params }: { params: Promise<{ courseId: string }> }) {
   const { courseId } = await params;
-  const course = getCourse(courseId);
+  const course = await getCourseBySlug(courseId);
 
   if (!course) {
     notFound();
   }
 
   const firstModule = course.modules[0];
-  const currentLesson = firstModule.lessons[0];
+  const currentLesson = firstModule?.lessons[0] ?? "Introdução ao curso";
   const ownerOrg = getOrganization(course.organizationSlugs[0]);
 
   return (

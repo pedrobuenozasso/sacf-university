@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMockUser } from "@/components/use-mock-user";
+import { useSessionUser } from "@/components/use-session-user";
 import { canAccessCourse, type Course, type Organization } from "@/lib/courses";
 
 export function HomeView({
@@ -11,7 +11,7 @@ export function HomeView({
   courses: Course[];
   organizations: Organization[];
 }) {
-  const user = useMockUser();
+  const user = useSessionUser();
   const visibleCourses = user ? courses.filter((course) => canAccessCourse(course, user)) : [];
   const currentOrg = user
     ? organizations.find((organization) => organization.slug === user.organizationSlug)
@@ -20,12 +20,11 @@ export function HomeView({
   if (!user) {
     return (
       <section className="authGate">
-        <p className="eyebrow">Acesso privado</p>
-        <h1>Entre para acessar sua universidade corporativa.</h1>
-        <p className="lead">
-          Cada usuário acessa o ambiente da empresa e visualiza apenas cursos, certificados e
-          relatórios liberados para seu perfil.
-        </p>
+          <p className="eyebrow">Acesso privado</p>
+          <h1>Entre para acessar sua universidade corporativa.</h1>
+          <p className="lead">
+          Conteúdos, certificados e relatórios organizados conforme a operação de cada empresa.
+          </p>
         <Link className="button" href="/login">
           Fazer login
         </Link>
@@ -39,13 +38,10 @@ export function HomeView({
         <div>
           <p className="eyebrow">Home</p>
           <h1>Bem-vindo, {user.name}.</h1>
-          <p>
-            Ambiente {user.organization}. Seu acesso atual usa papel {user.role} e grupos{" "}
-            {user.groups.join(", ")}.
-          </p>
+          <p>Ambiente {user.organization}. Continue os treinamentos prioritários da sua equipe.</p>
         </div>
         <Link className="button" href="/catalogo">
-          Ver catálogo
+          Ver cursos
         </Link>
       </section>
 
@@ -55,8 +51,8 @@ export function HomeView({
           <p className="eyebrow">Ambiente ativo</p>
           <h2>{currentOrg?.name ?? user.organization}</h2>
           <p>
-            Cursos, certificados e relatórios isolados por empresa. Este painel mostra somente o que
-            o perfil atual tem permissão para acessar.
+            Cursos, certificados e relatórios ficam separados por empresa, mantendo a identidade e
+            as regras de cada operação.
           </p>
         </div>
         <div className="tenantStats">
@@ -121,19 +117,19 @@ export function HomeView({
         </div>
 
         <aside className="detailPanel">
-          <p className="eyebrow">Acesso</p>
-          <h2>Como este usuário foi filtrado</h2>
+          <p className="eyebrow">Perfil operacional</p>
+          <h2>Prioridades deste acesso</h2>
           <div className="checklist">
             <div className="checkItem">
               <span>Empresa</span>
               <span>{user.organization}</span>
             </div>
             <div className="checkItem">
-              <span>Papel</span>
-              <span>{user.role}</span>
+              <span>Área</span>
+              <span>{user.role === "student" ? "Aluno" : "Gestão"}</span>
             </div>
             <div className="checkItem">
-              <span>Grupos</span>
+              <span>Trilhas</span>
               <span>{user.groups.length}</span>
             </div>
           </div>

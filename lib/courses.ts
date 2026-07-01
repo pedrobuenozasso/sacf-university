@@ -22,7 +22,7 @@ export type Course = {
   }[];
 };
 
-export type MockUser = {
+export type SessionUser = {
   id: string;
   name: string;
   email: string;
@@ -176,7 +176,7 @@ export const courses: Course[] = [
   }
 ];
 
-export const mockUsers: MockUser[] = [
+export const sessionUsers: SessionUser[] = [
   {
     id: "ana-admin",
     name: "Ana Ribeiro",
@@ -301,7 +301,7 @@ export function getOrganization(slug: string) {
   return organizations.find((organization) => organization.slug === slug) ?? null;
 }
 
-export function canAccessCourse(course: Course, user: MockUser) {
+export function canAccessCourse(course: Course, user: SessionUser) {
   if (user.role === "sacf_admin") return true;
 
   const sameOrganization = course.organizationSlugs.includes(user.organizationSlug);
@@ -317,6 +317,6 @@ export function canAccessCourse(course: Course, user: MockUser) {
   return Boolean(directlyAssigned || groupAllowed);
 }
 
-export function getMockUser(userId: string | null) {
-  return mockUsers.find((user) => user.id === userId) ?? null;
+export function getSessionUser(userId: string | null) {
+  return sessionUsers.find((user) => user.id === userId) ?? null;
 }

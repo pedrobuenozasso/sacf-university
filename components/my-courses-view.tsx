@@ -2,11 +2,11 @@
 
 import { CourseCard } from "@/components/course-card";
 import { LoginRequiredPanel } from "@/components/access-panels";
-import { useMockUser } from "@/components/use-mock-user";
+import { useSessionUser } from "@/components/use-session-user";
 import { canAccessCourse, type Course } from "@/lib/courses";
 
 export function MyCoursesView({ courses }: { courses: Course[] }) {
-  const user = useMockUser();
+  const user = useSessionUser();
 
   if (!user) {
     return <LoginRequiredPanel title="Entre para ver seus cursos." />;
@@ -21,15 +21,20 @@ export function MyCoursesView({ courses }: { courses: Course[] }) {
           <p className="eyebrow">Meus cursos</p>
           <h1>Continue treinando de onde parou.</h1>
           <p>
-            Area privada de {user.organization}. Aqui aparecem apenas cursos liberados para seu
-            perfil.
+            Área privada de {user.organization}. Aqui aparecem os cursos ativos, concluídos e
+            pendentes deste acesso.
           </p>
         </div>
       </section>
 
       <section className="grid">
         {visibleCourses.map((course) => (
-          <CourseCard course={course} href={`/aprender/${course.slug}`} key={course.slug} />
+          <CourseCard
+            course={course}
+            href={`/aprender/${course.slug}`}
+            key={course.slug}
+            showTenantBrand
+          />
         ))}
       </section>
     </>

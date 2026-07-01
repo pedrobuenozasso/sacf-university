@@ -30,3 +30,6 @@ pnpm-debug.log*
 # Local agent config + brand backup
 .claude/
 /public/brand - cópia/
+
+# Design reference bundle (not source code — kept locally only)
+/SACF University Design/
