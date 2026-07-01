@@ -1,9 +1,28 @@
 import type { Metadata } from "next";
+import { IBM_Plex_Mono, Inter, Space_Grotesk } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { MainNav } from "@/components/main-nav";
 import { UserChip } from "@/components/user-chip";
 import "./globals.css";
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display"
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body"
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono"
+});
 
 export const metadata: Metadata = {
   title: "SACF University",
@@ -12,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={`${spaceGrotesk.variable} ${inter.variable} ${ibmPlexMono.variable}`}>
       <body>
         <div className="shell">
           <header className="topbar">
