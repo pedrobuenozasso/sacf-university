@@ -92,7 +92,7 @@ a {
   gap: 18px;
   padding: 18px clamp(18px, 4vw, 56px);
   border-bottom: 1px solid var(--line);
-  background: rgba(5, 9, 20, 0.9);
+  background: rgba(5, 7, 10, 0.9);
   backdrop-filter: blur(18px);
 }
 
@@ -130,7 +130,7 @@ a {
   padding: 5px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(7, 17, 31, 0.72);
+  background: rgba(10, 16, 32, 0.72);
 }
 
 .nav a {
@@ -155,7 +155,7 @@ a {
   color: var(--soft);
   font-weight: 600;
   padding: 11px 16px;
-  background: rgba(13, 23, 40, 0.78);
+  background: rgba(15, 23, 41, 0.78);
 }
 
 .userChip {
@@ -167,7 +167,7 @@ a {
   color: var(--soft);
   min-width: max-content;
   padding: 7px 8px 7px 7px;
-  background: rgba(13, 23, 40, 0.78);
+  background: rgba(15, 23, 41, 0.78);
 }
 
 .userChip strong,
@@ -188,7 +188,7 @@ a {
 
 .userChip button {
   border: 0;
-  border-left: 1px solid rgba(203, 214, 236, 0.14);
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
   color: var(--muted);
   cursor: pointer;
   font: inherit;
@@ -305,7 +305,7 @@ h3 {
 
 .buttonGhost {
   border: 1px solid var(--line);
-  background: rgba(7, 17, 31, 0.68);
+  background: rgba(10, 16, 32, 0.68);
   color: var(--soft);
 }
 
@@ -338,7 +338,7 @@ h3 {
 .supportCard {
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: linear-gradient(180deg, rgba(17, 26, 45, 0.92), rgba(11, 18, 32, 0.9));
+  background: linear-gradient(180deg, rgba(15, 23, 41, 0.92), rgba(10, 16, 32, 0.9));
   box-shadow: var(--shadow-card);
 }
 
@@ -370,11 +370,11 @@ h3 {
 .showcaseCard {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(203, 214, 236, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 12px;
   background: linear-gradient(180deg, rgba(15, 26, 45, 0.97), rgba(6, 13, 26, 0.98));
   box-shadow:
-    0 28px 64px rgba(2, 6, 17, 0.48),
+    0 28px 64px rgba(5, 7, 10, 0.48),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
@@ -430,14 +430,14 @@ h3 {
 .showcaseTenantBrand,
 .coverBrandTenant {
   margin-left: -8px;
-  border: 1px solid rgba(5, 9, 20, 0.22);
+  border: 1px solid rgba(5, 7, 10, 0.22);
 }
 
 .showcaseTag {
   padding: 6px 11px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(2, 6, 17, 0.5);
+  background: rgba(5, 7, 10, 0.5);
   color: var(--soft);
   font-size: 0.64rem;
   font-weight: 700;
@@ -456,8 +456,8 @@ h3 {
   height: 58px;
   transform: translate(-50%, -50%);
   border-radius: 999px;
-  border: 1px solid rgba(247, 251, 255, 0.36);
-  background: rgba(247, 251, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  background: rgba(255, 255, 255, 0.16);
   color: #fff;
   box-shadow: 0 16px 38px rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(6px);
@@ -492,7 +492,7 @@ h3 {
   padding: 5px 10px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(2, 6, 17, 0.46);
+  background: rgba(5, 7, 10, 0.46);
   color: var(--soft);
   font-size: 0.7rem;
   font-weight: 700;
@@ -527,7 +527,7 @@ h3 {
 .showcaseMeta span + span::before {
   content: "·";
   margin-right: 9px;
-  color: rgba(154, 168, 195, 0.6);
+  color: rgba(138, 153, 184, 0.6);
 }
 
 .showcaseProgressLabel {
@@ -559,7 +559,7 @@ h3 {
   width: 17px;
   height: 17px;
   border-radius: 999px;
-  border: 1px solid rgba(203, 214, 236, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .showcaseLessons li.done {
@@ -599,9 +599,9 @@ h3 {
   gap: 10px;
   padding: 11px 13px;
   border-radius: 14px;
-  border: 1px solid rgba(203, 214, 236, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(9, 16, 30, 0.82);
-  box-shadow: 0 24px 54px rgba(2, 6, 17, 0.55);
+  box-shadow: 0 24px 54px rgba(5, 7, 10, 0.55);
   backdrop-filter: blur(14px);
   z-index: 3;
 }
@@ -689,7 +689,7 @@ h3 {
   padding: 22px;
   background:
     linear-gradient(90deg, rgba(0, 209, 255, 0.08), transparent 56%),
-    rgba(11, 18, 32, 0.82);
+    rgba(10, 16, 32, 0.82);
   box-shadow: var(--shadow-card);
 }
 
@@ -734,7 +734,7 @@ h3 {
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 600;
-  background: rgba(5, 9, 20, 0.38);
+  background: rgba(5, 7, 10, 0.38);
 }
 
 .tenantStats strong {
@@ -791,7 +791,7 @@ h3 {
   padding: clamp(24px, 5vw, 46px);
   background:
     linear-gradient(115deg, rgba(17, 85, 255, 0.24), rgba(0, 209, 255, 0.08) 44%, transparent 76%),
-    linear-gradient(180deg, rgba(17, 26, 45, 0.96), rgba(7, 17, 31, 0.92));
+    linear-gradient(180deg, rgba(15, 23, 41, 0.96), rgba(10, 16, 32, 0.92));
   box-shadow: var(--shadow-card);
 }
 
@@ -801,8 +801,8 @@ h3 {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(203, 214, 236, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(203, 214, 236, 0.035) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   background-size: 42px 42px;
   mask-image: linear-gradient(120deg, black, transparent 72%);
   -webkit-mask-image: linear-gradient(120deg, black, transparent 72%);
@@ -833,13 +833,13 @@ h3 {
 
 .librarySummary span {
   min-height: 112px;
-  border: 1px solid rgba(203, 214, 236, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--radius);
   padding: 16px;
   color: var(--muted);
   font-size: 0.84rem;
   font-weight: 600;
-  background: rgba(5, 9, 20, 0.42);
+  background: rgba(5, 7, 10, 0.42);
 }
 
 .librarySummary strong {
@@ -873,7 +873,7 @@ h3 {
   border-radius: var(--radius);
   margin: 18px 0 22px;
   padding: 10px;
-  background: rgba(11, 18, 32, 0.72);
+  background: rgba(10, 16, 32, 0.72);
 }
 
 .catalogContext {
@@ -897,7 +897,7 @@ h3 {
 .filter {
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(7, 17, 31, 0.72);
+  background: rgba(10, 16, 32, 0.72);
   color: var(--soft);
   font: inherit;
   font-size: 0.86rem;
@@ -1006,12 +1006,12 @@ h3 {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: rgba(2, 6, 17, 0);
+  background: rgba(5, 7, 10, 0);
   transition: background 240ms var(--ease);
 }
 
 .courseCard:hover .cover::after {
-  background: rgba(2, 6, 17, 0.32);
+  background: rgba(5, 7, 10, 0.32);
 }
 
 .coverTop,
@@ -1154,7 +1154,7 @@ h3 {
   width: 3px;
   height: 3px;
   border-radius: 999px;
-  background: rgba(154, 168, 195, 0.6);
+  background: rgba(138, 153, 184, 0.6);
 }
 
 .courseProgress {
@@ -1225,8 +1225,8 @@ h3 {
 
 .courseStatus[data-status="Disponível"] {
   color: var(--soft);
-  background: rgba(203, 214, 236, 0.08);
-  border-color: rgba(203, 214, 236, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .courseStatus[data-status="Concluído"] {
@@ -1240,12 +1240,12 @@ h3 {
   min-height: 260px;
   align-content: space-between;
   gap: 28px;
-  border: 1px solid rgba(203, 214, 236, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius);
   padding: 22px;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.055), transparent),
-    linear-gradient(180deg, rgba(7, 17, 31, 0.98), rgba(3, 7, 14, 0.96));
+    linear-gradient(180deg, rgba(10, 16, 32, 0.98), rgba(3, 7, 14, 0.96));
 }
 
 .videoSurface {
@@ -1260,7 +1260,7 @@ h3 {
   border-radius: 0;
   border-color: rgba(255, 255, 255, 0.18);
   background:
-    linear-gradient(180deg, rgba(17, 26, 45, 0.48), rgba(3, 7, 18, 0.96)),
+    linear-gradient(180deg, rgba(15, 23, 41, 0.48), rgba(3, 7, 18, 0.96)),
     repeating-linear-gradient(
       90deg,
       rgba(255, 255, 255, 0.025) 0,
@@ -1280,8 +1280,8 @@ h3 {
   height: 72px;
   transform: translate(-50%, -50%);
   border-radius: 999px;
-  border: 1px solid rgba(246, 248, 251, 0.3);
-  background: rgba(246, 248, 251, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(10px);
 }
 
@@ -1313,7 +1313,7 @@ h3 {
 
 .meta span,
 .statusTag {
-  border: 1px solid rgba(203, 214, 236, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 999px;
   color: var(--soft);
   font-size: 0.76rem;
@@ -1325,7 +1325,7 @@ h3 {
   height: 8px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(203, 214, 236, 0.12);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .progressFill {
@@ -1351,10 +1351,10 @@ h3 {
 }
 
 .moduleItem {
-  border: 1px solid rgba(203, 214, 236, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--radius);
   padding: 14px;
-  background: rgba(2, 6, 17, 0.34);
+  background: rgba(5, 7, 10, 0.34);
 }
 
 .moduleItem ul {
@@ -1374,7 +1374,7 @@ h3 {
 .playerSidebar {
   border-right: 1px solid var(--line);
   padding: 18px;
-  background: rgba(5, 9, 20, 0.46);
+  background: rgba(5, 7, 10, 0.46);
 }
 
 .playerMain {
@@ -1384,13 +1384,13 @@ h3 {
 .lessonButton {
   display: block;
   width: 100%;
-  border: 1px solid rgba(203, 214, 236, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--radius);
   color: var(--soft);
   margin-top: 8px;
   padding: 11px;
   text-align: left;
-  background: rgba(7, 17, 31, 0.72);
+  background: rgba(10, 16, 32, 0.72);
 }
 
 .lessonButton:first-of-type {
@@ -1411,7 +1411,7 @@ h3 {
   width: 12px;
   height: 12px;
   transform: translateY(-50%);
-  border: 1px solid rgba(213, 221, 235, 0.42);
+  border: 1px solid rgba(185, 196, 218, 0.42);
   border-radius: 999px;
 }
 
@@ -1442,7 +1442,7 @@ h3 {
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: var(--radius);
   padding: 14px;
-  background: rgba(5, 9, 20, 0.36);
+  background: rgba(5, 7, 10, 0.36);
 }
 
 .lessonOps strong,
@@ -1476,7 +1476,7 @@ h3 {
   padding: 20px;
   background:
     linear-gradient(90deg, rgba(0, 255, 156, 0.08), transparent 46%),
-    rgba(11, 18, 32, 0.9);
+    rgba(10, 16, 32, 0.9);
   box-shadow: var(--shadow-card);
 }
 
@@ -1556,7 +1556,7 @@ h3 {
 .loginForm {
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: linear-gradient(180deg, rgba(13, 23, 40, 0.92), rgba(7, 17, 31, 0.88));
+  background: linear-gradient(180deg, rgba(15, 23, 41, 0.92), rgba(10, 16, 32, 0.88));
   padding: 22px;
 }
 
@@ -1595,7 +1595,7 @@ h3 {
   min-height: 240px;
   padding: 18px;
   text-align: left;
-  background: linear-gradient(180deg, rgba(13, 23, 40, 0.92), rgba(7, 17, 31, 0.88));
+  background: linear-gradient(180deg, rgba(15, 23, 41, 0.92), rgba(10, 16, 32, 0.88));
   transition:
     transform 180ms ease,
     border-color 180ms ease,
@@ -1633,7 +1633,7 @@ h3 {
   border-radius: var(--radius);
   background:
     radial-gradient(circle at 20% 0%, rgba(17, 85, 255, 0.18), transparent 36%),
-    rgba(7, 17, 31, 0.82);
+    rgba(10, 16, 32, 0.82);
   padding: clamp(24px, 6vw, 70px);
 }
 
@@ -1657,7 +1657,7 @@ h3 {
 .adminRail {
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(11, 18, 32, 0.9);
+  background: rgba(10, 16, 32, 0.9);
   height: fit-content;
   padding: 12px;
   position: sticky;
@@ -1686,7 +1686,7 @@ h3 {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
-  background: rgba(11, 18, 32, 0.9);
+  background: rgba(10, 16, 32, 0.9);
 }
 
 .adminToolbar {
@@ -1706,7 +1706,7 @@ h3 {
   grid-template-columns: 1.2fr 1fr 0.8fr 0.8fr 0.8fr;
   gap: 12px;
   align-items: center;
-  border-bottom: 1px solid rgba(203, 214, 236, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   padding: 14px 16px;
 }
 
@@ -1819,14 +1819,14 @@ h3 {
 }
 
 .checkItem {
-  border: 1px solid rgba(203, 214, 236, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius);
   color: var(--soft);
   display: flex;
   justify-content: space-between;
   gap: 12px;
   padding: 13px;
-  background: rgba(2, 6, 17, 0.32);
+  background: rgba(5, 7, 10, 0.32);
 }
 
 .checkItem span:last-child {
@@ -1838,7 +1838,7 @@ h3 {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(2, 6, 17, 0.52);
+  background: rgba(5, 7, 10, 0.52);
   color: var(--text);
   font: inherit;
   margin-bottom: 12px;
