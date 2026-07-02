@@ -101,9 +101,6 @@ export default async function Home() {
               </div>
             </div>
           </div>
-          <div className="previewFloat previewFloatOne">Cursos próprios</div>
-          <div className="previewFloat previewFloatTwo">Certificação SACF</div>
-          <div className="previewFloat previewFloatThree">Relatórios</div>
         </aside>
 
         <div className="heroOrbit" aria-hidden="true">
