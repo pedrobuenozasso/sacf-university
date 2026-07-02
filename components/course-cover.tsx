@@ -72,7 +72,7 @@ export function CourseCover({ course, showTenantBrand = false }: { course: Cours
       <div className="coverTop">
         <span className="coverBrandGroup">
           <span className="coverBrand">
-            <Image src="/brand/sacf-app-icon-v2.png" alt="SACF University" width={26} height={26} />
+            <Image src="/brand/sacf-academy-symbol-onLight.png" alt="SACF Academy" width={26} height={26} />
           </span>
           {showTenantBrand && ownerOrg?.brandLogo ? (
             <span className="coverBrand coverBrandTenant">

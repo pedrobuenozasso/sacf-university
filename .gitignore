@@ -33,3 +33,6 @@ pnpm-debug.log*
 
 # Design reference bundle (not source code — kept locally only)
 /SACF University Design/
+
+# Raw logo drafts (processed derivatives live in public/brand/, tracked)
+/sacfuniversity-logos:brands/

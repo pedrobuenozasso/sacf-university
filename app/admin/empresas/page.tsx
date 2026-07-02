@@ -11,7 +11,7 @@ export default async function AdminCompaniesPage() {
         <div>
           <p className="eyebrow">Empresas</p>
           <h1>Clientes e ambientes de treinamento.</h1>
-          <p>Cadastro das empresas que usam a SACF University, com isolamento por organização.</p>
+          <p>Cadastro das empresas que usam a SACF Academy, com isolamento por organização.</p>
         </div>
       </div>
 

@@ -162,7 +162,7 @@ export const courses: Course[] = [
     summary:
       "Padronização para multiplicadores internos: como ensinar, validar conhecimento e manter registros de certificação.",
     audience: "Treinadores, coordenadores de operação e representantes master.",
-    instructor: "SACF University",
+    instructor: "SACF Academy",
     modules: [
       {
         title: "Metodologia",

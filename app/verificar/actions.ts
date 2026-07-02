@@ -19,7 +19,7 @@ export async function verifyAndSetPassword(
 
   const valid = await consumeVerificationToken(normalized, token, "email_verify");
   if (!valid) {
-    return { ok: false, error: "Link inválido ou expirado. Solicite um novo cadastro." };
+    return { ok: false, error: "Link inválido ou expirado. Solicite um novo convite ao administrador." };
   }
 
   const passwordHash = await bcrypt.hash(password, 12);

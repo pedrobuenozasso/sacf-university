@@ -45,8 +45,7 @@ export function VerifyPasswordForm({ token, email }: { token: string; email: str
   if (!token || !email) {
     return (
       <p className="formError">
-        Link inválido. Solicite um novo cadastro em{" "}
-        <a href="/cadastro">/cadastro</a>.
+        Link inválido. Solicite um novo convite ao administrador da sua empresa.
       </p>
     );
   }

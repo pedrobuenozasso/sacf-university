@@ -14,7 +14,7 @@ export default async function AdminPage() {
     <>
       <div className="sectionHead">
         <div>
-          <p className="eyebrow">Admin SACF University</p>
+          <p className="eyebrow">Admin SACF Academy</p>
           <h1>Painel de controle para operar empresas, cursos e certificações.</h1>
           <p>
             Visão interna da SACF para acompanhar clientes, conteúdo, alunos, certificados e

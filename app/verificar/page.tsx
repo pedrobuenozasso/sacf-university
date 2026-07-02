@@ -11,7 +11,7 @@ export default async function VerifyPage({
     <section className="loginShell">
       <div className="loginHero">
         <div>
-          <p className="eyebrow">SACF University</p>
+          <p className="eyebrow">SACF Academy</p>
           <h1>Crie sua senha.</h1>
           <p className="lead">
             Email confirmado. Defina uma senha para acessar a plataforma nas próximas vezes.

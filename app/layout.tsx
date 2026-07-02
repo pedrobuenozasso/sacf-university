@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, Inter, Space_Grotesk } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { AppShell } from "@/components/app-shell";
+import { MouseAura } from "@/components/mouse-aura";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -23,7 +24,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SACF University",
+  title: "SACF Academy",
   description: "Plataforma corporativa de cursos, certificações e reciclagens."
 };
 
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="pt-BR" className={`${spaceGrotesk.variable} ${inter.variable} ${ibmPlexMono.variable}`}>
       <body>
         <div className="shell">
+          <MouseAura />
           <SessionProvider>
             <AppShell>{children}</AppShell>
           </SessionProvider>

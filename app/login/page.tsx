@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [showCompanyPrompt, setShowCompanyPrompt] = useState(false);
 
   async function loginWithEmail(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -37,13 +38,13 @@ export default function LoginPage() {
         <div>
           <Image
             className="loginBrand"
-            src="/brand/sacf-lockup-dark.jpg"
-            alt="SACF"
-            width={330}
-            height={210}
+            src="/brand/sacf-academy-symbol.png"
+            alt="SACF Academy"
+            width={360}
+            height={360}
             priority
           />
-          <p className="eyebrow">SACF University</p>
+          <p className="eyebrow">SACF Academy</p>
           <h1>Acesse sua universidade corporativa.</h1>
           <p className="lead">
             Cada conta pertence a uma empresa, grupos e permissões. A plataforma direciona o usuário
@@ -55,7 +56,7 @@ export default function LoginPage() {
           <div className="formStatus">
             <span className="statusDot" />
             <div>
-              <strong>Acesso SACF University</strong>
+              <strong>Acesso SACF Academy</strong>
               <small>Ambiente privado por organização</small>
             </div>
           </div>
@@ -87,14 +88,59 @@ export default function LoginPage() {
             {submitting ? "Entrando..." : "Entrar na plataforma"}
           </button>
           <p>
-            Ainda não tem senha?{" "}
-            <Link href="/cadastro" className="loginInlineLink">
-              Confirme seu email corporativo
-            </Link>
+            Sua empresa ainda não tem acesso?{" "}
+            <button
+              type="button"
+              className="loginInlineLink"
+              onClick={() => setShowCompanyPrompt(true)}
+            >
+              Solicitar implantação
+            </button>
             .
           </p>
+          <div className="loginContractBox">
+            <strong>Primeiro acesso de empresa</strong>
+            <span>
+              A SACF cria o ambiente corporativo e libera o administrador inicial para configurar
+              usuários, cursos e trilhas.
+            </span>
+            <Link href="/cadastro">Quero contratar para minha empresa</Link>
+          </div>
         </form>
       </div>
+
+      {showCompanyPrompt ? (
+        <div className="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="companyPromptTitle">
+          <div className="companyPrompt">
+            <button
+              type="button"
+              className="modalClose"
+              onClick={() => setShowCompanyPrompt(false)}
+              aria-label="Fechar"
+            >
+              x
+            </button>
+            <p className="eyebrow">SACF Academy</p>
+            <h2 id="companyPromptTitle">Sua empresa quer contratar a plataforma?</h2>
+            <p>
+              Envie os dados da empresa para a equipe SACF iniciar a implantação, criar o ambiente
+              privado e liberar o primeiro administrador.
+            </p>
+            <div className="productHeroActions">
+              <Link className="button" href="/cadastro">
+                Solicitar implantação
+              </Link>
+              <button
+                type="button"
+                className="buttonGhost"
+                onClick={() => setShowCompanyPrompt(false)}
+              >
+                Continuar no login
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

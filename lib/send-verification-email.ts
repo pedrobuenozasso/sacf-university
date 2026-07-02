@@ -12,9 +12,9 @@ export async function sendVerificationEmail(email: string, url: string) {
   const resend = new Resend(apiKey);
 
   await resend.emails.send({
-    from: "SACF University <onboarding@resend.dev>",
+    from: "SACF Academy <onboarding@resend.dev>",
     to: email,
-    subject: "Confirme seu acesso à SACF University",
+    subject: "Confirme seu acesso à SACF Academy",
     html: `
       <p>Clique no link abaixo para confirmar seu email e criar sua senha:</p>
       <p><a href="${url}">${url}</a></p>

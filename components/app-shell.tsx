@@ -36,26 +36,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return (
       <>
         <header className="topbar">
-          <Link href="/" className="brand" aria-label="SACF University">
+          <Link href="/" className="brand" aria-label="SACF Academy">
             <Image
-              className="brandMark"
-              src="/brand/sacf-app-icon-v2.png"
-              alt="SACF"
-              width={42}
-              height={42}
+              className="brandLockup"
+              src="/brand/sacf-academy-horizontal-onDark.png"
+              alt="SACF Academy"
+              width={190}
+              height={107}
               priority
             />
-            <span>
-              <strong>SACF</strong>
-              <small>University</small>
-            </span>
           </Link>
           <nav className="nav" aria-label="Navegação principal">
             <Link href="/">Produto</Link>
             <Link href="/login">Login</Link>
           </nav>
-          <Link href="/login" className="profilePill">
-            Entrar
+          <Link href="/cadastro" className="profilePill">
+            Solicitar implantação
           </Link>
         </header>
         <main>{children}</main>
@@ -71,18 +67,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="appShell">
       <aside className="sidebar" aria-label="Navegação principal">
-        <Link href="/" className="sidebarBrand" aria-label="SACF University">
+        <Link href="/" className="sidebarBrand" aria-label="SACF Academy">
           <Image
             className="brandMark"
-            src="/brand/sacf-app-icon-v2.png"
-            alt="SACF"
+            src="/brand/sacf-academy-symbol.png"
+            alt="SACF Academy"
             width={38}
             height={38}
             priority
           />
           <span>
             <strong>SACF</strong>
-            <small>University</small>
+            <small>Academy</small>
           </span>
         </Link>
 

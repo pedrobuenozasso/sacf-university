@@ -16,8 +16,8 @@ export function HeroShowcase({ course }: { course: Course }) {
               <span className="showcaseBrandGroup">
                 <Image
                   className="showcaseBrand"
-                  src="/brand/sacf-app-icon-v2.png"
-                  alt="SACF University"
+                  src="/brand/sacf-academy-symbol-onLight.png"
+                  alt="SACF Academy"
                   width={40}
                   height={40}
                 />

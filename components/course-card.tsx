@@ -49,7 +49,7 @@ export function CourseCard({
 export function CoursePreviewPanel({ label = "Aula segura" }: { label?: string }) {
   return (
     <div className="lessonPreview">
-      <Image src="/brand/sacf-lockup-white.png" alt="SACF" width={160} height={48} />
+      <Image src="/brand/sacf-academy-horizontal-onDark.png" alt="SACF Academy" width={170} height={96} />
       <div>
         <p className="eyebrow">{label}</p>
         <h3>Conteúdo protegido por empresa</h3>
