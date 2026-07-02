@@ -2303,8 +2303,8 @@ textarea.field {
   height: auto;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 22px;
-  object-fit: cover;
-  filter: grayscale(1) contrast(1.08);
+  object-fit: contain;
+  padding: 28px;
   box-shadow:
     0 22px 60px rgba(0, 0, 0, 0.28),
     0 0 42px rgba(255, 255, 255, 0.07);
