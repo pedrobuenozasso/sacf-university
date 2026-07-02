@@ -106,7 +106,6 @@ a {
   mask-image: linear-gradient(180deg, black 0%, rgba(0, 0, 0, 0.72) 42%, transparent 84%);
   -webkit-mask-image: linear-gradient(180deg, black 0%, rgba(0, 0, 0, 0.72) 42%, transparent 84%);
   opacity: 0.42;
-  animation: mainframeDrift 22s linear infinite;
 }
 
 .mouseAura {
@@ -2169,7 +2168,7 @@ textarea.field {
   box-shadow:
     0 24px 70px rgba(0, 0, 0, 0.42),
     inset 0 1px 1px rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(34px) saturate(150%);
+  backdrop-filter: blur(14px);
 }
 
 .button,
@@ -2395,7 +2394,7 @@ textarea.field {
   box-shadow:
     0 34px 84px rgba(0, 0, 0, 0.38),
     inset 0 1px 1px rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(28px) saturate(150%);
+  backdrop-filter: blur(12px);
   transform: rotateX(5deg) rotateY(-7deg);
   transform-origin: center;
   animation: previewFloat 7s ease-in-out infinite;
@@ -2706,15 +2705,6 @@ textarea.field {
   margin: 0;
 }
 
-@keyframes mainframeDrift {
-  0% {
-    background-position: 0 0, 0 0, 0 0;
-  }
-  100% {
-    background-position: 520px 520px, -260px 260px, 0 180px;
-  }
-}
-
 @keyframes scanLine {
   0%,
   100% {
@@ -2825,7 +2815,7 @@ textarea.field {
   box-shadow:
     0 24px 64px rgba(0, 0, 0, 0.42),
     inset 0 1px 1px rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(30px);
+  backdrop-filter: blur(14px);
 }
 
 .consoleHeader {
