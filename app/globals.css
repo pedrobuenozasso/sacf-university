@@ -2323,8 +2323,7 @@ textarea.field {
   font-size: clamp(1.06rem, 1.8vw, 1.32rem);
 }
 
-.productHeroActions,
-.productProof {
+.productHeroActions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
@@ -2332,23 +2331,6 @@ textarea.field {
 
 .productHeroActions {
   margin-top: 34px;
-}
-
-.productProof {
-  margin-top: 42px;
-}
-
-.productProof span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 32px;
-  padding: 0 13px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.045);
-  color: var(--soft);
-  font-size: 0.78rem;
-  font-weight: 700;
 }
 
 .productPreview {
@@ -3222,7 +3204,6 @@ textarea.field {
   }
 
   .productHeroActions,
-  .productProof,
   .companyPrompt .productHeroActions,
   .consoleFooter {
     align-items: stretch;
@@ -3235,13 +3216,6 @@ textarea.field {
   .companyPrompt .buttonGhost {
     width: 100%;
     justify-content: center;
-  }
-
-  .productProof span {
-    justify-content: center;
-    text-align: center;
-    white-space: normal;
-    width: 100%;
   }
 
   .productMetrics {

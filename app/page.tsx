@@ -37,11 +37,6 @@ export default async function Home() {
               Entrar na plataforma
             </Link>
           </div>
-          <div className="productProof">
-            <span>Ambiente isolado por empresa</span>
-            <span>Biblioteca oficial SACF</span>
-            <span>Certificados com validade</span>
-          </div>
         </div>
 
         <aside className="productPreview" aria-label="Exemplo da plataforma SACF Academy">
