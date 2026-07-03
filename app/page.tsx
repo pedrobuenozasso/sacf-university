@@ -15,14 +15,6 @@ export default async function Home() {
     <>
       <section className="productHero">
         <div className="productHeroCopy">
-          <Image
-            className="academyHeroLogo"
-            src="/brand/sacf-academy-horizontal-onDark.png"
-            alt="SACF Academy"
-            width={520}
-            height={293}
-            priority
-          />
           <p className="eyebrow">Educação corporativa privada</p>
           <h1>SACF Academy</h1>
           <p className="lead">
