@@ -462,6 +462,7 @@ model Certificate {
 
   @@index([organizationId, expiresAt])
   @@index([userId])
+  @@unique([enrollmentId])
   @@map("certificates")
 }
 

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { randomBytes } from "crypto";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@prisma/client";
@@ -156,7 +157,14 @@ export async function completeLesson(courseSlug: string, lessonId: string) {
       organizationId: session.organizationId,
       course: { slug: courseSlug, status: "published" }
     },
-    select: { id: true, courseId: true, startedAt: true }
+    select: {
+      id: true,
+      courseId: true,
+      organizationId: true,
+      userId: true,
+      startedAt: true,
+      course: { select: { certificateEnabled: true, certificateValidityDays: true } }
+    }
   });
   if (!enrollment) return { ok: false as const, error: "not_enrolled" };
 
@@ -187,17 +195,40 @@ export async function completeLesson(courseSlug: string, lessonId: string) {
     })
   ]);
   const completed = requiredLessons > 0 && completedProgress >= requiredLessons;
-  await prisma.enrollment.update({
-    where: { id: enrollment.id },
-    data: {
-      status: completed ? "completed" : "in_progress",
-      startedAt: enrollment.startedAt ?? now,
-      ...(completed ? { completedAt: now } : {})
+  const expiresAt = completed && enrollment.course.certificateValidityDays
+    ? new Date(now.getTime() + enrollment.course.certificateValidityDays * 86_400_000)
+    : null;
+
+  await prisma.$transaction(async (tx) => {
+    await tx.enrollment.update({
+      where: { id: enrollment.id },
+      data: {
+        status: completed ? "completed" : "in_progress",
+        startedAt: enrollment.startedAt ?? now,
+        ...(completed ? { completedAt: now, certificateExpiresAt: expiresAt } : {})
+      }
+    });
+
+    if (completed && enrollment.course.certificateEnabled) {
+      await tx.certificate.upsert({
+        where: { enrollmentId: enrollment.id },
+        update: {},
+        create: {
+          organizationId: enrollment.organizationId,
+          courseId: enrollment.courseId,
+          userId: enrollment.userId,
+          enrollmentId: enrollment.id,
+          certificateCode: `SACF-${now.getFullYear()}-${randomBytes(5).toString("hex").toUpperCase()}`,
+          issuedAt: now,
+          expiresAt,
+          metadata: { source: "course_completion" }
+        }
+      });
     }
   });
 
   revalidatePath(`/aprender/${courseSlug}`);
   revalidatePath("/meus-cursos");
   revalidatePath("/certificados");
-  return { ok: true as const, completed };
+  return { ok: true as const, completed, certificateIssued: completed && enrollment.course.certificateEnabled };
 }
