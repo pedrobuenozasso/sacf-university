@@ -22,6 +22,7 @@ const courseInclude = {
 
 type CourseRow = {
   organization: { slug: string };
+  status: "draft" | "published" | "archived";
   slug: string;
   title: string;
   description: string | null;
@@ -160,6 +161,7 @@ function mapCourse(course: CourseRow): Course {
     progress: enrollment.progress,
     certificate: certificateLabel(course),
     status: enrollment.status,
+    publicationStatus: course.status,
     accent: accentFor(course.vertical),
     summary: course.shortDescription ?? course.description ?? "",
     audience: course.targetAudience ?? "",
@@ -182,6 +184,20 @@ export async function getCourses(organizationSlug?: string): Promise<Course[]> {
     },
     include: courseInclude,
     orderBy: { createdAt: "asc" }
+  });
+  return rows.map(mapCourse);
+}
+
+// Administrative lists include drafts as well as published courses, but are
+// still constrained to the caller's tenant by the route-level scope.
+export async function getAdminCourses(organizationSlug?: string): Promise<Course[]> {
+  const prisma = await getPrisma();
+  if (!prisma) return fallbackCourses;
+
+  const rows = await prisma.course.findMany({
+    where: organizationSlug ? { organization: { slug: organizationSlug } } : {},
+    include: courseInclude,
+    orderBy: { createdAt: "desc" }
   });
   return rows.map(mapCourse);
 }

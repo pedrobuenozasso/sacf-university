@@ -12,6 +12,7 @@ export type Course = {
   progress: number;
   certificate: string;
   status: "Em andamento" | "Disponível" | "Concluído";
+  publicationStatus?: "draft" | "published" | "archived";
   accent: string;
   summary: string;
   audience: string;

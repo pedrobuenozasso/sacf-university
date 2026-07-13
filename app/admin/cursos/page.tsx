@@ -1,15 +1,17 @@
-import { getCourses } from "@/lib/data";
+import { getAdminCourses, getOrganizations } from "@/lib/data";
 import { supportedLocales } from "@/lib/i18n";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { requireAdminScope } from "@/lib/admin-scope";
+import { createCourse, setCourseStatus } from "./actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminCoursesPage() {
   const scope = await requireAdminScope();
   const organizationSlug = scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined;
-  const [courses, { dict }] = await Promise.all([
-    getCourses(organizationSlug),
+  const [courses, organizations, { dict }] = await Promise.all([
+    getAdminCourses(organizationSlug),
+    getOrganizations(organizationSlug),
     getDictionary()
   ]);
   const t = dict.admin.cursos;
@@ -55,12 +57,19 @@ export default async function AdminCoursesPage() {
               <span>{course.vertical}</span>
               <span>{course.level}</span>
               <span>{course.lessons}</span>
-              <span className="statusTag">{course.status}</span>
+              <div>
+                <span className="statusTag">{course.publicationStatus === "draft" ? "Rascunho" : course.publicationStatus === "archived" ? "Arquivado" : "Publicado"}</span>
+                <form className="courseRowActions" action={setCourseStatus}>
+                  <input name="courseSlug" type="hidden" value={course.slug} />
+                  {course.publicationStatus !== "published" ? <button name="status" type="submit" value="published">Publicar</button> : null}
+                  {course.publicationStatus !== "archived" ? <button name="status" type="submit" value="archived">Arquivar</button> : null}
+                </form>
+              </div>
             </div>
           ))}
         </div>
 
-        <form className="detailPanel">
+        <form className="detailPanel" action={createCourse}>
           <div className="formStatus">
             <span className="statusDot" />
             <div>
@@ -69,12 +78,14 @@ export default async function AdminCoursesPage() {
             </div>
           </div>
           <h2>{t.newCourse}</h2>
-          <input className="field" placeholder={t.titlePlaceholder} />
-          <label className="fileField">
-            {t.coverLabel}
-            <input className="field" type="file" accept="image/*" />
-          </label>
-          <select className="field" defaultValue="">
+          <input className="field" name="title" placeholder={t.titlePlaceholder} required />
+          {scope.isSacfAdmin ? (
+            <select className="field" name="organizationSlug" defaultValue="" required>
+              <option value="" disabled>Empresa proprietária</option>
+              {organizations.map((organization) => <option key={organization.slug} value={organization.slug}>{organization.name}</option>)}
+            </select>
+          ) : null}
+          <select className="field" name="vertical" defaultValue="" required>
             <option value="" disabled>
               {t.verticalSelect}
             </option>
@@ -84,33 +95,37 @@ export default async function AdminCoursesPage() {
             <option>{t.trainer}</option>
             <option>{t.representative}</option>
           </select>
-          <input className="field" placeholder={t.instructorPlaceholder} />
+          <input className="field" name="instructor" placeholder={t.instructorPlaceholder} />
+          <select className="field" name="level" defaultValue="Essencial">
+            <option value="Essencial">Essencial</option>
+            <option value="Intermediário">Intermediário</option>
+            <option value="Avançado">Avançado</option>
+          </select>
           <select className="field" defaultValue="empresa">
             <option value="empresa">{t.privateCourse}</option>
             <option value="sacf">{t.officialCourse}</option>
           </select>
           <div className="formGrid">
-            <input className="field" placeholder={t.hoursPlaceholder} />
-            <input className="field" placeholder={t.validityPlaceholder} />
+            <input className="field" name="workloadHours" type="number" min="0" step="0.5" placeholder={t.hoursPlaceholder} />
+            <input className="field" name="validityMonths" type="number" min="0" step="1" placeholder={t.validityPlaceholder} />
           </div>
-          <select className="field" defaultValue="pt-BR">
+          <select className="field" name="language" defaultValue="pt-BR">
             {supportedLocales.map((locale) => (
               <option key={locale.code} value={locale.code}>
                 {locale.label}
               </option>
             ))}
           </select>
-          <textarea className="field" placeholder={t.summaryPlaceholder} />
-          <textarea className="field" placeholder={t.contentPlaceholder} />
+          <textarea className="field" name="summary" placeholder={t.summaryPlaceholder} />
+          <textarea className="field" name="lessons" placeholder={`${t.contentPlaceholder} (uma aula por linha)`} />
+          <label className="checkItem"><input name="certificateEnabled" type="checkbox" defaultChecked /> Emitir certificado ao concluir</label>
+          <label className="checkItem"><input name="mandatory" type="checkbox" /> Curso obrigatório</label>
           <div className="actions noTopMargin">
-            <button className="button" type="button">
+            <button className="button" name="intent" type="submit" value="draft">
               {t.saveDraft}
             </button>
-            <button className="buttonGhost" type="button">
+            <button className="buttonGhost" name="intent" type="submit" value="publish">
               {t.publish}
-            </button>
-            <button className="dangerButton" type="button">
-              {t.delete}
             </button>
           </div>
           <p className="formHint">{t.hint}</p>

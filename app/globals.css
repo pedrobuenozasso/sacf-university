@@ -2541,6 +2541,24 @@ h3 {
   width: fit-content;
 }
 
+.courseRowActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.courseRowActions button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--cyan);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
 .tableHead {
   color: var(--muted);
   font-size: 0.78rem;
