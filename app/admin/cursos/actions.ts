@@ -35,7 +35,7 @@ async function getManagedCourse(courseId: string) {
       id: courseId,
       ...(role === "sacf_admin" ? {} : { organization: { slug: session.user.organizationSlug } })
     },
-    select: { id: true }
+    select: { id: true, organizationId: true }
   });
 }
 
@@ -241,4 +241,76 @@ export async function deleteLesson(formData: FormData) {
   if (!course || !lessonId) return;
   await prisma.lesson.deleteMany({ where: { id: lessonId, courseId: course.id } });
   revalidateCourseEditor(course.id);
+}
+
+export async function assignCourse(formData: FormData) {
+  const courseId = String(formData.get("courseId") ?? "");
+  const targetType = String(formData.get("targetType") ?? "");
+  const targetId = String(formData.get("targetId") ?? "");
+  const dueDateValue = String(formData.get("dueDate") ?? "");
+  const course = await getManagedCourse(courseId);
+  const session = await auth();
+  if (!course || !session?.user?.id || !targetId || !["user", "group"].includes(targetType)) return;
+
+  const dueDate = dueDateValue ? new Date(`${dueDateValue}T23:59:59`) : null;
+  if (dueDate && Number.isNaN(dueDate.getTime())) return;
+  let userIds: string[] = [];
+
+  if (targetType === "user") {
+    const member = await prisma.organizationMember.findFirst({
+      where: { organizationId: course.organizationId, userId: targetId, status: "active" },
+      select: { userId: true }
+    });
+    if (!member) return;
+    userIds = [member.userId];
+    const existingRule = await prisma.courseVisibilityRule.findFirst({
+      where: { courseId: course.id, organizationId: course.organizationId, userId: member.userId, ruleType: "user" },
+      select: { id: true }
+    });
+    if (!existingRule) {
+      await prisma.courseVisibilityRule.create({
+        data: { courseId: course.id, organizationId: course.organizationId, userId: member.userId, ruleType: "user" }
+      });
+    }
+  } else {
+    const group = await prisma.group.findFirst({
+      where: { id: targetId, organizationId: course.organizationId },
+      include: { members: { select: { userId: true } } }
+    });
+    if (!group) return;
+    const activeMembers = await prisma.organizationMember.findMany({
+      where: { organizationId: course.organizationId, status: "active", userId: { in: group.members.map((member) => member.userId) } },
+      select: { userId: true }
+    });
+    userIds = activeMembers.map((member) => member.userId);
+    const existingRule = await prisma.courseVisibilityRule.findFirst({
+      where: { courseId: course.id, organizationId: course.organizationId, groupId: group.id, ruleType: "group" },
+      select: { id: true }
+    });
+    if (!existingRule) {
+      await prisma.courseVisibilityRule.create({
+        data: { courseId: course.id, organizationId: course.organizationId, groupId: group.id, ruleType: "group" }
+      });
+    }
+  }
+
+  await prisma.$transaction(
+    userIds.map((userId) =>
+      prisma.enrollment.upsert({
+        where: { courseId_userId: { courseId: course.id, userId } },
+        update: { assignedById: session.user.id, assignedAt: new Date(), dueDate },
+        create: {
+          organizationId: course.organizationId,
+          courseId: course.id,
+          userId,
+          status: "not_started",
+          assignedById: session.user.id,
+          assignedAt: new Date(),
+          dueDate
+        }
+      })
+    )
+  );
+  revalidateCourseEditor(course.id);
+  revalidatePath("/meus-cursos");
 }

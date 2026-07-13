@@ -16,7 +16,7 @@ const courseInclude = {
   enrollments: {
     include: { lessonProgress: true }
   },
-  visibilityRules: { include: { organization: true, group: true } },
+  visibilityRules: { include: { organization: true, group: true, user: true } },
   _count: { select: { lessons: true } }
 } as const;
 
@@ -46,6 +46,7 @@ type CourseRow = {
     ruleType: string;
     organization: { slug: string } | null;
     group: { slug: string } | null;
+    user: { id: string } | null;
   }[];
   _count: { lessons: number };
 };
@@ -146,6 +147,13 @@ function mapCourse(course: CourseRow): Course {
         .map((rule) => rule.group!.slug)
     )
   );
+  const assignedUserIds = Array.from(
+    new Set(
+      course.visibilityRules
+        .filter((rule) => rule.ruleType === "user" && rule.user)
+        .map((rule) => rule.user!.id)
+    )
+  );
 
   const enrollment = enrollmentProgress(course);
 
@@ -155,6 +163,7 @@ function mapCourse(course: CourseRow): Course {
     title: course.title,
     organizationSlugs,
     accessGroups,
+    assignedUserIds,
     vertical: course.vertical,
     level: course.level,
     language: course.language,
@@ -227,6 +236,39 @@ export async function getAdminCourseEditor(courseId: string, organizationSlug?: 
       title: module.title,
       lessons: module.lessons.map((lesson) => ({ id: lesson.id, title: lesson.title }))
     }))
+  };
+}
+
+export type CourseAssignmentOptions = {
+  users: { id: string; name: string; email: string }[];
+  groups: { id: string; name: string }[];
+};
+
+export async function getCourseAssignmentOptions(courseId: string, organizationSlug?: string): Promise<CourseAssignmentOptions> {
+  const prisma = await getPrisma();
+  if (!prisma) return { users: [], groups: [] };
+
+  const course = await prisma.course.findFirst({
+    where: { id: courseId, ...(organizationSlug ? { organization: { slug: organizationSlug } } : {}) },
+    select: { organizationId: true }
+  });
+  if (!course) return { users: [], groups: [] };
+
+  const [members, groups] = await Promise.all([
+    prisma.organizationMember.findMany({
+      where: { organizationId: course.organizationId, status: "active" },
+      include: { user: { select: { id: true, name: true, email: true } } },
+      orderBy: { createdAt: "asc" }
+    }),
+    prisma.group.findMany({
+      where: { organizationId: course.organizationId },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" }
+    })
+  ]);
+  return {
+    users: members.map((member) => member.user),
+    groups
   };
 }
 

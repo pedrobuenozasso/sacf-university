@@ -2,15 +2,19 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supportedLocales } from "@/lib/i18n";
 import { requireAdminScope } from "@/lib/admin-scope";
-import { getAdminCourseEditor } from "@/lib/data";
-import { addLesson, addModule, deleteLesson, deleteModule, updateCourse } from "../actions";
+import { getAdminCourseEditor, getCourseAssignmentOptions } from "@/lib/data";
+import { addLesson, addModule, assignCourse, deleteLesson, deleteModule, updateCourse } from "../actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function CourseEditorPage({ params }: { params: Promise<{ courseId: string }> }) {
   const { courseId } = await params;
   const scope = await requireAdminScope();
-  const course = await getAdminCourseEditor(courseId, scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined);
+  const organizationSlug = scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined;
+  const [course, assignmentOptions] = await Promise.all([
+    getAdminCourseEditor(courseId, organizationSlug),
+    getCourseAssignmentOptions(courseId, organizationSlug)
+  ]);
   if (!course) notFound();
 
   return (
@@ -72,6 +76,35 @@ export default async function CourseEditorPage({ params }: { params: Promise<{ c
           <form className="formGrid" action={addModule}>
             <input name="courseId" type="hidden" value={course.id} /><input className="field" name="title" placeholder="Título do novo módulo" required />
             <button className="button" type="submit">Adicionar módulo</button>
+          </form>
+        </div>
+      </section>
+
+      <section className="split">
+        <div className="detailPanel">
+          <h2>Atribuir a uma pessoa</h2>
+          <p className="formHint">A matrícula é criada com o prazo informado e fica disponível no catálogo do aluno.</p>
+          <form action={assignCourse}>
+            <input name="courseId" type="hidden" value={course.id} /><input name="targetType" type="hidden" value="user" />
+            <select className="field" name="targetId" defaultValue="" required>
+              <option value="" disabled>Selecione uma pessoa</option>
+              {assignmentOptions.users.map((user) => <option key={user.id} value={user.id}>{user.name} · {user.email}</option>)}
+            </select>
+            <input className="field" name="dueDate" type="date" />
+            <button className="button" type="submit">Atribuir curso</button>
+          </form>
+        </div>
+        <div className="detailPanel">
+          <h2>Atribuir a um grupo</h2>
+          <p className="formHint">Todos os membros ativos do grupo recebem uma matrícula. Novos membros podem ser atribuídos novamente quando necessário.</p>
+          <form action={assignCourse}>
+            <input name="courseId" type="hidden" value={course.id} /><input name="targetType" type="hidden" value="group" />
+            <select className="field" name="targetId" defaultValue="" required>
+              <option value="" disabled>Selecione um grupo</option>
+              {assignmentOptions.groups.map((group) => <option key={group.id} value={group.id}>{group.name}</option>)}
+            </select>
+            <input className="field" name="dueDate" type="date" />
+            <button className="button" type="submit">Atribuir ao grupo</button>
           </form>
         </div>
       </section>
