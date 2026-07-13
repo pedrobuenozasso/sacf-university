@@ -1,6 +1,7 @@
 import { getCertificationOverview } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { requireAdminScope } from "@/lib/admin-scope";
+import { revokeCertificate } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -58,7 +59,15 @@ export default async function AdminCertificationsPage() {
             <span>{record.courseTitle}</span>
             <span>{record.expiresAt ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(new Date(record.expiresAt)) : "Sem vencimento"}</span>
             <span>{record.code}</span>
-            <span className="statusTag">{record.status === "valid" ? "Válido" : record.status === "expiring" ? "Vencendo" : record.status === "expired" ? "Vencido" : "Revogado"}</span>
+            <div>
+              <span className="statusTag">{record.status === "valid" ? "Válido" : record.status === "expiring" ? "Vencendo" : record.status === "expired" ? "Vencido" : "Revogado"}</span>
+              {record.status !== "revoked" ? (
+                <form className="courseRowActions" action={revokeCertificate}>
+                  <input name="certificateId" type="hidden" value={record.id} />
+                  <button type="submit">Revogar</button>
+                </form>
+              ) : null}
+            </div>
           </div>
         ))}
         {overview.records.length === 0 ? <div className="tableRow"><div><strong>Nenhum certificado emitido</strong><p>Os certificados emitidos aparecerão aqui.</p></div></div> : null}
