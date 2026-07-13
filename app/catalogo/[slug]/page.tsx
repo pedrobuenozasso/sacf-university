@@ -2,12 +2,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CoursePreviewPanel } from "@/components/course-card";
 import { getCourseBySlug } from "@/lib/data";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { interpolate } from "@/lib/i18n/interpolate";
 
 export const dynamic = "force-dynamic";
 
 export default async function CourseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const course = await getCourseBySlug(slug);
+  const [course, { dict }] = await Promise.all([getCourseBySlug(slug), getDictionary()]);
+  const t = dict.courseDetail;
 
   if (!course) {
     notFound();
@@ -23,17 +26,16 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
           <span>{course.level}</span>
           <span>{course.language}</span>
           <span>{course.duration}</span>
-          <span>{course.lessons} aulas</span>
+          <span>
+            {course.lessons} {t.lessons}
+          </span>
           <span>{course.certificate}</span>
         </div>
 
-        <h2>O que o aluno vai aprender</h2>
-        <p>
-          Procedimentos padronizados, critérios de segurança, validação teórica e boas práticas para
-          reduzir erros operacionais.
-        </p>
+        <h2>{t.learnTitle}</h2>
+        <p>{t.learnBody}</p>
 
-        <h2>Conteúdo do curso</h2>
+        <h2>{t.contentTitle}</h2>
         <div className="moduleList">
           {course.modules.map((module) => (
             <div className="moduleItem" key={module.title}>
@@ -49,20 +51,22 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
       </div>
 
       <aside className="detailPanel">
-        <CoursePreviewPanel label="Resumo do curso" />
-        <h3>Incluído neste curso</h3>
+        <CoursePreviewPanel label={t.summaryLabel} />
+        <h3>{t.includedTitle}</h3>
         <div className="meta">
           <span>{course.duration}</span>
-          <span>{course.lessons} aulas</span>
+          <span>
+            {course.lessons} {t.lessons}
+          </span>
           <span>{course.certificate}</span>
         </div>
         <p>
-          Público-alvo: {course.audience}
+          {interpolate(t.audience, { audience: course.audience })}
           <br />
-          Responsável: {course.instructor}
+          {interpolate(t.instructor, { instructor: course.instructor })}
         </p>
         <Link className="button" href={`/aprender/${course.slug}`}>
-          Iniciar curso
+          {t.start}
         </Link>
       </aside>
     </section>

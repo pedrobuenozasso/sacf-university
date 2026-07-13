@@ -26,12 +26,38 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const valid = await bcrypt.compare(password, user.passwordHash);
         if (!valid) return null;
 
-        return { id: user.id, email: user.email, name: user.name };
+        return { id: user.id, email: user.email, name: user.name, image: user.avatarUrl ?? undefined };
+      }
+    }),
+    // Temporary demo shortcut so we can click through role screens during
+    // review. Only wired up when DEMO_LOGIN_ENABLED=true (never set in
+    // production) — never touches passwords, just looks up a fixed seeded
+    // demo account by role. Remove this provider + the buttons once the
+    // product review is done.
+    Credentials({
+      id: "demo",
+      name: "Demo",
+      credentials: { role: { label: "Role", type: "text" } },
+      async authorize(credentials) {
+        if (process.env.DEMO_LOGIN_ENABLED !== "true") return null;
+
+        const demoEmails: Record<string, string> = {
+          sacf_admin: "admin@sacf.io",
+          org_admin: "ana@zasso.com",
+          student: "carlos@zasso.com"
+        };
+        const email = demoEmails[String(credentials?.role ?? "")];
+        if (!email) return null;
+
+        const user = await prisma.user.findUnique({ where: { email } });
+        if (!user) return null;
+
+        return { id: user.id, email: user.email, name: user.name, image: user.avatarUrl ?? undefined };
       }
     })
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user?.id) {
         const [membership, groupMemberships] = await Promise.all([
           prisma.organizationMember.findFirst({
@@ -51,6 +77,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.organizationName = membership?.organization.name ?? null;
         token.groups = groupMemberships.map((membershipRow) => membershipRow.group.slug);
       }
+
+      if (trigger === "update" && session) {
+        if (typeof session.name === "string") token.name = session.name;
+        if ("avatarUrl" in session) token.picture = session.avatarUrl ?? null;
+      }
+
       return token;
     },
     async session({ session, token }) {

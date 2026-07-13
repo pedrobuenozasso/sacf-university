@@ -26,6 +26,7 @@ export type SessionUser = {
   id: string;
   name: string;
   email: string;
+  avatarUrl?: string | null;
   organization: string;
   organizationSlug: string;
   role: "sacf_admin" | "org_admin" | "instructor" | "manager" | "student" | "external_partner";
@@ -37,6 +38,7 @@ export type Organization = {
   slug: string;
   status: "Ativa" | "Piloto" | "Pausada";
   users: number;
+  seatLimit: number | null;
   courses: number;
   certificates: number;
   expiring: number;
@@ -48,6 +50,7 @@ export type AdminUser = {
   name: string;
   email: string;
   organization: string;
+  organizationSlug: string;
   role: string;
   status: "Ativo" | "Pendente" | "Bloqueado";
   progress: number;
@@ -230,6 +233,7 @@ export const organizations: Organization[] = [
     slug: "zasso",
     status: "Piloto",
     users: 86,
+    seatLimit: 100,
     courses: 4,
     certificates: 31,
     expiring: 8,
@@ -241,6 +245,7 @@ export const organizations: Organization[] = [
     slug: "zasso-latam",
     status: "Ativa",
     users: 24,
+    seatLimit: 50,
     courses: 2,
     certificates: 12,
     expiring: 3,
@@ -251,6 +256,7 @@ export const organizations: Organization[] = [
     slug: "industrial-sul",
     status: "Pausada",
     users: 12,
+    seatLimit: null,
     courses: 1,
     certificates: 4,
     expiring: 1,
@@ -263,6 +269,7 @@ export const adminUsers: AdminUser[] = [
     name: "Ana Ribeiro",
     email: "ana@zasso.com",
     organization: "Zasso",
+    organizationSlug: "zasso",
     role: "Admin da empresa",
     status: "Ativo",
     progress: 92
@@ -271,6 +278,7 @@ export const adminUsers: AdminUser[] = [
     name: "Carlos Mendes",
     email: "carlos@zasso.com",
     organization: "Zasso",
+    organizationSlug: "zasso",
     role: "Operador",
     status: "Ativo",
     progress: 64
@@ -279,6 +287,7 @@ export const adminUsers: AdminUser[] = [
     name: "Marina Costa",
     email: "marina@zasso.com",
     organization: "Zasso",
+    organizationSlug: "zasso",
     role: "Treinadora",
     status: "Pendente",
     progress: 18
@@ -287,6 +296,7 @@ export const adminUsers: AdminUser[] = [
     name: "Diego Silva",
     email: "diego@latam-partner.com",
     organization: "Representantes Zasso LATAM",
+    organizationSlug: "zasso-latam",
     role: "Parceiro externo",
     status: "Ativo",
     progress: 48

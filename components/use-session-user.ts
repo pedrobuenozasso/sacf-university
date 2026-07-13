@@ -11,6 +11,7 @@ export function useSessionUser(): SessionUser | null {
     id: data.user.id,
     name: data.user.name ?? data.user.email ?? "Usuário",
     email: data.user.email ?? "",
+    avatarUrl: data.user.image ?? null,
     organization: data.user.organizationName ?? "Sem empresa",
     organizationSlug: data.user.organizationSlug ?? "",
     role: (data.user.role ?? "student") as SessionUser["role"],

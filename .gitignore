@@ -25,6 +25,7 @@ pnpm-debug.log*
 # OS/editor
 .DS_Store
 *.swp
+*.tsbuildinfo
 .vercel
 
 # Local agent config + brand backup

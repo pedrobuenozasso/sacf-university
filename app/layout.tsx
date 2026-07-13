@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, Inter, Space_Grotesk } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { AppShell } from "@/components/app-shell";
+import { LocaleProvider } from "@/components/locale-provider";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -27,14 +29,18 @@ export const metadata: Metadata = {
   description: "Plataforma corporativa de cursos, certificações e reciclagens."
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const { locale, dict } = await getDictionary();
+
   return (
-    <html lang="pt-BR" className={`${spaceGrotesk.variable} ${inter.variable} ${ibmPlexMono.variable}`}>
+    <html lang={locale} className={`${spaceGrotesk.variable} ${inter.variable} ${ibmPlexMono.variable}`}>
       <body>
         <div className="shell">
-          <SessionProvider>
-            <AppShell>{children}</AppShell>
-          </SessionProvider>
+          <LocaleProvider locale={locale} dict={dict}>
+            <SessionProvider>
+              <AppShell>{children}</AppShell>
+            </SessionProvider>
+          </LocaleProvider>
         </div>
       </body>
     </html>

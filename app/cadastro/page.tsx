@@ -3,9 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import { useLocale } from "@/components/locale-provider";
 import { requestImplementation } from "./actions";
 
 export default function SignupPage() {
+  const { dict } = useLocale();
+  const t = dict.signup;
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -51,27 +54,24 @@ export default function SignupPage() {
             height={237}
             priority
           />
-          <p className="eyebrow">Implantação SACF Academy</p>
-          <h1>Leve treinamento e certificação para dentro da sua empresa.</h1>
-          <p className="lead">
-            A SACF configura o ambiente inicial da empresa, cria o administrador responsável e apoia
-            a primeira estrutura de cursos, usuários e trilhas obrigatórias.
-          </p>
+          <p className="eyebrow">{t.eyebrow}</p>
+          <h1>{t.title}</h1>
+          <p className="lead">{t.lead}</p>
           <div className="implementationSteps">
             <article>
               <span>01</span>
-              <strong>Solicitação</strong>
-              <p>Você informa os dados da empresa e o tamanho aproximado da equipe.</p>
+              <strong>{t.step1Title}</strong>
+              <p>{t.step1Body}</p>
             </article>
             <article>
               <span>02</span>
-              <strong>Implantação assistida</strong>
-              <p>A equipe SACF cria o ambiente corporativo e o primeiro admin.</p>
+              <strong>{t.step2Title}</strong>
+              <p>{t.step2Body}</p>
             </article>
             <article>
               <span>03</span>
-              <strong>Operação</strong>
-              <p>O admin adiciona usuários, organiza grupos e gerencia cursos internos.</p>
+              <strong>{t.step3Title}</strong>
+              <p>{t.step3Body}</p>
             </article>
           </div>
         </div>
@@ -80,106 +80,107 @@ export default function SignupPage() {
           <div className="formStatus">
             <span className="statusDot" />
             <div>
-              <strong>Solicitar implantação</strong>
-              <small>Retorno da equipe SACF para configuração da empresa</small>
+              <strong>{t.statusTitle}</strong>
+              <small>{t.statusSub}</small>
             </div>
           </div>
 
           {step === "form" ? (
             <>
-              <h2>Dados da empresa</h2>
+              <h2>{t.formTitle}</h2>
               <form onSubmit={handleSubmit}>
                 <label>
-                  Nome
+                  {t.nameLabel}
                   <input
                     className="field"
                     onChange={(event) => updateField("name", event.target.value)}
-                    placeholder="Seu nome"
+                    placeholder={t.namePlaceholder}
                     type="text"
                     value={form.name}
                     required
                   />
                 </label>
                 <label>
-                  Email corporativo
+                  {t.emailLabel}
                   <input
                     className="field"
                     onChange={(event) => updateField("email", event.target.value)}
-                    placeholder="nome@empresa.com"
+                    placeholder={t.emailPlaceholder}
                     type="email"
                     value={form.email}
                     required
                   />
                 </label>
                 <label>
-                  Telefone
+                  {t.phoneLabel}
                   <input
                     className="field"
                     onChange={(event) => updateField("phone", event.target.value)}
-                    placeholder="+55 (00) 00000-0000"
+                    placeholder={t.phonePlaceholder}
                     type="tel"
                     value={form.phone}
                     required
                   />
                 </label>
                 <label>
-                  Nome da empresa
+                  {t.companyLabel}
                   <input
                     className="field"
                     onChange={(event) => updateField("company", event.target.value)}
-                    placeholder="Empresa"
+                    placeholder={t.companyPlaceholder}
                     type="text"
                     value={form.company}
                     required
                   />
                 </label>
                 <label>
-                  Número de funcionários
+                  {t.employeesLabel}
                   <select
                     className="field"
                     onChange={(event) => updateField("employees", event.target.value)}
                     value={form.employees}
                     required
                   >
-                    <option value="">Selecione</option>
-                    <option value="1-25">1 a 25</option>
-                    <option value="26-100">26 a 100</option>
-                    <option value="101-500">101 a 500</option>
-                    <option value="501-1000">501 a 1.000</option>
-                    <option value="1000+">Mais de 1.000</option>
+                    <option value="">{t.employeesSelect}</option>
+                    <option value="1-25">{t.employees1}</option>
+                    <option value="26-100">{t.employees2}</option>
+                    <option value="101-500">{t.employees3}</option>
+                    <option value="501-1000">{t.employees4}</option>
+                    <option value="1000+">{t.employees5}</option>
                   </select>
                 </label>
                 <label>
-                  Observações
+                  {t.messageLabel}
                   <textarea
                     className="field"
                     onChange={(event) => updateField("message", event.target.value)}
-                    placeholder="Conte rapidamente quais equipes ou treinamentos precisam entrar primeiro."
+                    placeholder={t.messagePlaceholder}
                     value={form.message}
                   />
                 </label>
                 {error ? <p className="formError">{error}</p> : null}
                 <button className="button fullButton" type="submit" disabled={submitting}>
-                  {submitting ? "Enviando..." : "Solicitar implantação"}
+                  {submitting ? t.submitting : t.submit}
                 </button>
               </form>
               <p>
-                Já tem acesso?{" "}
+                {t.haveAccess}{" "}
                 <Link href="/login" className="loginInlineLink">
-                  Entrar na plataforma
+                  {t.login}
                 </Link>
                 .
               </p>
             </>
           ) : (
             <>
-              <h2>Solicitação enviada</h2>
+              <h2>{t.sentTitle}</h2>
               <p className="lead">
-                Recebemos o pedido de implantação da <strong>{form.company}</strong>. A equipe SACF
-                vai avaliar o cenário, criar o ambiente da empresa e liberar o primeiro administrador.
+                {t.sentBody.split("{company}")[0]}
+                <strong>{form.company}</strong>
+                {t.sentBody.split("{company}")[1]}
               </p>
               <Link className="button fullButton" href="/login">
-                Voltar para o login
+                {t.backToLogin}
               </Link>
             </>
           )}

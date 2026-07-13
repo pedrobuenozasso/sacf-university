@@ -1,44 +1,45 @@
-export default function HelpPage() {
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+
+export default async function HelpPage() {
+  const { dict } = await getDictionary();
+  const t = dict.help;
   return (
     <>
       <section className="sectionHead">
         <div>
-          <p className="eyebrow">Ajuda</p>
-          <h1>Suporte para alunos, administradores e treinadores.</h1>
-          <p>
-            Espaço para dúvidas sobre acesso, certificados, reciclagem, cursos obrigatórios e
-            sugestões de novos conteúdos.
-          </p>
+          <p className="eyebrow">{t.eyebrow}</p>
+          <h1>{t.title}</h1>
+          <p>{t.body}</p>
         </div>
       </section>
 
       <section className="supportGrid">
         <div className="supportCard">
-          <h2>Dúvidas frequentes</h2>
+          <h2>{t.faqTitle}</h2>
           <div className="moduleList">
             <div className="moduleItem">
-              <h3>Como libero um certificado?</h3>
-              <p>Conclua todas as aulas obrigatórias e atinja a nota mínima da avaliação.</p>
+              <h3>{t.q1}</h3>
+              <p>{t.a1}</p>
             </div>
             <div className="moduleItem">
-              <h3>O que acontece quando vence?</h3>
-              <p>O curso entra na fila de reciclagem e o administrador acompanha o prazo.</p>
+              <h3>{t.q2}</h3>
+              <p>{t.a2}</p>
             </div>
             <div className="moduleItem">
-              <h3>Posso treinar prestadores?</h3>
-              <p>Sim. O papel de parceiro externo limita o acesso aos cursos e certificados.</p>
+              <h3>{t.q3}</h3>
+              <p>{t.a3}</p>
             </div>
           </div>
         </div>
 
         <form className="supportCard">
-          <h2>Enviar mensagem</h2>
-          <input className="field" placeholder="Nome" />
-          <input className="field" placeholder="Email" />
-          <input className="field" placeholder="Assunto" />
-          <textarea className="field" placeholder="Descreva sua dúvida ou sugestão" />
+          <h2>{t.sendMessageTitle}</h2>
+          <input className="field" placeholder={t.namePlaceholder} />
+          <input className="field" placeholder={t.emailPlaceholder} />
+          <input className="field" placeholder={t.subjectPlaceholder} />
+          <textarea className="field" placeholder={t.messagePlaceholder} />
           <button className="button" type="button">
-            Enviar
+            {t.send}
           </button>
         </form>
       </section>

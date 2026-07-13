@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSessionUser } from "@/components/use-session-user";
+import { useLocale, interpolate } from "@/components/locale-provider";
 import { canAccessCourse, type Course, type Organization } from "@/lib/courses";
 
 export function HomeView({
@@ -12,6 +13,8 @@ export function HomeView({
   organizations: Organization[];
 }) {
   const user = useSessionUser();
+  const { dict } = useLocale();
+  const t = dict.homeView;
   const visibleCourses = user ? courses.filter((course) => canAccessCourse(course, user)) : [];
   const currentOrg = user
     ? organizations.find((organization) => organization.slug === user.organizationSlug)
@@ -20,13 +23,11 @@ export function HomeView({
   if (!user) {
     return (
       <section className="authGate">
-          <p className="eyebrow">Acesso privado</p>
-          <h1>Entre para acessar sua universidade corporativa.</h1>
-          <p className="lead">
-          Conteúdos, certificados e relatórios organizados conforme a operação de cada empresa.
-          </p>
+          <p className="eyebrow">{dict.accessPanels.privateEyebrow}</p>
+          <h1>{t.loginTitle}</h1>
+          <p className="lead">{t.loginLead}</p>
         <Link className="button" href="/login">
-          Fazer login
+          {t.login}
         </Link>
       </section>
     );
@@ -36,37 +37,34 @@ export function HomeView({
     <>
       <section className="sectionHead">
         <div>
-          <p className="eyebrow">Home</p>
-          <h1>Bem-vindo, {user.name}.</h1>
-          <p>Ambiente {user.organization}. Continue os treinamentos prioritários da sua equipe.</p>
+          <p className="eyebrow">{t.eyebrow}</p>
+          <h1>{interpolate(t.welcome, { name: user.name })}</h1>
+          <p>{interpolate(t.environment, { organization: user.organization })}</p>
         </div>
         <Link className="button" href="/catalogo">
-          Ver cursos
+          {t.seeCourses}
         </Link>
       </section>
 
       <section className="tenantBanner">
         <div>
           <span className="statusDot" />
-          <p className="eyebrow">Ambiente ativo</p>
+          <p className="eyebrow">{t.activeEnv}</p>
           <h2>{currentOrg?.name ?? user.organization}</h2>
-          <p>
-            Cursos, certificados e relatórios ficam separados por empresa, mantendo a identidade e
-            as regras de cada operação.
-          </p>
+          <p>{t.tenantBody}</p>
         </div>
         <div className="tenantStats">
           <span>
             <strong>{currentOrg?.users ?? 0}</strong>
-            usuários
+            {t.users}
           </span>
           <span>
             <strong>{currentOrg?.courses ?? visibleCourses.length}</strong>
-            cursos
+            {t.courses}
           </span>
           <span>
             <strong>{currentOrg?.expiring ?? 0}</strong>
-            vencendo
+            {t.expiring}
           </span>
         </div>
       </section>
@@ -74,19 +72,19 @@ export function HomeView({
       <section className="metrics">
         <div className="metric">
           <strong>{visibleCourses.length}</strong>
-          <span>Cursos liberados</span>
+          <span>{t.coursesReleased}</span>
         </div>
         <div className="metric">
           <strong>{currentOrg?.certificates ?? 0}</strong>
-          <span>Certificados da empresa</span>
+          <span>{t.companyCertificates}</span>
         </div>
         <div className="metric">
           <strong>{currentOrg?.expiring ?? 0}</strong>
-          <span>Vencendo</span>
+          <span>{t.expiringLabel}</span>
         </div>
         <div className="metric">
           <strong>{user.groups.length}</strong>
-          <span>Grupos de acesso</span>
+          <span>{t.accessGroups}</span>
         </div>
       </section>
 
@@ -94,11 +92,11 @@ export function HomeView({
         <div className="detailPanel">
           <div className="sectionHead">
             <div>
-              <p className="eyebrow">Próximos cursos</p>
-              <h2>Continue sua trilha.</h2>
+              <p className="eyebrow">{t.nextCoursesEyebrow}</p>
+              <h2>{t.nextCoursesTitle}</h2>
             </div>
             <Link className="buttonGhost" href="/meus-cursos">
-              Meus cursos
+              {t.myCourses}
             </Link>
           </div>
           <div className="moduleList">
@@ -117,19 +115,19 @@ export function HomeView({
         </div>
 
         <aside className="detailPanel">
-          <p className="eyebrow">Perfil operacional</p>
-          <h2>Prioridades deste acesso</h2>
+          <p className="eyebrow">{t.profileEyebrow}</p>
+          <h2>{t.profileTitle}</h2>
           <div className="checklist">
             <div className="checkItem">
-              <span>Empresa</span>
+              <span>{t.company}</span>
               <span>{user.organization}</span>
             </div>
             <div className="checkItem">
-              <span>Área</span>
-              <span>{user.role === "student" ? "Aluno" : "Gestão"}</span>
+              <span>{t.area}</span>
+              <span>{user.role === "student" ? dict.nav.student : dict.nav.management}</span>
             </div>
             <div className="checkItem">
-              <span>Trilhas</span>
+              <span>{t.tracks}</span>
               <span>{user.groups.length}</span>
             </div>
           </div>

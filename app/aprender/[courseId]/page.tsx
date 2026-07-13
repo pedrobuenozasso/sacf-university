@@ -3,19 +3,21 @@ import { notFound } from "next/navigation";
 import { CoursePreviewPanel } from "@/components/course-card";
 import { getOrganization } from "@/lib/courses";
 import { getCourseBySlug } from "@/lib/data";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
 
 export const dynamic = "force-dynamic";
 
 export default async function LearnPage({ params }: { params: Promise<{ courseId: string }> }) {
   const { courseId } = await params;
-  const course = await getCourseBySlug(courseId);
+  const [course, { dict }] = await Promise.all([getCourseBySlug(courseId), getDictionary()]);
+  const t = dict.learn;
 
   if (!course) {
     notFound();
   }
 
   const firstModule = course.modules[0];
-  const currentLesson = firstModule?.lessons[0] ?? "Introdução ao curso";
+  const currentLesson = firstModule?.lessons[0] ?? t.introFallback;
   const ownerOrg = getOrganization(course.organizationSlugs[0]);
 
   return (
@@ -26,7 +28,10 @@ export default async function LearnPage({ params }: { params: Promise<{ courseId
         <div className="progressTrack">
           <div className="progressFill" style={{ width: `${course.progress}%` }} />
         </div>
-        <p>{course.progress}% concluído</p>
+        <p>
+          {course.progress}
+          {t.completed}
+        </p>
         {course.modules.map((module) => (
           <div className="moduleList" key={module.title}>
             <h3>{module.title}</h3>
@@ -44,39 +49,36 @@ export default async function LearnPage({ params }: { params: Promise<{ courseId
       </aside>
       <div className="playerMain">
         <div className="videoSurface">
-          <CoursePreviewPanel label="Player privado" />
+          <CoursePreviewPanel label={t.playerLabel} />
           <span className="videoPlay" aria-hidden="true" />
         </div>
         <div className="sectionHead">
           <div>
             <p className="eyebrow">{course.instructor}</p>
             <h1>{currentLesson}</h1>
-            <p>
-              Conteúdo privado do curso com acompanhamento de progresso, anexos e conclusão
-              vinculada à certificação.
-            </p>
+            <p>{t.body}</p>
           </div>
         </div>
         <div className="lessonOps">
           <div>
-            <strong>Tempo estimado</strong>
-            <span>12 min</span>
+            <strong>{t.estimatedTime}</strong>
+            <span>{t.minutes}</span>
           </div>
           <div>
-            <strong>Status</strong>
-            <span>Em andamento</span>
+            <strong>{t.status}</strong>
+            <span>{t.inProgress}</span>
           </div>
           <div>
-            <strong>Certificação</strong>
+            <strong>{t.certification}</strong>
             <span>{course.certificate}</span>
           </div>
         </div>
         <div className="actions">
           <Link className="button" href="/certificados">
-            Marcar como concluída
+            {t.markComplete}
           </Link>
           <Link className="buttonGhost" href={`/catalogo/${course.slug}`}>
-            Ver detalhes
+            {t.viewDetails}
           </Link>
         </div>
       </div>

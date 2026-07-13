@@ -51,6 +51,7 @@ type OrganizationRow = {
   slug: string;
   status: string;
   logoUrl: string | null;
+  seatLimit: number | null;
   _count: { members: number; courses: number; certificates: number };
 };
 
@@ -66,7 +67,7 @@ type AdminMemberRow = {
       course: { _count: { lessons: number } };
     }[];
   };
-  organization: { name: string };
+  organization: { name: string; slug: string };
 };
 
 async function getPrisma() {
@@ -209,6 +210,7 @@ export async function getOrganizations(): Promise<Organization[]> {
     slug: org.slug,
     status: org.status === "paused" ? "Pausada" : "Ativa",
     users: org._count.members,
+    seatLimit: org.seatLimit,
     courses: org._count.courses,
     certificates: org._count.certificates,
     expiring: 0,
@@ -268,9 +270,24 @@ export async function getAdminUsers(): Promise<AdminUser[]> {
       name: member.user.name,
       email: member.user.email,
       organization: member.organization.name,
+      organizationSlug: member.organization.slug,
       role: ROLE_LABEL[member.role] ?? member.role,
       status: MEMBER_STATUS_LABEL[member.status] ?? "Ativo",
       progress: averageProgress
     };
+  });
+}
+
+// Courses an org has started but hasn't published yet — used by the admin
+// "implementation" queue. Scope to one company, or omit for the whole platform.
+export async function getDraftCourseCount(organizationSlug?: string): Promise<number> {
+  const prisma = await getPrisma();
+  if (!prisma) return 0;
+
+  return prisma.course.count({
+    where: {
+      status: "draft",
+      ...(organizationSlug ? { organization: { slug: organizationSlug } } : {})
+    }
   });
 }

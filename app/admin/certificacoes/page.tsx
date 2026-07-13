@@ -1,48 +1,63 @@
 import { getCourses, getOrganizations } from "@/lib/data";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { getAdminScope } from "@/lib/admin-scope";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminCertificationsPage() {
-  const [courses, organizations] = await Promise.all([getCourses(), getOrganizations()]);
+  const [allCourses, allOrganizations, { dict }, scope] = await Promise.all([
+    getCourses(),
+    getOrganizations(),
+    getDictionary(),
+    getAdminScope()
+  ]);
+  const t = dict.admin.certificacoes;
+  const organizations = scope.isSacfAdmin
+    ? allOrganizations
+    : allOrganizations.filter((org) => org.slug === scope.organizationSlug);
+  const courses = scope.isSacfAdmin
+    ? allCourses
+    : allCourses.filter(
+        (course) =>
+          course.organizationSlugs.length === 0 ||
+          course.organizationSlugs.includes(scope.organizationSlug ?? "")
+      );
   return (
     <>
       <div className="sectionHead">
         <div>
-          <p className="eyebrow">Certificações</p>
-          <h1>Validade, vencimentos e reciclagens.</h1>
-          <p>
-            O diferencial operacional da plataforma: saber quem está certificado, quem vai vencer e
-            quem precisa reciclar.
-          </p>
+          <p className="eyebrow">{t.eyebrow}</p>
+          <h1>{t.title}</h1>
+          <p>{t.body}</p>
         </div>
       </div>
 
       <section className="metrics">
         <div className="metric">
           <strong>{organizations.reduce((sum, org) => sum + org.certificates, 0)}</strong>
-          <span>Emitidos</span>
+          <span>{t.issued}</span>
         </div>
         <div className="metric">
           <strong>{organizations.reduce((sum, org) => sum + org.expiring, 0)}</strong>
-          <span>Vencendo</span>
+          <span>{t.expiring}</span>
         </div>
         <div className="metric">
           <strong>4</strong>
-          <span>Regras ativas</span>
+          <span>{t.activeRules}</span>
         </div>
         <div className="metric">
           <strong>12m</strong>
-          <span>Validade padrão</span>
+          <span>{t.defaultValidity}</span>
         </div>
       </section>
 
       <div className="tablePanel">
         <div className="tableHead">
-          <span>Curso</span>
-          <span>Regra</span>
-          <span>Validade</span>
-          <span>Alertas</span>
-          <span>Status</span>
+          <span>{t.course}</span>
+          <span>{t.rule}</span>
+          <span>{t.validity}</span>
+          <span>{t.alerts}</span>
+          <span>{t.status}</span>
         </div>
         {courses.map((course) => (
           <div className="tableRow" key={course.slug}>
@@ -51,9 +66,9 @@ export default async function AdminCertificationsPage() {
               <p>{course.vertical}</p>
             </div>
             <span>{course.certificate}</span>
-            <span>{course.certificate.includes("24") ? "24 meses" : "12 meses"}</span>
-            <span>30 dias antes</span>
-            <span className="statusTag">Ativa</span>
+            <span>{course.certificate.includes("24") ? t.months24 : t.months12}</span>
+            <span>{t.alertDays}</span>
+            <span className="statusTag">{t.active}</span>
           </div>
         ))}
       </div>

@@ -4,9 +4,12 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { verifyAndSetPassword } from "@/app/verificar/actions";
+import { useLocale } from "@/components/locale-provider";
 
 export function VerifyPasswordForm({ token, email }: { token: string; email: string }) {
   const router = useRouter();
+  const { dict } = useLocale();
+  const t = dict.verify;
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -17,7 +20,7 @@ export function VerifyPasswordForm({ token, email }: { token: string; email: str
     setError(null);
 
     if (password !== confirmPassword) {
-      setError("As senhas não coincidem.");
+      setError(t.passwordMismatch);
       return;
     }
 
@@ -38,30 +41,25 @@ export function VerifyPasswordForm({ token, email }: { token: string; email: str
       return;
     }
 
-    router.push("/home");
-    router.refresh();
+    window.location.href = "/home";
   }
 
   if (!token || !email) {
-    return (
-      <p className="formError">
-        Link inválido. Solicite um novo convite ao administrador da sua empresa.
-      </p>
-    );
+    return <p className="formError">{t.invalidLink}</p>;
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        Email
+        {t.emailLabel}
         <input className="field" type="email" value={email} disabled />
       </label>
       <label>
-        Criar senha
+        {t.passwordLabel}
         <input
           className="field"
           onChange={(event) => setPassword(event.target.value)}
-          placeholder="Mínimo 8 caracteres"
+          placeholder={t.passwordPlaceholder}
           type="password"
           value={password}
           required
@@ -69,11 +67,11 @@ export function VerifyPasswordForm({ token, email }: { token: string; email: str
         />
       </label>
       <label>
-        Confirmar senha
+        {t.confirmLabel}
         <input
           className="field"
           onChange={(event) => setConfirmPassword(event.target.value)}
-          placeholder="Repita a senha"
+          placeholder={t.confirmPlaceholder}
           type="password"
           value={confirmPassword}
           required
@@ -82,7 +80,7 @@ export function VerifyPasswordForm({ token, email }: { token: string; email: str
       </label>
       {error ? <p className="formError">{error}</p> : null}
       <button className="button fullButton" type="submit" disabled={submitting}>
-        {submitting ? "Confirmando..." : "Confirmar e entrar"}
+        {submitting ? t.submitting : t.submit}
       </button>
     </form>
   );

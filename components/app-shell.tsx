@@ -5,23 +5,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navIcon, type IconKey } from "@/components/nav-icons";
 import { clearSessionUser, useSessionUser } from "@/components/use-session-user";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { useLocale } from "@/components/locale-provider";
+import type { Dictionary } from "@/lib/i18n/dictionaries/types";
 
-type NavItem = { href: string; label: string; icon?: IconKey };
+type NavItem = { href: string; labelKey: keyof Dictionary["nav"]; icon?: IconKey };
 
 const studentNav: NavItem[] = [
-  { href: "/home", label: "Home", icon: "home" },
-  { href: "/catalogo", label: "Catálogo", icon: "catalog" },
-  { href: "/meus-cursos", label: "Meus cursos", icon: "myCourses" },
-  { href: "/certificados", label: "Certificados", icon: "certificates" }
+  { href: "/home", labelKey: "home", icon: "home" },
+  { href: "/catalogo", labelKey: "catalog", icon: "catalog" },
+  { href: "/meus-cursos", labelKey: "myCourses", icon: "myCourses" },
+  { href: "/certificados", labelKey: "certificates", icon: "certificates" }
 ];
 
 const adminNav: NavItem[] = [
-  { href: "/admin", label: "Visão geral" },
-  { href: "/admin/empresas", label: "Empresas" },
-  { href: "/admin/cursos", label: "Cursos" },
-  { href: "/admin/usuarios", label: "Usuários" },
-  { href: "/admin/certificacoes", label: "Certificações" },
-  { href: "/admin/relatorios", label: "Relatórios" }
+  { href: "/admin", labelKey: "adminOverview", icon: "admin" },
+  { href: "/admin/empresas", labelKey: "adminCompanies", icon: "building" },
+  { href: "/admin/cursos", labelKey: "adminCourses", icon: "catalog" },
+  { href: "/admin/usuarios", labelKey: "adminUsers", icon: "users" },
+  { href: "/admin/certificacoes", labelKey: "adminCertifications", icon: "certificates" },
+  { href: "/admin/relatorios", labelKey: "adminReports", icon: "report" }
 ];
 
 function isActive(pathname: string, href: string) {
@@ -31,6 +34,7 @@ function isActive(pathname: string, href: string) {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const user = useSessionUser();
   const pathname = usePathname();
+  const { dict } = useLocale();
 
   if (!user) {
     return (
@@ -46,13 +50,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               priority
             />
           </Link>
-          <nav className="nav" aria-label="Navegação principal">
-            <Link href="/">Produto</Link>
-            <Link href="/login">Login</Link>
-          </nav>
-          <Link href="/cadastro" className="profilePill">
-            Solicitar implantação
-          </Link>
+          <div className="topbarActions">
+            <nav className="nav" aria-label="Navegação principal">
+              <Link href="/">{dict.nav.product}</Link>
+              <Link href="/login">{dict.nav.login}</Link>
+            </nav>
+            <Link href="/cadastro" className="profilePill">
+              {dict.nav.requestImplementation}
+            </Link>
+            <LanguageSwitcher />
+          </div>
         </header>
         <main>{children}</main>
       </>
@@ -88,31 +95,41 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {items.map((item) => (
             <Link key={item.href} href={item.href} data-active={isActive(pathname, item.href)}>
               {item.icon ? navIcon(item.icon) : null}
-              {item.label}
+              {dict.nav[item.labelKey]}
             </Link>
           ))}
           {!inAdmin && canManage ? (
             <Link href="/admin" data-active={false}>
               {navIcon("admin")}
-              Admin
+              {dict.nav.admin}
             </Link>
           ) : null}
         </nav>
 
         <div className="sidebarUser">
-          <span className="userAvatar">{user.name.slice(0, 1)}</span>
-          <span>
-            <strong>{user.name}</strong>
-            <small>
-              {user.role === "student"
-                ? "Aluno"
-                : user.role === "external_partner"
-                  ? "Parceiro externo"
-                  : "Gestão"}
-            </small>
-          </span>
-          <button type="button" onClick={() => clearSessionUser()} aria-label="Sair">
-            Sair
+          <LanguageSwitcher />
+          <Link href="/perfil" className="sidebarUserLink" data-active={pathname === "/perfil"}>
+            <span className="userAvatar">
+              {user.avatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={user.avatarUrl} alt="" />
+              ) : (
+                user.name.slice(0, 1)
+              )}
+            </span>
+            <span>
+              <strong>{user.name}</strong>
+              <small>
+                {user.role === "student"
+                  ? dict.nav.student
+                  : user.role === "external_partner"
+                    ? dict.nav.partner
+                    : dict.nav.management}
+              </small>
+            </span>
+          </Link>
+          <button type="button" onClick={() => clearSessionUser()} aria-label={dict.nav.logout}>
+            {dict.nav.logout}
           </button>
         </div>
       </aside>

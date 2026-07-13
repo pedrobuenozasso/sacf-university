@@ -1,60 +1,82 @@
 import { getOrganizations } from "@/lib/data";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { getAdminScope } from "@/lib/admin-scope";
 import { createOrganization } from "./actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminCompaniesPage() {
-  const organizations = await getOrganizations();
+  const [organizations, { dict }, scope] = await Promise.all([
+    getOrganizations(),
+    getDictionary(),
+    getAdminScope()
+  ]);
+  const t = dict.admin.empresas;
+  const visibleOrganizations = scope.isSacfAdmin
+    ? organizations
+    : organizations.filter((org) => org.slug === scope.organizationSlug);
+
   return (
     <>
       <div className="sectionHead">
         <div>
-          <p className="eyebrow">Empresas</p>
-          <h1>Clientes e ambientes de treinamento.</h1>
-          <p>Cadastro das empresas que usam a SACF Academy, com isolamento por organização.</p>
+          <p className="eyebrow">{t.eyebrow}</p>
+          <h1>{t.title}</h1>
+          <p>{t.body}</p>
         </div>
       </div>
 
-      <section className="split">
+      <section className={scope.isSacfAdmin ? "split" : undefined}>
         <div className="tablePanel">
           <div className="tableHead">
-            <span>Empresa</span>
-            <span>Status</span>
-            <span>Usuários</span>
-            <span>Cursos</span>
-            <span>Vencendo</span>
+            <span>{t.company}</span>
+            <span>{t.status}</span>
+            <span>{t.users}</span>
+            <span>{t.courses}</span>
+            <span>{t.expiring}</span>
           </div>
-          {organizations.map((org) => (
+          {visibleOrganizations.map((org) => (
             <div className="tableRow" key={org.slug}>
               <div>
                 <strong>{org.name}</strong>
                 <p>{org.slug}</p>
               </div>
               <span className="statusTag">{org.status}</span>
-              <span>{org.users}</span>
+              <span>{org.seatLimit ? `${org.users} / ${org.seatLimit}` : org.users}</span>
               <span>{org.courses}</span>
               <span>{org.expiring}</span>
             </div>
           ))}
         </div>
 
-        <form className="detailPanel" action={createOrganization}>
-          <div className="formStatus">
-            <span className="statusDot" />
-            <div>
-              <strong>Novo ambiente</strong>
-              <small>Cliente, domínio, admin inicial e idioma padrão</small>
+        {scope.isSacfAdmin ? (
+          <form className="detailPanel" action={createOrganization}>
+            <div className="formStatus">
+              <span className="statusDot" />
+              <div>
+                <strong>{t.newEnvTitle}</strong>
+                <small>{t.newEnvSub}</small>
+              </div>
             </div>
-          </div>
-          <h2>Adicionar empresa</h2>
-          <input className="field" name="name" placeholder="Nome da empresa" required />
-          <input className="field" name="slug" placeholder="Slug (opcional)" />
-          <input className="field" name="adminEmail" type="email" placeholder="Email do admin" />
-          <button className="button" type="submit">
-            Criar empresa
-          </button>
-          <p className="formHint">Cada empresa mantém catálogo, membros e certificados isolados.</p>
-        </form>
+            <h2>{t.addCompany}</h2>
+            <input className="field" name="name" placeholder={t.namePlaceholder} required />
+            <input className="field" name="slug" placeholder={t.slugPlaceholder} />
+            <input className="field" name="adminEmail" type="email" placeholder={t.adminEmailPlaceholder} />
+            <input
+              className="field"
+              name="seatLimit"
+              type="number"
+              min={1}
+              step={1}
+              placeholder={t.seatLimitPlaceholder}
+            />
+            <button className="button" type="submit">
+              {t.createCompany}
+            </button>
+            <p className="formHint">{t.hint}</p>
+            <p className="formHint">{t.seatLimitHint}</p>
+          </form>
+        ) : null}
       </section>
     </>
   );

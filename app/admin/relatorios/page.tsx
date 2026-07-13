@@ -1,66 +1,76 @@
 import { getOrganizations } from "@/lib/data";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { getAdminScope } from "@/lib/admin-scope";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminReportsPage() {
-  const organizations = await getOrganizations();
+  const [allOrganizations, { dict }, scope] = await Promise.all([
+    getOrganizations(),
+    getDictionary(),
+    getAdminScope()
+  ]);
+  const t = dict.admin.relatorios;
+  const organizations = scope.isSacfAdmin
+    ? allOrganizations
+    : allOrganizations.filter((org) => org.slug === scope.organizationSlug);
   return (
     <>
       <div className="sectionHead">
         <div>
-          <p className="eyebrow">Relatórios</p>
-          <h1>Indicadores para SACF e para cada empresa.</h1>
-          <p>Base para export CSV, relatório mensal e acompanhamento executivo.</p>
+          <p className="eyebrow">{t.eyebrow}</p>
+          <h1>{t.title}</h1>
+          <p>{t.body}</p>
         </div>
       </div>
 
       <section className="grid">
         <div className="detailPanel reportCard">
-          <span className="reportStatus">Semanal</span>
-          <h2>Progresso por empresa</h2>
-          <p>Conclusão média, cursos em andamento e alunos atrasados.</p>
+          <span className="reportStatus">{t.weekly}</span>
+          <h2>{t.progressTitle}</h2>
+          <p>{t.progressBody}</p>
           <button className="buttonGhost" type="button">
-            Exportar CSV
+            {t.exportCsv}
           </button>
         </div>
         <div className="detailPanel reportCard">
-          <span className="reportStatus">Crítico</span>
-          <h2>Certificados</h2>
-          <p>Emitidos, vencidos, vencendo e reciclados por período.</p>
+          <span className="reportStatus">{t.critical}</span>
+          <h2>{t.certificatesTitle}</h2>
+          <p>{t.certificatesBody}</p>
           <button className="buttonGhost" type="button">
-            Exportar CSV
+            {t.exportCsv}
           </button>
         </div>
         <div className="detailPanel reportCard">
-          <span className="reportStatus">Operação</span>
-          <h2>Uso da plataforma</h2>
-          <p>Acessos, aulas assistidas, provas realizadas e convites pendentes.</p>
+          <span className="reportStatus">{t.operation}</span>
+          <h2>{t.usageTitle}</h2>
+          <p>{t.usageBody}</p>
           <button className="buttonGhost" type="button">
-            Exportar CSV
+            {t.exportCsv}
           </button>
         </div>
         <div className="detailPanel reportCard">
-          <span className="reportStatus">Executivo</span>
-          <h2>Resumo executivo</h2>
-          <p>Relatório mensal para liderança da empresa cliente.</p>
+          <span className="reportStatus">{t.executive}</span>
+          <h2>{t.execSummaryTitle}</h2>
+          <p>{t.execSummaryBody}</p>
           <button className="buttonGhost" type="button">
-            Gerar prévia
+            {t.generatePreview}
           </button>
         </div>
       </section>
 
       <div className="sectionHead">
         <div>
-          <h2>Empresas monitoradas</h2>
+          <h2>{t.monitoredCompanies}</h2>
         </div>
       </div>
       <div className="tablePanel">
         <div className="tableHead">
-          <span>Empresa</span>
-          <span>Status</span>
-          <span>Usuários</span>
-          <span>Certificados</span>
-          <span>Vencendo</span>
+          <span>{t.company}</span>
+          <span>{t.status}</span>
+          <span>{t.users}</span>
+          <span>{t.certificates}</span>
+          <span>{t.expiring}</span>
         </div>
         {organizations.map((org) => (
           <div className="tableRow" key={org.slug}>

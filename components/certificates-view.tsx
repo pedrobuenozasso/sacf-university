@@ -2,13 +2,16 @@
 
 import { LoginRequiredPanel } from "@/components/access-panels";
 import { useSessionUser } from "@/components/use-session-user";
+import { useLocale, interpolate } from "@/components/locale-provider";
 import { canAccessCourse, getOrganization, type Course } from "@/lib/courses";
 
 export function CertificatesView({ courses }: { courses: Course[] }) {
   const user = useSessionUser();
+  const { dict } = useLocale();
+  const t = dict.certificatesView;
 
   if (!user) {
-    return <LoginRequiredPanel title="Entre para acessar certificados." />;
+    return <LoginRequiredPanel title={t.loginTitle} />;
   }
 
   const visibleCourses = courses.filter((course) => canAccessCourse(course, user));
@@ -17,12 +20,9 @@ export function CertificatesView({ courses }: { courses: Course[] }) {
     <>
       <section className="sectionHead">
         <div>
-          <p className="eyebrow">Certificados</p>
-          <h1>Controle de validade e reciclagem.</h1>
-          <p>
-            Certificados e vencimentos vinculados ao usuário, empresa e curso, com código de
-            rastreio e status de reciclagem.
-          </p>
+          <p className="eyebrow">{t.eyebrow}</p>
+          <h1>{t.title}</h1>
+          <p>{t.body}</p>
         </div>
       </section>
 
@@ -39,25 +39,25 @@ export function CertificatesView({ courses }: { courses: Course[] }) {
             <div className="certificateMeta">
               <div>
                 <strong>{course.progress}%</strong>
-                <span>progresso</span>
+                <span>{t.progress}</span>
               </div>
               <span className="statusTag">
-                {course.progress === 100 ? "Emitido" : index === 0 ? "Em andamento" : "Pendente"}
+                {course.progress === 100 ? t.issued : index === 0 ? t.inProgress : t.pending}
               </span>
             </div>
             <div className="progressTrack">
               <div className="progressFill" style={{ width: `${course.progress}%` }} />
             </div>
             <div className="certificateFoot">
-              <span>Código: SACF-{course.slug.slice(0, 4).toUpperCase()}-{index + 1001}</span>
-              <span>{course.progress === 100 ? "Válido até 24/06/2027" : "Aguardando conclusão"}</span>
+              <span>{interpolate(t.code, { code: `SACF-${course.slug.slice(0, 4).toUpperCase()}-${index + 1001}` })}</span>
+              <span>{course.progress === 100 ? t.validUntil : t.awaitingCompletion}</span>
             </div>
             <div className="certificateActions">
               <button className="buttonGhost" type="button">
-                Visualizar
+                {t.view}
               </button>
               <button className="buttonGhost" type="button">
-                Histórico
+                {t.history}
               </button>
             </div>
           </div>

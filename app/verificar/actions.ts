@@ -28,23 +28,34 @@ export async function verifyAndSetPassword(
     data: { emailVerified: new Date(), passwordHash }
   });
 
-  const domain = normalized.split("@")[1];
-  const orgDomain = await prisma.organizationDomain.findUnique({ where: { domain } });
+  // Activate any pending invite this user already has (created by an admin
+  // via /admin/usuarios) — this is the common path for real invited users.
+  const activated = await prisma.organizationMember.updateMany({
+    where: { userId: user.id, status: "invited" },
+    data: { status: "active", joinedAt: new Date() }
+  });
 
-  if (orgDomain) {
-    await prisma.organizationMember.upsert({
-      where: {
-        organizationId_userId: { organizationId: orgDomain.organizationId, userId: user.id }
-      },
-      update: {},
-      create: {
-        organizationId: orgDomain.organizationId,
-        userId: user.id,
-        role: "student",
-        status: "active",
-        joinedAt: new Date()
-      }
-    });
+  // Fallback for the self-serve domain-matched flow: no explicit invite yet,
+  // but the email domain maps to a known company — join as a student.
+  if (activated.count === 0) {
+    const domain = normalized.split("@")[1];
+    const orgDomain = await prisma.organizationDomain.findUnique({ where: { domain } });
+
+    if (orgDomain) {
+      await prisma.organizationMember.upsert({
+        where: {
+          organizationId_userId: { organizationId: orgDomain.organizationId, userId: user.id }
+        },
+        update: {},
+        create: {
+          organizationId: orgDomain.organizationId,
+          userId: user.id,
+          role: "student",
+          status: "active",
+          joinedAt: new Date()
+        }
+      });
+    }
   }
 
   return { ok: true };

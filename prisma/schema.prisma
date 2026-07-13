@@ -93,6 +93,7 @@ model Organization {
   defaultLocale  String             @default("pt-BR") @map("default_locale")
   allowedLocales String[]           @default(["pt-BR"]) @map("allowed_locales")
   status         OrganizationStatus @default(active)
+  seatLimit      Int?               @map("seat_limit")
   createdAt      DateTime           @default(now()) @map("created_at")
   updatedAt      DateTime           @updatedAt @map("updated_at")
 

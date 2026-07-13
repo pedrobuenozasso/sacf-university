@@ -1,29 +1,42 @@
-import { getAdminUsers } from "@/lib/data";
+import { getAdminUsers, getOrganizations } from "@/lib/data";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { getAdminScope } from "@/lib/admin-scope";
+import { InviteUserForm } from "@/components/invite-user-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminUsersPage() {
-  const adminUsers = await getAdminUsers();
+  const [adminUsers, organizations, { dict }, scope] = await Promise.all([
+    getAdminUsers(),
+    getOrganizations(),
+    getDictionary(),
+    getAdminScope()
+  ]);
+  const t = dict.admin.usuarios;
+  const visibleUsers = scope.isSacfAdmin
+    ? adminUsers
+    : adminUsers.filter((user) => user.organizationSlug === scope.organizationSlug);
+
   return (
     <>
       <div className="sectionHead">
         <div>
-          <p className="eyebrow">Usuários</p>
-          <h1>Convites, papéis e progresso por pessoa.</h1>
-          <p>Controle alunos internos, treinadores, administradores e parceiros externos.</p>
+          <p className="eyebrow">{t.eyebrow}</p>
+          <h1>{t.title}</h1>
+          <p>{t.body}</p>
         </div>
       </div>
 
       <section className="split">
         <div className="tablePanel">
           <div className="tableHead">
-            <span>Usuário</span>
-            <span>Empresa</span>
-            <span>Papel</span>
-            <span>Status</span>
-            <span>Progresso</span>
+            <span>{t.user}</span>
+            <span>{t.company}</span>
+            <span>{t.role}</span>
+            <span>{t.status}</span>
+            <span>{t.progress}</span>
           </div>
-          {adminUsers.map((user) => (
+          {visibleUsers.map((user) => (
             <div className="tableRow" key={user.email}>
               <div>
                 <strong>{user.name}</strong>
@@ -37,31 +50,17 @@ export default async function AdminUsersPage() {
           ))}
         </div>
 
-        <form className="detailPanel">
+        <div className="detailPanel">
           <div className="formStatus">
             <span className="statusDot" />
             <div>
-              <strong>Convite corporativo</strong>
-              <small>Papel, empresa e grupos definem o catálogo do usuário</small>
+              <strong>{t.inviteTitle}</strong>
+              <small>{t.inviteSub}</small>
             </div>
           </div>
-          <h2>Convidar usuário</h2>
-          <input className="field" placeholder="Nome" />
-          <input className="field" placeholder="Email" />
-          <select className="field" defaultValue="">
-            <option value="" disabled>
-              Papel
-            </option>
-            <option>Admin da empresa</option>
-            <option>Treinador</option>
-            <option>Aluno</option>
-            <option>Parceiro externo</option>
-          </select>
-          <button className="button" type="button">
-            Enviar convite
-          </button>
-          <p className="formHint">O convite cria vínculo de organização antes do primeiro acesso.</p>
-        </form>
+          <h2>{t.inviteUser}</h2>
+          <InviteUserForm organizations={organizations} showOrgSelect={scope.isSacfAdmin} />
+        </div>
       </section>
     </>
   );

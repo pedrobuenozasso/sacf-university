@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { CourseCover } from "@/components/course-cover";
+import { useLocale } from "@/components/locale-provider";
 import type { Course } from "@/lib/courses";
 
 export function CourseCard({
@@ -12,6 +15,7 @@ export function CourseCard({
   href: string;
   showTenantBrand?: boolean;
 }) {
+  const { dict } = useLocale();
   return (
     <Link className="courseCard" data-accent={course.accent} href={href}>
       <CourseCover course={course} showTenantBrand={showTenantBrand} />
@@ -19,7 +23,9 @@ export function CourseCard({
         <p className="courseInstructor">{course.instructor}</p>
         <h3>{course.title}</h3>
         <div className="courseMeta">
-          <span>{course.lessons} aulas</span>
+          <span>
+            {course.lessons} {dict.courseCard.lessons}
+          </span>
           <span className="courseMetaDot" />
           <span>{course.duration}</span>
           <span className="courseMetaDot" />
@@ -46,14 +52,15 @@ export function CourseCard({
   );
 }
 
-export function CoursePreviewPanel({ label = "Aula segura" }: { label?: string }) {
+export function CoursePreviewPanel({ label }: { label?: string }) {
+  const { dict } = useLocale();
   return (
     <div className="lessonPreview">
       <Image src="/brand/sacf-academy-horizontal-onDark.png" alt="SACF Academy" width={170} height={96} />
       <div>
-        <p className="eyebrow">{label}</p>
-        <h3>Conteúdo protegido por empresa</h3>
-        <p>Vídeo, anexos e progresso ficam disponíveis somente para usuários autorizados.</p>
+        <p className="eyebrow">{label ?? dict.courseCard.safeLesson}</p>
+        <h3>{dict.courseCard.protectedContentTitle}</h3>
+        <p>{dict.courseCard.protectedContentBody}</p>
       </div>
     </div>
   );

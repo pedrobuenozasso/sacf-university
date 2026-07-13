@@ -1,45 +1,56 @@
 import { getCourses } from "@/lib/data";
 import { supportedLocales } from "@/lib/i18n";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { getAdminScope } from "@/lib/admin-scope";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminCoursesPage() {
-  const courses = await getCourses();
+  const [allCourses, { dict }, scope] = await Promise.all([
+    getCourses(),
+    getDictionary(),
+    getAdminScope()
+  ]);
+  const t = dict.admin.cursos;
+  const courses = scope.isSacfAdmin
+    ? allCourses
+    : allCourses.filter(
+        (course) =>
+          course.organizationSlugs.length === 0 ||
+          course.organizationSlugs.includes(scope.organizationSlug ?? "")
+      );
   return (
     <>
       <div className="sectionHead">
         <div>
-          <p className="eyebrow">Cursos</p>
-          <h1>Crie, publique e acompanhe treinamentos.</h1>
-          <p>
-            Gerencie cursos privados da empresa e cursos oficiais SACF que podem ser atribuídos ou
-            adaptados para cada operação.
-          </p>
+          <p className="eyebrow">{t.eyebrow}</p>
+          <h1>{t.title}</h1>
+          <p>{t.body}</p>
         </div>
       </div>
 
       <div className="adminToolbar">
-        <input className="field" placeholder="Buscar curso" />
+        <input className="field" placeholder={t.searchPlaceholder} />
         <select className="field" defaultValue="todos">
-          <option value="todos">Todas as verticais</option>
-          <option>Operador</option>
-          <option>Mecânico</option>
-          <option>Elétrico</option>
-          <option>Treinador</option>
+          <option value="todos">{t.allVerticals}</option>
+          <option>{t.operator}</option>
+          <option>{t.mechanic}</option>
+          <option>{t.electric}</option>
+          <option>{t.trainer}</option>
         </select>
         <button className="buttonGhost" type="button">
-          Exportar
+          {t.export}
         </button>
       </div>
 
       <section className="split">
         <div className="tablePanel">
           <div className="tableHead">
-            <span>Curso</span>
-            <span>Vertical</span>
-            <span>Nível</span>
-            <span>Aulas</span>
-            <span>Status</span>
+            <span>{t.course}</span>
+            <span>{t.vertical}</span>
+            <span>{t.level}</span>
+            <span>{t.lessons}</span>
+            <span>{t.status}</span>
           </div>
           {courses.map((course) => (
             <div className="tableRow" key={course.slug}>
@@ -59,34 +70,34 @@ export default async function AdminCoursesPage() {
           <div className="formStatus">
             <span className="statusDot" />
             <div>
-              <strong>Editor de curso</strong>
-              <small>Conteúdo interno ou curso oficial SACF em um único fluxo</small>
+              <strong>{t.editorTitle}</strong>
+              <small>{t.editorSub}</small>
             </div>
           </div>
-          <h2>Novo curso</h2>
-          <input className="field" placeholder="Título do curso" />
+          <h2>{t.newCourse}</h2>
+          <input className="field" placeholder={t.titlePlaceholder} />
           <label className="fileField">
-            Foto/capa do curso
+            {t.coverLabel}
             <input className="field" type="file" accept="image/*" />
           </label>
           <select className="field" defaultValue="">
             <option value="" disabled>
-              Vertical
+              {t.verticalSelect}
             </option>
-            <option>Operador</option>
-            <option>Mecânico</option>
-            <option>Elétrico / alta tensão</option>
-            <option>Treinador</option>
-            <option>Representante</option>
+            <option>{t.operator}</option>
+            <option>{t.mechanic}</option>
+            <option>{t.electricFull}</option>
+            <option>{t.trainer}</option>
+            <option>{t.representative}</option>
           </select>
-          <input className="field" placeholder="Instrutor ou responsável técnico" />
+          <input className="field" placeholder={t.instructorPlaceholder} />
           <select className="field" defaultValue="empresa">
-            <option value="empresa">Curso privado da empresa</option>
-            <option value="sacf">Curso oficial da Biblioteca SACF</option>
+            <option value="empresa">{t.privateCourse}</option>
+            <option value="sacf">{t.officialCourse}</option>
           </select>
           <div className="formGrid">
-            <input className="field" placeholder="Carga horária" />
-            <input className="field" placeholder="Validade do certificado" />
+            <input className="field" placeholder={t.hoursPlaceholder} />
+            <input className="field" placeholder={t.validityPlaceholder} />
           </div>
           <select className="field" defaultValue="pt-BR">
             {supportedLocales.map((locale) => (
@@ -95,57 +106,51 @@ export default async function AdminCoursesPage() {
               </option>
             ))}
           </select>
-          <textarea className="field" placeholder="Resumo do curso" />
-          <textarea className="field" placeholder="Conteúdo programático / módulos / aulas" />
+          <textarea className="field" placeholder={t.summaryPlaceholder} />
+          <textarea className="field" placeholder={t.contentPlaceholder} />
           <div className="actions noTopMargin">
             <button className="button" type="button">
-              Salvar rascunho
+              {t.saveDraft}
             </button>
             <button className="buttonGhost" type="button">
-              Publicar
+              {t.publish}
             </button>
             <button className="dangerButton" type="button">
-              Apagar
+              {t.delete}
             </button>
           </div>
-          <p className="formHint">
-            Cursos privados ficam restritos à empresa. Cursos oficiais SACF podem ser usados como
-            base e personalizados por cliente.
-          </p>
+          <p className="formHint">{t.hint}</p>
         </form>
       </section>
 
       <section className="detailPanel adminEditorPreview">
         <div className="sectionHead">
           <div>
-            <p className="eyebrow">Cursos privados e Biblioteca SACF</p>
-            <h2>Controle completo do conteúdo</h2>
-            <p>
-              O admin da empresa poderá configurar cursos internos. A SACF mantém uma biblioteca
-              oficial de cursos assinados, que podem ser atribuídos ou adaptados para cada cliente.
-            </p>
+            <p className="eyebrow">{t.previewEyebrow}</p>
+            <h2>{t.previewTitle}</h2>
+            <p>{t.previewBody}</p>
           </div>
         </div>
         <div className="grid">
           <div className="moduleItem">
-            <h3>Identidade da empresa</h3>
-            <p>Editar capa, título, vertical, idioma, carga horária, instrutor e nível.</p>
+            <h3>{t.identityTitle}</h3>
+            <p>{t.identityBody}</p>
           </div>
           <div className="moduleItem">
-            <h3>Conteúdo</h3>
-            <p>Adicionar módulos, aulas, vídeos, anexos, textos, quiz e prova final.</p>
+            <h3>{t.contentTitle}</h3>
+            <p>{t.contentBody}</p>
           </div>
           <div className="moduleItem">
-            <h3>Acesso privado</h3>
-            <p>Definir se o curso é da empresa inteira, grupo específico ou usuários selecionados.</p>
+            <h3>{t.accessTitle}</h3>
+            <p>{t.accessBody}</p>
           </div>
           <div className="moduleItem">
-            <h3>Biblioteca SACF</h3>
-            <p>Usar cursos oficiais como base para treinamento, certificação e reciclagem.</p>
+            <h3>{t.libraryTitle}</h3>
+            <p>{t.libraryBody}</p>
           </div>
           <div className="moduleItem">
-            <h3>Governança</h3>
-            <p>Salvar rascunho, publicar, arquivar, apagar e acompanhar alterações.</p>
+            <h3>{t.governanceTitle}</h3>
+            <p>{t.governanceBody}</p>
           </div>
         </div>
       </section>
