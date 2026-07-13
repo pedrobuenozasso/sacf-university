@@ -41,8 +41,14 @@ export default async function CourseEditorPage({ params }: { params: Promise<{ c
             </select>
           </div>
           <div className="formGrid">
-            <input className="field" name="workloadHours" type="number" min="0" step="0.5" defaultValue={course.workloadMinutes ? course.workloadMinutes / 60 : ""} placeholder="Carga horária (horas)" />
-            <input className="field" name="validityMonths" type="number" min="0" defaultValue={course.certificateValidityDays ? Math.round(course.certificateValidityDays / 30) : ""} placeholder="Validade (meses)" />
+            <label>
+              Carga horária (horas)
+              <input className="field" name="workloadHours" type="number" min="0" step="0.5" defaultValue={course.workloadMinutes ? course.workloadMinutes / 60 : ""} />
+            </label>
+            <label>
+              Validade do certificado (meses)
+              <input className="field" name="validityMonths" type="number" min="1" defaultValue={course.certificateValidityDays ? Math.round(course.certificateValidityDays / 30) : ""} placeholder="Sem vencimento" />
+            </label>
           </div>
           <select className="field" name="language" defaultValue={course.language}>
             {supportedLocales.map((locale) => <option key={locale.code} value={locale.code}>{locale.label}</option>)}
@@ -50,6 +56,7 @@ export default async function CourseEditorPage({ params }: { params: Promise<{ c
           <textarea className="field" name="summary" defaultValue={course.shortDescription ?? ""} placeholder="Resumo do curso" />
           <label className="checkItem"><input name="certificateEnabled" type="checkbox" defaultChecked={course.certificateEnabled} /> Emitir certificado ao concluir</label>
           <label className="checkItem"><input name="mandatory" type="checkbox" defaultChecked={course.mandatory} /> Curso obrigatório</label>
+          <p className="formHint">A validade é aplicada aos certificados emitidos depois da alteração.</p>
           <button className="button" type="submit">Salvar alterações</button>
         </form>
 

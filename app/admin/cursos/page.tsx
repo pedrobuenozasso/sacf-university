@@ -107,8 +107,14 @@ export default async function AdminCoursesPage() {
             <option value="sacf">{t.officialCourse}</option>
           </select>
           <div className="formGrid">
-            <input className="field" name="workloadHours" type="number" min="0" step="0.5" placeholder={t.hoursPlaceholder} />
-            <input className="field" name="validityMonths" type="number" min="0" step="1" placeholder={t.validityPlaceholder} />
+            <label>
+              Carga horária (horas)
+              <input className="field" name="workloadHours" type="number" min="0" step="0.5" placeholder={t.hoursPlaceholder} />
+            </label>
+            <label>
+              Validade do certificado (meses)
+              <input className="field" name="validityMonths" type="number" min="1" step="1" placeholder="Ex.: 12" />
+            </label>
           </div>
           <select className="field" name="language" defaultValue="pt-BR">
             {supportedLocales.map((locale) => (
@@ -130,6 +136,7 @@ export default async function AdminCoursesPage() {
             </button>
           </div>
           <p className="formHint">{t.hint}</p>
+          <p className="formHint">Deixe a validade em branco para um certificado sem vencimento.</p>
         </form>
       </section>
 
