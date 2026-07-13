@@ -3,9 +3,19 @@
 import { LoginRequiredPanel } from "@/components/access-panels";
 import { useSessionUser } from "@/components/use-session-user";
 import { useLocale, interpolate } from "@/components/locale-provider";
-import { canAccessCourse, getOrganization, type Course } from "@/lib/courses";
+import type { UserCertificate } from "@/lib/certificates";
 
-export function CertificatesView({ courses }: { courses: Course[] }) {
+function formatDate(isoDate: string) {
+  return new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(new Date(isoDate));
+}
+
+function statusLabel(status: UserCertificate["status"]) {
+  if (status === "revoked") return "Revogado";
+  if (status === "expired") return "Vencido";
+  return "Válido";
+}
+
+export function CertificatesView({ certificates }: { certificates: UserCertificate[] }) {
   const user = useSessionUser();
   const { dict } = useLocale();
   const t = dict.certificatesView;
@@ -13,8 +23,6 @@ export function CertificatesView({ courses }: { courses: Course[] }) {
   if (!user) {
     return <LoginRequiredPanel title={t.loginTitle} />;
   }
-
-  const visibleCourses = courses.filter((course) => canAccessCourse(course, user));
 
   return (
     <>
@@ -27,38 +35,32 @@ export function CertificatesView({ courses }: { courses: Course[] }) {
       </section>
 
       <section className="certificateList">
-        {visibleCourses.map((course, index) => (
-          <div className="certificateCard" key={course.slug}>
+        {certificates.length === 0 ? (
+          <div className="detailPanel">
+            <h2>Nenhum certificado emitido ainda.</h2>
+            <p>Quando você concluir um curso com certificação habilitada, ele aparecerá aqui.</p>
+          </div>
+        ) : null}
+        {certificates.map((certificate) => (
+          <div className="certificateCard" key={certificate.id}>
             <div>
-              <p className="eyebrow">
-                {getOrganization(course.organizationSlugs[0])?.name ?? "SACF"} · {course.vertical}
-              </p>
-              <h3>{course.title}</h3>
-              <p>{course.certificate}</p>
+              <p className="eyebrow">{certificate.organizationName} · {certificate.courseVertical}</p>
+              <h3>{certificate.courseTitle}</h3>
+              <p>Emitido em {formatDate(certificate.issuedAt)}</p>
             </div>
             <div className="certificateMeta">
               <div>
-                <strong>{course.progress}%</strong>
-                <span>{t.progress}</span>
+                <strong>{formatDate(certificate.issuedAt)}</strong>
+                <span>emissão</span>
               </div>
-              <span className="statusTag">
-                {course.progress === 100 ? t.issued : index === 0 ? t.inProgress : t.pending}
-              </span>
-            </div>
-            <div className="progressTrack">
-              <div className="progressFill" style={{ width: `${course.progress}%` }} />
+              <span className="statusTag">{statusLabel(certificate.status)}</span>
             </div>
             <div className="certificateFoot">
-              <span>{interpolate(t.code, { code: `SACF-${course.slug.slice(0, 4).toUpperCase()}-${index + 1001}` })}</span>
-              <span>{course.progress === 100 ? t.validUntil : t.awaitingCompletion}</span>
+              <span>{interpolate(t.code, { code: certificate.code })}</span>
+              <span>{certificate.expiresAt ? `Válido até ${formatDate(certificate.expiresAt)}` : "Sem vencimento"}</span>
             </div>
             <div className="certificateActions">
-              <button className="buttonGhost" type="button">
-                {t.view}
-              </button>
-              <button className="buttonGhost" type="button">
-                {t.history}
-              </button>
+              <span className="buttonGhost">{t.view} disponível após a validação pública</span>
             </div>
           </div>
         ))}
