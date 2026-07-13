@@ -480,3 +480,47 @@ export async function getCertificationOverview(organizationSlug?: string): Promi
     records
   };
 }
+
+export type TrainingDeadlineOverview = {
+  overdue: number;
+  dueSoon: number;
+  records: { id: string; userName: string; courseTitle: string; organizationName: string; dueDate: string; status: "overdue" | "due_soon" | "scheduled" }[];
+};
+
+export async function getTrainingDeadlineOverview(organizationSlug?: string): Promise<TrainingDeadlineOverview> {
+  const prisma = await getPrisma();
+  if (!prisma) return { overdue: 0, dueSoon: 0, records: [] };
+
+  const rows = await prisma.enrollment.findMany({
+    where: {
+      dueDate: { not: null },
+      status: { notIn: ["completed", "cancelled", "expired"] },
+      ...(organizationSlug ? { organization: { slug: organizationSlug } } : {})
+    },
+    include: {
+      user: { select: { name: true } },
+      course: { select: { title: true } },
+      organization: { select: { name: true } }
+    },
+    orderBy: { dueDate: "asc" }
+  });
+  const now = new Date();
+  const soonThreshold = new Date(now.getTime() + 7 * 86_400_000);
+  const records = rows.map((enrollment) => {
+    const dueDate = enrollment.dueDate!;
+    const status = dueDate < now ? "overdue" as const : dueDate <= soonThreshold ? "due_soon" as const : "scheduled" as const;
+    return {
+      id: enrollment.id,
+      userName: enrollment.user.name,
+      courseTitle: enrollment.course.title,
+      organizationName: enrollment.organization.name,
+      dueDate: dueDate.toISOString(),
+      status
+    };
+  });
+  return {
+    overdue: records.filter((record) => record.status === "overdue").length,
+    dueSoon: records.filter((record) => record.status === "due_soon").length,
+    records
+  };
+}
