@@ -21,6 +21,7 @@ const courseInclude = {
 } as const;
 
 type CourseRow = {
+  id: string;
   organization: { slug: string };
   status: "draft" | "published" | "archived";
   slug: string;
@@ -149,6 +150,7 @@ function mapCourse(course: CourseRow): Course {
   const enrollment = enrollmentProgress(course);
 
   return {
+    id: course.id,
     slug: course.slug,
     title: course.title,
     organizationSlugs,
@@ -169,6 +171,61 @@ function mapCourse(course: CourseRow): Course {
     modules: course.modules.map((module) => ({
       title: module.title,
       lessons: module.lessons.map((lesson) => lesson.title)
+    }))
+  };
+}
+
+export type CourseEditorData = {
+  id: string;
+  title: string;
+  shortDescription: string | null;
+  vertical: string;
+  level: string;
+  language: string;
+  instructorName: string | null;
+  workloadMinutes: number | null;
+  certificateEnabled: boolean;
+  certificateValidityDays: number | null;
+  mandatory: boolean;
+  status: "draft" | "published" | "archived";
+  modules: { id: string; title: string; lessons: { id: string; title: string }[] }[];
+};
+
+export async function getAdminCourseEditor(courseId: string, organizationSlug?: string): Promise<CourseEditorData | null> {
+  const prisma = await getPrisma();
+  if (!prisma) return null;
+
+  const course = await prisma.course.findFirst({
+    where: {
+      id: courseId,
+      ...(organizationSlug ? { organization: { slug: organizationSlug } } : {})
+    },
+    include: {
+      modules: {
+        orderBy: { position: "asc" },
+        include: { lessons: { orderBy: { position: "asc" } } }
+      }
+    }
+  });
+  if (!course) return null;
+
+  return {
+    id: course.id,
+    title: course.title,
+    shortDescription: course.shortDescription,
+    vertical: course.vertical,
+    level: course.level,
+    language: course.language,
+    instructorName: course.instructorName,
+    workloadMinutes: course.workloadMinutes,
+    certificateEnabled: course.certificateEnabled,
+    certificateValidityDays: course.certificateValidityDays,
+    mandatory: course.mandatory,
+    status: course.status,
+    modules: course.modules.map((module) => ({
+      id: module.id,
+      title: module.title,
+      lessons: module.lessons.map((lesson) => ({ id: lesson.id, title: lesson.title }))
     }))
   };
 }

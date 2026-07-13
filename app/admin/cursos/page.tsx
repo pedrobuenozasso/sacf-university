@@ -3,6 +3,7 @@ import { supportedLocales } from "@/lib/i18n";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { requireAdminScope } from "@/lib/admin-scope";
 import { createCourse, setCourseStatus } from "./actions";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -51,7 +52,7 @@ export default async function AdminCoursesPage() {
           {courses.map((course) => (
             <div className="tableRow" key={course.slug}>
               <div>
-                <strong>{course.title}</strong>
+                {course.id ? <Link href={`/admin/cursos/${course.id}`}>{course.title}</Link> : <strong>{course.title}</strong>}
                 <p>{course.duration} · {course.certificate}</p>
               </div>
               <span>{course.vertical}</span>

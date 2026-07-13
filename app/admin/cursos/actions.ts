@@ -24,6 +24,27 @@ async function uniqueSlug(organizationId: string, title: string) {
   return slug;
 }
 
+async function getManagedCourse(courseId: string) {
+  const session = await auth();
+  const role = session?.user?.role;
+  if (!session?.user?.id || !session.user.organizationSlug || !["sacf_admin", "org_admin", "instructor"].includes(role ?? "")) {
+    return null;
+  }
+  return prisma.course.findFirst({
+    where: {
+      id: courseId,
+      ...(role === "sacf_admin" ? {} : { organization: { slug: session.user.organizationSlug } })
+    },
+    select: { id: true }
+  });
+}
+
+function revalidateCourseEditor(courseId: string) {
+  revalidatePath(`/admin/cursos/${courseId}`);
+  revalidatePath("/admin/cursos");
+  revalidatePath("/catalogo");
+}
+
 // Course creation is tenant-scoped on the server. A company admin/instructor
 // can only create content for their own company; SACF admins choose a tenant.
 export async function createCourse(formData: FormData) {
@@ -127,6 +148,97 @@ export async function setCourseStatus(formData: FormData) {
       publishedAt: courseStatus === "published" ? new Date() : null
     }
   });
-  revalidatePath("/admin/cursos");
-  revalidatePath("/catalogo");
+  revalidateCourseEditor(course.id);
+}
+
+export async function updateCourse(formData: FormData) {
+  const courseId = String(formData.get("courseId") ?? "");
+  const course = await getManagedCourse(courseId);
+  if (!course) return;
+
+  const title = String(formData.get("title") ?? "").trim();
+  const vertical = String(formData.get("vertical") ?? "").trim();
+  if (!title || !vertical) return;
+
+  const workloadHours = Number.parseFloat(String(formData.get("workloadHours") ?? ""));
+  const validityMonths = Number.parseInt(String(formData.get("validityMonths") ?? ""), 10);
+  await prisma.course.update({
+    where: { id: course.id },
+    data: {
+      title,
+      vertical,
+      level: String(formData.get("level") ?? "Essencial"),
+      language: String(formData.get("language") ?? "pt-BR"),
+      instructorName: String(formData.get("instructor") ?? "").trim() || null,
+      shortDescription: String(formData.get("summary") ?? "").trim() || null,
+      description: String(formData.get("summary") ?? "").trim() || null,
+      workloadMinutes: Number.isFinite(workloadHours) && workloadHours > 0 ? Math.round(workloadHours * 60) : null,
+      certificateEnabled: formData.get("certificateEnabled") === "on",
+      certificateValidityDays: Number.isFinite(validityMonths) && validityMonths > 0 ? validityMonths * 30 : null,
+      mandatory: formData.get("mandatory") === "on"
+    }
+  });
+  revalidateCourseEditor(course.id);
+}
+
+export async function addModule(formData: FormData) {
+  const courseId = String(formData.get("courseId") ?? "");
+  const title = String(formData.get("title") ?? "").trim();
+  const course = await getManagedCourse(courseId);
+  if (!course || !title) return;
+
+  const lastModule = await prisma.courseModule.findFirst({
+    where: { courseId: course.id },
+    orderBy: { position: "desc" },
+    select: { position: true }
+  });
+  await prisma.courseModule.create({ data: { courseId: course.id, title, position: (lastModule?.position ?? -1) + 1 } });
+  revalidateCourseEditor(course.id);
+}
+
+export async function addLesson(formData: FormData) {
+  const courseId = String(formData.get("courseId") ?? "");
+  const moduleId = String(formData.get("moduleId") ?? "");
+  const title = String(formData.get("title") ?? "").trim();
+  const course = await getManagedCourse(courseId);
+  if (!course || !moduleId || !title) return;
+
+  const module = await prisma.courseModule.findFirst({
+    where: { id: moduleId, courseId: course.id },
+    select: { id: true }
+  });
+  if (!module) return;
+  const lastLesson = await prisma.lesson.findFirst({
+    where: { moduleId: module.id },
+    orderBy: { position: "desc" },
+    select: { position: true }
+  });
+  await prisma.lesson.create({
+    data: {
+      courseId: course.id,
+      moduleId: module.id,
+      title,
+      position: (lastLesson?.position ?? -1) + 1,
+      lessonType: "text"
+    }
+  });
+  revalidateCourseEditor(course.id);
+}
+
+export async function deleteModule(formData: FormData) {
+  const courseId = String(formData.get("courseId") ?? "");
+  const moduleId = String(formData.get("moduleId") ?? "");
+  const course = await getManagedCourse(courseId);
+  if (!course || !moduleId) return;
+  await prisma.courseModule.deleteMany({ where: { id: moduleId, courseId: course.id } });
+  revalidateCourseEditor(course.id);
+}
+
+export async function deleteLesson(formData: FormData) {
+  const courseId = String(formData.get("courseId") ?? "");
+  const lessonId = String(formData.get("lessonId") ?? "");
+  const course = await getManagedCourse(courseId);
+  if (!course || !lessonId) return;
+  await prisma.lesson.deleteMany({ where: { id: lessonId, courseId: course.id } });
+  revalidateCourseEditor(course.id);
 }
