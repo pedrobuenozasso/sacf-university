@@ -8,6 +8,7 @@ import {
 } from "@/lib/courses";
 
 const courseInclude = {
+  organization: { select: { slug: true } },
   modules: {
     orderBy: { position: "asc" },
     include: { lessons: { orderBy: { position: "asc" } } }
@@ -20,6 +21,7 @@ const courseInclude = {
 } as const;
 
 type CourseRow = {
+  organization: { slug: string };
   slug: string;
   title: string;
   description: string | null;
@@ -127,9 +129,12 @@ function enrollmentProgress(course: CourseRow): { progress: number; status: Cour
 function mapCourse(course: CourseRow): Course {
   const organizationSlugs = Array.from(
     new Set(
-      course.visibilityRules
-        .filter((rule) => rule.ruleType === "organization" && rule.organization)
-        .map((rule) => rule.organization!.slug)
+      [
+        course.organization.slug,
+        ...course.visibilityRules
+          .filter((rule) => rule.ruleType === "organization" && rule.organization)
+          .map((rule) => rule.organization!.slug)
+      ]
     )
   );
   const accessGroups = Array.from(
@@ -166,12 +171,15 @@ function mapCourse(course: CourseRow): Course {
   };
 }
 
-export async function getCourses(): Promise<Course[]> {
+export async function getCourses(organizationSlug?: string): Promise<Course[]> {
   const prisma = await getPrisma();
   if (!prisma) return fallbackCourses;
 
   const rows = await prisma.course.findMany({
-    where: { status: "published" },
+    where: {
+      status: "published",
+      ...(organizationSlug ? { organization: { slug: organizationSlug } } : {})
+    },
     include: courseInclude,
     orderBy: { createdAt: "asc" }
   });
@@ -196,12 +204,12 @@ const ORG_ACCENT: Record<string, string> = {
 };
 
 // Tenant companies shown in the admin — excludes the SACF platform org itself.
-export async function getOrganizations(): Promise<Organization[]> {
+export async function getOrganizations(organizationSlug?: string): Promise<Organization[]> {
   const prisma = await getPrisma();
   if (!prisma) return fallbackOrganizations;
 
   const rows = (await prisma.organization.findMany({
-    where: { slug: { not: "sacf" } },
+    where: organizationSlug ? { slug: organizationSlug } : { slug: { not: "sacf" } },
     include: { _count: { select: { members: true, courses: true, certificates: true } } },
     orderBy: { createdAt: "asc" }
   })) as OrganizationRow[];
@@ -234,12 +242,14 @@ const MEMBER_STATUS_LABEL: Record<string, AdminUser["status"]> = {
   blocked: "Bloqueado"
 };
 
-export async function getAdminUsers(): Promise<AdminUser[]> {
+export async function getAdminUsers(organizationSlug?: string): Promise<AdminUser[]> {
   const prisma = await getPrisma();
   if (!prisma) return fallbackAdminUsers;
 
   const rows = (await prisma.organizationMember.findMany({
-    where: { organization: { slug: { not: "sacf" } } },
+    where: organizationSlug
+      ? { organization: { slug: organizationSlug } }
+      : { organization: { slug: { not: "sacf" } } },
     include: {
       user: {
         include: {

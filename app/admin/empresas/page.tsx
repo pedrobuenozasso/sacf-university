@@ -1,21 +1,18 @@
 import { getOrganizations } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
-import { getAdminScope } from "@/lib/admin-scope";
+import { requireAdminScope } from "@/lib/admin-scope";
 import { createOrganization } from "./actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminCompaniesPage() {
-  const [organizations, { dict }, scope] = await Promise.all([
-    getOrganizations(),
-    getDictionary(),
-    getAdminScope()
+  const scope = await requireAdminScope();
+  const organizationSlug = scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined;
+  const [visibleOrganizations, { dict }] = await Promise.all([
+    getOrganizations(organizationSlug),
+    getDictionary()
   ]);
   const t = dict.admin.empresas;
-  const visibleOrganizations = scope.isSacfAdmin
-    ? organizations
-    : organizations.filter((org) => org.slug === scope.organizationSlug);
-
   return (
     <>
       <div className="sectionHead">

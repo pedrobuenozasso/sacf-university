@@ -1,27 +1,18 @@
 import { getCourses, getOrganizations } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
-import { getAdminScope } from "@/lib/admin-scope";
+import { requireAdminScope } from "@/lib/admin-scope";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminCertificationsPage() {
-  const [allCourses, allOrganizations, { dict }, scope] = await Promise.all([
-    getCourses(),
-    getOrganizations(),
-    getDictionary(),
-    getAdminScope()
+  const scope = await requireAdminScope();
+  const organizationSlug = scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined;
+  const [courses, organizations, { dict }] = await Promise.all([
+    getCourses(organizationSlug),
+    getOrganizations(organizationSlug),
+    getDictionary()
   ]);
   const t = dict.admin.certificacoes;
-  const organizations = scope.isSacfAdmin
-    ? allOrganizations
-    : allOrganizations.filter((org) => org.slug === scope.organizationSlug);
-  const courses = scope.isSacfAdmin
-    ? allCourses
-    : allCourses.filter(
-        (course) =>
-          course.organizationSlugs.length === 0 ||
-          course.organizationSlugs.includes(scope.organizationSlug ?? "")
-      );
   return (
     <>
       <div className="sectionHead">

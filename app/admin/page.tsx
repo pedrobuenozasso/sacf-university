@@ -2,25 +2,20 @@ import Link from "next/link";
 import { getAdminUsers, getDraftCourseCount, getOrganizations } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { interpolate } from "@/lib/i18n/interpolate";
-import { getAdminScope } from "@/lib/admin-scope";
+import { requireAdminScope } from "@/lib/admin-scope";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  const [allOrganizations, allAdminUsers, { dict }, scope] = await Promise.all([
-    getOrganizations(),
-    getAdminUsers(),
+  const scope = await requireAdminScope();
+  const organizationSlug = scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined;
+  const [organizations, adminUsers, { dict }] = await Promise.all([
+    getOrganizations(organizationSlug),
+    getAdminUsers(organizationSlug),
     getDictionary(),
-    getAdminScope()
   ]);
   const t = dict.admin.overview;
-  const organizations = scope.isSacfAdmin
-    ? allOrganizations
-    : allOrganizations.filter((org) => org.slug === scope.organizationSlug);
-  const adminUsers = scope.isSacfAdmin
-    ? allAdminUsers
-    : allAdminUsers.filter((user) => user.organizationSlug === scope.organizationSlug);
-  const draftCourses = await getDraftCourseCount(scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined);
+  const draftCourses = await getDraftCourseCount(organizationSlug);
 
   const totalUsers = organizations.reduce((sum, org) => sum + org.users, 0);
   const totalCourses = organizations.reduce((sum, org) => sum + org.courses, 0);

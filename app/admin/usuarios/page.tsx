@@ -1,22 +1,19 @@
 import { getAdminUsers, getOrganizations } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
-import { getAdminScope } from "@/lib/admin-scope";
+import { requireAdminScope } from "@/lib/admin-scope";
 import { InviteUserForm } from "@/components/invite-user-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminUsersPage() {
-  const [adminUsers, organizations, { dict }, scope] = await Promise.all([
-    getAdminUsers(),
-    getOrganizations(),
+  const scope = await requireAdminScope();
+  const organizationSlug = scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined;
+  const [visibleUsers, organizations, { dict }] = await Promise.all([
+    getAdminUsers(organizationSlug),
+    getOrganizations(organizationSlug),
     getDictionary(),
-    getAdminScope()
   ]);
   const t = dict.admin.usuarios;
-  const visibleUsers = scope.isSacfAdmin
-    ? adminUsers
-    : adminUsers.filter((user) => user.organizationSlug === scope.organizationSlug);
-
   return (
     <>
       <div className="sectionHead">
