@@ -416,3 +416,67 @@ export async function getDraftCourseCount(organizationSlug?: string): Promise<nu
     }
   });
 }
+
+export type AdminCertificateRecord = {
+  id: string;
+  code: string;
+  userName: string;
+  organizationName: string;
+  courseTitle: string;
+  issuedAt: string;
+  expiresAt: string | null;
+  status: "valid" | "expiring" | "expired" | "revoked";
+};
+
+export type CertificationOverview = {
+  issued: number;
+  expiring: number;
+  expired: number;
+  revoked: number;
+  records: AdminCertificateRecord[];
+};
+
+// Certification reporting is scoped by tenant before rows are returned to an
+// organization admin. "Expiring" means the certificate ends within 30 days.
+export async function getCertificationOverview(organizationSlug?: string): Promise<CertificationOverview> {
+  const prisma = await getPrisma();
+  if (!prisma) return { issued: 0, expiring: 0, expired: 0, revoked: 0, records: [] };
+
+  const rows = await prisma.certificate.findMany({
+    where: organizationSlug ? { organization: { slug: organizationSlug } } : {},
+    include: {
+      user: { select: { name: true } },
+      course: { select: { title: true } },
+      organization: { select: { name: true } }
+    },
+    orderBy: { issuedAt: "desc" }
+  });
+  const now = new Date();
+  const expiringThreshold = new Date(now.getTime() + 30 * 86_400_000);
+  const records = rows.map((certificate) => {
+    const status = certificate.revokedAt
+      ? "revoked" as const
+      : certificate.expiresAt && certificate.expiresAt < now
+        ? "expired" as const
+        : certificate.expiresAt && certificate.expiresAt <= expiringThreshold
+          ? "expiring" as const
+          : "valid" as const;
+    return {
+      id: certificate.id,
+      code: certificate.certificateCode,
+      userName: certificate.user.name,
+      organizationName: certificate.organization.name,
+      courseTitle: certificate.course.title,
+      issuedAt: certificate.issuedAt.toISOString(),
+      expiresAt: certificate.expiresAt?.toISOString() ?? null,
+      status
+    };
+  });
+  return {
+    issued: records.length,
+    expiring: records.filter((record) => record.status === "expiring").length,
+    expired: records.filter((record) => record.status === "expired").length,
+    revoked: records.filter((record) => record.status === "revoked").length,
+    records
+  };
+}

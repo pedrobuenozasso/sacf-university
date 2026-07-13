@@ -100,13 +100,13 @@ export async function createCourse(formData: FormData) {
   });
 
   if (lessonTitles.length) {
-    const module = await prisma.courseModule.create({
+    const courseModule = await prisma.courseModule.create({
       data: { courseId: course.id, title: "Conteúdo inicial", position: 0 }
     });
     await prisma.lesson.createMany({
       data: lessonTitles.map((lesson, position) => ({
         courseId: course.id,
-        moduleId: module.id,
+        moduleId: courseModule.id,
         title: lesson,
         position,
         lessonType: "text",
@@ -203,20 +203,20 @@ export async function addLesson(formData: FormData) {
   const course = await getManagedCourse(courseId);
   if (!course || !moduleId || !title) return;
 
-  const module = await prisma.courseModule.findFirst({
+  const courseModule = await prisma.courseModule.findFirst({
     where: { id: moduleId, courseId: course.id },
     select: { id: true }
   });
-  if (!module) return;
+  if (!courseModule) return;
   const lastLesson = await prisma.lesson.findFirst({
-    where: { moduleId: module.id },
+    where: { moduleId: courseModule.id },
     orderBy: { position: "desc" },
     select: { position: true }
   });
   await prisma.lesson.create({
     data: {
       courseId: course.id,
-      moduleId: module.id,
+      moduleId: courseModule.id,
       title,
       position: (lastLesson?.position ?? -1) + 1,
       lessonType: "text"

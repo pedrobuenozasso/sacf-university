@@ -1,4 +1,4 @@
-import { getCourses, getOrganizations } from "@/lib/data";
+import { getCertificationOverview } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { requireAdminScope } from "@/lib/admin-scope";
 
@@ -7,9 +7,8 @@ export const dynamic = "force-dynamic";
 export default async function AdminCertificationsPage() {
   const scope = await requireAdminScope();
   const organizationSlug = scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined;
-  const [courses, organizations, { dict }] = await Promise.all([
-    getCourses(organizationSlug),
-    getOrganizations(organizationSlug),
+  const [overview, { dict }] = await Promise.all([
+    getCertificationOverview(organizationSlug),
     getDictionary()
   ]);
   const t = dict.admin.certificacoes;
@@ -25,43 +24,44 @@ export default async function AdminCertificationsPage() {
 
       <section className="metrics">
         <div className="metric">
-          <strong>{organizations.reduce((sum, org) => sum + org.certificates, 0)}</strong>
+          <strong>{overview.issued}</strong>
           <span>{t.issued}</span>
         </div>
         <div className="metric">
-          <strong>{organizations.reduce((sum, org) => sum + org.expiring, 0)}</strong>
+          <strong>{overview.expiring}</strong>
           <span>{t.expiring}</span>
         </div>
         <div className="metric">
-          <strong>4</strong>
-          <span>{t.activeRules}</span>
+          <strong>{overview.expired}</strong>
+          <span>Vencidos</span>
         </div>
         <div className="metric">
-          <strong>12m</strong>
-          <span>{t.defaultValidity}</span>
+          <strong>{overview.revoked}</strong>
+          <span>Revogados</span>
         </div>
       </section>
 
       <div className="tablePanel">
         <div className="tableHead">
+          <span>Aluno</span>
           <span>{t.course}</span>
-          <span>{t.rule}</span>
           <span>{t.validity}</span>
-          <span>{t.alerts}</span>
+          <span>Código</span>
           <span>{t.status}</span>
         </div>
-        {courses.map((course) => (
-          <div className="tableRow" key={course.slug}>
+        {overview.records.map((record) => (
+          <div className="tableRow" key={record.id}>
             <div>
-              <strong>{course.title}</strong>
-              <p>{course.vertical}</p>
+              <strong>{record.userName}</strong>
+              <p>{record.organizationName}</p>
             </div>
-            <span>{course.certificate}</span>
-            <span>{course.certificate.includes("24") ? t.months24 : t.months12}</span>
-            <span>{t.alertDays}</span>
-            <span className="statusTag">{t.active}</span>
+            <span>{record.courseTitle}</span>
+            <span>{record.expiresAt ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(new Date(record.expiresAt)) : "Sem vencimento"}</span>
+            <span>{record.code}</span>
+            <span className="statusTag">{record.status === "valid" ? "Válido" : record.status === "expiring" ? "Vencendo" : record.status === "expired" ? "Vencido" : "Revogado"}</span>
           </div>
         ))}
+        {overview.records.length === 0 ? <div className="tableRow"><div><strong>Nenhum certificado emitido</strong><p>Os certificados emitidos aparecerão aqui.</p></div></div> : null}
       </div>
     </>
   );
