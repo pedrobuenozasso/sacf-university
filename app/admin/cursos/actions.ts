@@ -126,15 +126,15 @@ export async function setCourseStatus(formData: FormData) {
     return;
   }
 
-  const slug = String(formData.get("courseSlug") ?? "").trim();
+  const courseId = String(formData.get("courseId") ?? "").trim();
   const status = String(formData.get("status") ?? "");
   const allowedStatuses = ["draft", "published", "archived"] as const;
-  if (!slug || !allowedStatuses.includes(status as (typeof allowedStatuses)[number])) return;
+  if (!courseId || !allowedStatuses.includes(status as (typeof allowedStatuses)[number])) return;
   const courseStatus = status as (typeof allowedStatuses)[number];
 
   const course = await prisma.course.findFirst({
     where: {
-      slug,
+      id: courseId,
       ...(role === "sacf_admin" ? {} : { organization: { slug: session.user.organizationSlug } })
     },
     select: { id: true }

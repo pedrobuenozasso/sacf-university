@@ -61,7 +61,7 @@ export default async function AdminCoursesPage() {
               <div>
                 <span className="statusTag">{course.publicationStatus === "draft" ? "Rascunho" : course.publicationStatus === "archived" ? "Arquivado" : "Publicado"}</span>
                 <form className="courseRowActions" action={setCourseStatus}>
-                  <input name="courseSlug" type="hidden" value={course.slug} />
+                  <input name="courseId" type="hidden" value={course.id} />
                   {course.publicationStatus !== "published" ? <button name="status" type="submit" value="published">Publicar</button> : null}
                   {course.publicationStatus !== "archived" ? <button name="status" type="submit" value="archived">Arquivar</button> : null}
                 </form>
