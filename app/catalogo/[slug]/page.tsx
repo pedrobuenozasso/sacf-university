@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CoursePreviewPanel } from "@/components/course-card";
 import { getCourseBySlug } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { interpolate } from "@/lib/i18n/interpolate";
+import { startCourse } from "@/lib/learning";
 
 export const dynamic = "force-dynamic";
 
@@ -65,9 +65,10 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
           <br />
           {interpolate(t.instructor, { instructor: course.instructor })}
         </p>
-        <Link className="button" href={`/aprender/${course.slug}`}>
-          {t.start}
-        </Link>
+        <form action={startCourse}>
+          <input name="courseSlug" type="hidden" value={course.slug} />
+          <button className="button" type="submit">{t.start}</button>
+        </form>
       </aside>
     </section>
   );

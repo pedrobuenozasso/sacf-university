@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import type { Session } from "next-auth";
 
 export type AdminScope = {
   isSacfAdmin: boolean;
@@ -8,7 +9,7 @@ export type AdminScope = {
 
 const ADMIN_ROLES = new Set(["sacf_admin", "org_admin", "instructor"]);
 
-function scopeFromSession(session: Awaited<ReturnType<typeof auth>>): AdminScope {
+function scopeFromSession(session: Session | null): AdminScope {
   return {
     isSacfAdmin: session?.user?.role === "sacf_admin",
     organizationSlug: session?.user?.organizationSlug ?? null
