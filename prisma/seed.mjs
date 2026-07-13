@@ -288,9 +288,13 @@ async function main() {
     const organization = membership?.organization ?? orgBySlug.zasso;
     const completed = item.status === "completed";
 
-    const enrollment = await prisma.enrollment.upsert({
-      where: { courseId_userId: { courseId: course.id, userId: user.id } },
-      update: {
+    const existingEnrollment = await prisma.enrollment.findFirst({
+      where: { courseId: course.id, userId: user.id, cycleNumber: 1 }
+    });
+    const enrollment = existingEnrollment
+      ? await prisma.enrollment.update({
+          where: { id: existingEnrollment.id },
+          data: {
         organizationId: organization.id,
         status: item.status,
         assignedAt: addDays(-42),
@@ -300,8 +304,10 @@ async function main() {
         finalScore: item.finalScore ?? null,
         certificateExpiresAt: item.expiresInDays ? addDays(item.expiresInDays) : null,
         recertificationRequired: false
-      },
-      create: {
+      }
+        })
+      : await prisma.enrollment.create({
+          data: {
         organizationId: organization.id,
         courseId: course.id,
         userId: user.id,
@@ -312,9 +318,10 @@ async function main() {
         dueDate: completed ? null : addDays(item.dueInDays ?? 14),
         finalScore: item.finalScore ?? null,
         certificateExpiresAt: item.expiresInDays ? addDays(item.expiresInDays) : null,
-        recertificationRequired: false
+        recertificationRequired: false,
+        cycleNumber: 1
       }
-    });
+        });
 
     const modules = await prisma.courseModule.findMany({
       where: { courseId: course.id },

@@ -383,6 +383,7 @@ model Enrollment {
   certificateExpiresAt          DateTime?        @map("certificate_expires_at")
   recertificationRequired       Boolean          @default(false) @map("recertification_required")
   recertificationOfEnrollmentId String?          @map("recertification_of_enrollment_id") @db.Uuid
+  cycleNumber                   Int              @default(1) @map("cycle_number")
   createdAt                     DateTime         @default(now()) @map("created_at")
   updatedAt                     DateTime         @updatedAt @map("updated_at")
 
@@ -396,7 +397,8 @@ model Enrollment {
   quizAttempts                QuizAttempt[]
   certificates                Certificate[]
 
-  @@unique([courseId, userId])
+  @@unique([courseId, userId, cycleNumber])
+  @@index([courseId, userId])
   @@index([organizationId, status])
   @@index([userId])
   @@map("enrollments")

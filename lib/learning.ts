@@ -58,20 +58,18 @@ export async function startCourse(formData: FormData) {
   const course = await findAccessibleCourse(slug, session);
   if (!course) redirect("/catalogo");
 
-  await prisma.enrollment.upsert({
-    where: { courseId_userId: { courseId: course.id, userId: session.userId } },
-    update: {
-      status: "in_progress",
-      startedAt: new Date()
-    },
-    create: {
-      organizationId: session.organizationId,
-      courseId: course.id,
-      userId: session.userId,
-      status: "in_progress",
-      startedAt: new Date()
-    }
+  const latestEnrollment = await prisma.enrollment.findFirst({
+    where: { courseId: course.id, userId: session.userId },
+    orderBy: { cycleNumber: "desc" },
+    select: { id: true, status: true }
   });
+  if (latestEnrollment && latestEnrollment.status !== "completed") {
+    await prisma.enrollment.update({ where: { id: latestEnrollment.id }, data: { status: "in_progress", startedAt: new Date() } });
+  } else if (!latestEnrollment) {
+    await prisma.enrollment.create({
+      data: { organizationId: session.organizationId, courseId: course.id, userId: session.userId, status: "in_progress", startedAt: new Date() }
+    });
+  }
 
   revalidatePath("/meus-cursos");
   redirect(`/aprender/${slug}`);
@@ -105,6 +103,7 @@ export async function getLearningCourse(slug: string): Promise<LearningCourse | 
       organizationId: session.organizationId,
       course: { slug, status: "published" }
     },
+    orderBy: { cycleNumber: "desc" },
     include: {
       course: {
         include: {
@@ -157,6 +156,7 @@ export async function completeLesson(courseSlug: string, lessonId: string) {
       organizationId: session.organizationId,
       course: { slug: courseSlug, status: "published" }
     },
+    orderBy: { cycleNumber: "desc" },
     select: {
       id: true,
       courseId: true,

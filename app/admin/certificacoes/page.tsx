@@ -1,7 +1,7 @@
 import { getCertificationOverview } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { requireAdminScope } from "@/lib/admin-scope";
-import { revokeCertificate } from "./actions";
+import { revokeCertificate, startRecertification } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -65,6 +65,12 @@ export default async function AdminCertificationsPage() {
                 <form className="courseRowActions" action={revokeCertificate}>
                   <input name="certificateId" type="hidden" value={record.id} />
                   <button type="submit">Revogar</button>
+                </form>
+              ) : null}
+              {record.status === "expired" ? (
+                <form className="courseRowActions" action={startRecertification}>
+                  <input name="certificateId" type="hidden" value={record.id} />
+                  <button type="submit">Iniciar reciclagem</button>
                 </form>
               ) : null}
             </div>

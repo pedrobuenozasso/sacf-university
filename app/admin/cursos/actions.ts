@@ -294,23 +294,28 @@ export async function assignCourse(formData: FormData) {
     }
   }
 
-  await prisma.$transaction(
-    userIds.map((userId) =>
-      prisma.enrollment.upsert({
-        where: { courseId_userId: { courseId: course.id, userId } },
-        update: { assignedById: session.user.id, assignedAt: new Date(), dueDate },
-        create: {
-          organizationId: course.organizationId,
-          courseId: course.id,
-          userId,
-          status: "not_started",
-          assignedById: session.user.id,
-          assignedAt: new Date(),
-          dueDate
+  await prisma.$transaction(async (tx) => {
+    for (const userId of userIds) {
+      const activeEnrollment = await tx.enrollment.findFirst({
+        where: { courseId: course.id, userId, status: { notIn: ["completed", "cancelled", "expired"] } },
+        orderBy: { cycleNumber: "desc" },
+        select: { id: true }
+      });
+      if (activeEnrollment) {
+        await tx.enrollment.update({ where: { id: activeEnrollment.id }, data: { assignedById: session.user.id, assignedAt: new Date(), dueDate } });
+        continue;
+      }
+      const latestEnrollment = await tx.enrollment.findFirst({
+        where: { courseId: course.id, userId }, orderBy: { cycleNumber: "desc" }, select: { cycleNumber: true }
+      });
+      await tx.enrollment.create({
+        data: {
+          organizationId: course.organizationId, courseId: course.id, userId, cycleNumber: (latestEnrollment?.cycleNumber ?? 0) + 1,
+          status: "not_started", assignedById: session.user.id, assignedAt: new Date(), dueDate
         }
-      })
-    )
-  );
+      });
+    }
+  });
   revalidateCourseEditor(course.id);
   revalidatePath("/meus-cursos");
 }
