@@ -28,8 +28,13 @@ export default async function CourseEditorPage({ params }: { params: Promise<{ c
         <Link className="buttonGhost" href="/admin/cursos">Voltar aos cursos</Link>
       </div>
 
+      <nav className="editorSteps" aria-label="Etapas do editor">
+        <a href="#dados">1. Dados</a><a href="#estrutura">2. Estrutura</a><a href="#avaliacao">3. Avaliação</a><a href="#distribuicao">4. Distribuição</a>
+      </nav>
+
       <section className="split">
-        <form className="detailPanel" action={updateCourse}>
+        <form className="detailPanel" id="dados" action={updateCourse}>
+          <p className="eyebrow">Etapa 1</p>
           <h2>Informações do curso</h2>
           <input name="courseId" type="hidden" value={course.id} />
           <input className="field" name="title" defaultValue={course.title} required />
@@ -49,7 +54,7 @@ export default async function CourseEditorPage({ params }: { params: Promise<{ c
               Validade do certificado (meses)
               <input className="field" name="validityMonths" type="number" min="1" defaultValue={course.certificateValidityDays ? Math.round(course.certificateValidityDays / 30) : ""} placeholder="Sem vencimento" />
             </label>
-            <label>
+            <label id="avaliacao">
               Nota mínima da prova (%)
               <input className="field" name="passingScore" type="number" min="0" max="100" defaultValue={course.passingScore ?? ""} placeholder="Sem exigência" />
             </label>
@@ -64,7 +69,8 @@ export default async function CourseEditorPage({ params }: { params: Promise<{ c
           <button className="button" type="submit">Salvar alterações</button>
         </form>
 
-        <div className="detailPanel">
+        <div className="detailPanel" id="estrutura">
+          <p className="eyebrow">Etapa 2</p>
           <h2>Estrutura do curso</h2>
           {course.modules.map((module) => (
             <div className="moduleItem" key={module.id}>
@@ -93,8 +99,9 @@ export default async function CourseEditorPage({ params }: { params: Promise<{ c
         </div>
       </section>
 
-      <section className="split">
+      <section className="split" id="distribuicao">
         <div className="detailPanel">
+          <p className="eyebrow">Etapa 4</p>
           <h2>Atribuir a uma pessoa</h2>
           <p className="formHint">A matrícula é criada com o prazo informado e fica disponível no catálogo do aluno.</p>
           <form action={assignCourse}>
