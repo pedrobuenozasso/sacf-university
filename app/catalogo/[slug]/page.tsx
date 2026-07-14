@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { CoursePreviewPanel } from "@/components/course-card";
-import { getCourseBySlug } from "@/lib/data";
+import { getCourseForCurrentUser } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { interpolate } from "@/lib/i18n/interpolate";
 import { startCourse } from "@/lib/learning";
@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function CourseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [course, { dict }] = await Promise.all([getCourseBySlug(slug), getDictionary()]);
+  const [course, { dict }] = await Promise.all([getCourseForCurrentUser(slug), getDictionary()]);
   const t = dict.courseDetail;
 
   if (!course) {

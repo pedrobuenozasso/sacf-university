@@ -6,6 +6,8 @@ import {
   type Course,
   type Organization
 } from "@/lib/courses";
+import { canAccessCourse, type SessionUser } from "@/lib/courses";
+import { auth } from "@/lib/auth";
 
 const courseInclude = {
   organization: { select: { slug: true } },
@@ -310,6 +312,33 @@ export async function getCourseBySlug(slug: string): Promise<Course | null> {
     include: courseInclude
   });
   return row ? mapCourse(row) : null;
+}
+
+function sessionToCourseViewer(session: Awaited<ReturnType<typeof auth>>): SessionUser | null {
+  if (!session?.user?.id || !session.user.organizationSlug || !session.user.organizationName || !session.user.email) return null;
+  return {
+    id: session.user.id,
+    name: session.user.name ?? session.user.email,
+    email: session.user.email,
+    organization: session.user.organizationName,
+    organizationSlug: session.user.organizationSlug,
+    role: (session.user.role ?? "student") as SessionUser["role"],
+    groups: session.user.groups ?? []
+  };
+}
+
+// Course visibility is enforced before private catalog data is sent to the
+// browser. Client-side filters remain only as a presentation convenience.
+export async function getCoursesForCurrentUser(): Promise<Course[]> {
+  const viewer = sessionToCourseViewer(await auth());
+  if (!viewer) return [];
+  return (await getCourses()).filter((course) => canAccessCourse(course, viewer));
+}
+
+export async function getCourseForCurrentUser(slug: string): Promise<Course | null> {
+  const viewer = sessionToCourseViewer(await auth());
+  if (!viewer) return null;
+  return (await getCourses()).find((course) => course.slug === slug && canAccessCourse(course, viewer)) ?? null;
 }
 
 const ORG_ACCENT: Record<string, string> = {

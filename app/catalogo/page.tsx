@@ -1,9 +1,9 @@
 import { CatalogView } from "@/components/catalog-view";
-import { getCourses } from "@/lib/data";
+import { getCoursesForCurrentUser } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
 export default async function CatalogPage() {
-  const courses = await getCourses();
+  const courses = await getCoursesForCurrentUser();
   return <CatalogView courses={courses} />;
 }
