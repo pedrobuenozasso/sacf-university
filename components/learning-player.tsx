@@ -99,12 +99,12 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
           <div><strong>Status</strong><span>{currentLesson.status === "completed" ? "Concluída" : "Em andamento"}</span></div>
           <div><strong>Certificação</strong><span>{course.certificate}</span></div>
         </div>
-        {currentLesson.content ? <div className="detailPanel"><h2>Conteúdo</h2><p>{currentLesson.content}</p></div> : null}
+        {currentLesson.content ? <article className="lessonContent"><p className="eyebrow">Material da aula</p><h2>Conteúdo</h2><div>{currentLesson.content}</div></article> : null}
         {currentLesson.attachmentUrl ? <div className="actions"><a className="buttonGhost" href={currentLesson.attachmentUrl} rel="noreferrer" target="_blank">Abrir material complementar</a></div> : null}
-        {currentLesson.lessonType === "quiz" ? <section className="detailPanel">
+        {currentLesson.lessonType === "quiz" ? <section className="quizPanel">
           <h2>Prova</h2>
           <p className="formHint">Nota mínima: {course.passingScore ?? 0}%.</p>
-          {currentLesson.questions.map((question, index) => <fieldset key={question.id}><legend>{index + 1}. {question.question}</legend>{question.options.map((option) => <label className="checkItem" key={option.id}><input checked={quizAnswers[question.id] === option.id} name={question.id} onChange={() => setQuizAnswers((current) => ({ ...current, [question.id]: option.id }))} type="radio" /> {option.optionText}</label>)}</fieldset>)}
+          {currentLesson.questions.map((question, index) => <fieldset key={question.id}><legend>{index + 1}. {question.question}</legend>{question.options.map((option) => <label className="quizOption" key={option.id}><input checked={quizAnswers[question.id] === option.id} name={question.id} onChange={() => setQuizAnswers((current) => ({ ...current, [question.id]: option.id }))} type="radio" /> <span>{option.optionText}</span></label>)}</fieldset>)}
           {quizFeedback ? <p className="formHint">{quizFeedback}</p> : null}
           <button className="button" disabled={isPending || currentLesson.status === "completed" || !currentLesson.questions.length} onClick={submitCurrentQuiz} type="button">{currentLesson.status === "completed" ? "Prova aprovada" : isPending ? "Corrigindo..." : "Enviar prova"}</button>
         </section> : null}
