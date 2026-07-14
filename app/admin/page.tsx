@@ -73,30 +73,30 @@ export default async function AdminPage() {
       </div>
 
       <section className="metrics">
-        <div className="metric">
+        <Link className="metric metricLink" href="/admin/empresas">
           <strong>{organizations.length}</strong>
           <span>{t.companies}</span>
-        </div>
-        <div className="metric">
+        </Link>
+        <Link className="metric metricLink" href="/admin/usuarios">
           <strong>{totalUsers}</strong>
           <span>{t.users}</span>
-        </div>
-        <div className="metric">
+        </Link>
+        <Link className="metric metricLink" href="/admin/cursos">
           <strong>{totalCourses}</strong>
           <span>{t.checklistCourses}</span>
-        </div>
-        <div className="metric">
+        </Link>
+        <Link className="metric metricLink" href="/admin/certificacoes">
           <strong>{totalCertificates}</strong>
           <span>{t.certificates}</span>
-        </div>
-        <div className="metric">
+        </Link>
+        <Link className="metric metricLink" href="/admin/relatorios">
           <strong>{deadlines.overdue}</strong>
           <span>Treinamentos atrasados</span>
-        </div>
-        <div className="metric">
+        </Link>
+        <Link className="metric metricLink" href="/admin/certificacoes">
           <strong>{certifications.expiring + certifications.expired}</strong>
           <span>Certificados em risco</span>
-        </div>
+        </Link>
       </section>
 
       <section className="detailPanel">
