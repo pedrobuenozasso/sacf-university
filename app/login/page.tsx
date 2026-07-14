@@ -12,10 +12,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [showCompanyPrompt, setShowCompanyPrompt] = useState(false);
   const [demoLoading, setDemoLoading] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const demoLoginEnabled = process.env.NEXT_PUBLIC_DEMO_LOGIN_ENABLED === "true";
+  const demoLoginEnabled = process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_DEMO_LOGIN_ENABLED === "true";
 
   async function loginWithEmail(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -127,17 +126,6 @@ export default function LoginPage() {
           <button className="button" type="submit" disabled={submitting}>
             {submitting ? t.submitting : t.submit}
           </button>
-          <p>
-            {t.noAccess}{" "}
-            <button
-              type="button"
-              className="loginInlineLink"
-              onClick={() => setShowCompanyPrompt(true)}
-            >
-              {t.requestImplementation}
-            </button>
-            .
-          </p>
           <div className="loginContractBox">
             <strong>{t.contractTitle}</strong>
             <span>{t.contractBody}</span>
@@ -177,36 +165,6 @@ export default function LoginPage() {
           ) : null}
         </form>
       </div>
-
-      {showCompanyPrompt ? (
-        <div className="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="companyPromptTitle">
-          <div className="companyPrompt">
-            <button
-              type="button"
-              className="modalClose"
-              onClick={() => setShowCompanyPrompt(false)}
-              aria-label={t.close}
-            >
-              x
-            </button>
-            <p className="eyebrow">SACF Academy</p>
-            <h2 id="companyPromptTitle">{t.modalTitle}</h2>
-            <p>{t.modalBody}</p>
-            <div className="productHeroActions">
-              <Link className="button" href="/cadastro">
-                {t.modalPrimary}
-              </Link>
-              <button
-                type="button"
-                className="buttonGhost"
-                onClick={() => setShowCompanyPrompt(false)}
-              >
-                {t.modalSecondary}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
     </section>
   );
 }

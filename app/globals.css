@@ -2467,6 +2467,8 @@ h3 {
   line-height: 1.55;
 }
 
+.implementationMeta { max-width: 520px; color: var(--muted); font-size: 0.9rem; line-height: 1.55; margin-top: 14px; }
+
 .modalBackdrop {
   position: fixed;
   inset: 0;

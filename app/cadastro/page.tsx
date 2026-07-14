@@ -48,6 +48,7 @@ export default function SignupPage() {
           <p className="eyebrow">{t.eyebrow}</p>
           <h1>{t.title}</h1>
           <p className="lead">{t.lead}</p>
+          <p className="implementationMeta">Leva poucos minutos. A equipe SACF retorna para alinhar o ambiente e os primeiros treinamentos.</p>
           <div className="implementationSteps">
             <article>
               <span>01</span>

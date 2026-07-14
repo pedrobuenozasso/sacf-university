@@ -39,7 +39,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       name: "Demo",
       credentials: { role: { label: "Role", type: "text" } },
       async authorize(credentials) {
-        if (process.env.DEMO_LOGIN_ENABLED !== "true") return null;
+        if (process.env.NODE_ENV === "production" || process.env.DEMO_LOGIN_ENABLED !== "true") return null;
 
         const demoEmails: Record<string, string> = {
           sacf_admin: "admin@sacf.io",
