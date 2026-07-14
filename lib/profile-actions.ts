@@ -4,8 +4,6 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
-const MAX_AVATAR_BYTES = 800_000;
-
 export async function updateProfile({
   name,
   avatarUrl
@@ -23,19 +21,14 @@ export async function updateProfile({
     return { ok: false, error: "Informe um nome." };
   }
 
-  if (avatarUrl && avatarUrl.length > MAX_AVATAR_BYTES) {
-    return { ok: false, error: "Imagem muito grande. Escolha uma foto menor." };
-  }
-
-  if (avatarUrl && !avatarUrl.startsWith("data:image/")) {
-    return { ok: false, error: "Formato de imagem inválido." };
+  if (avatarUrl !== undefined) {
+    return { ok: false, error: "Foto de perfil será liberada após a configuração do armazenamento seguro." };
   }
 
   await prisma.user.update({
     where: { id: session.user.id },
     data: {
-      name: trimmedName,
-      ...(avatarUrl !== undefined ? { avatarUrl } : {})
+      name: trimmedName
     }
   });
 

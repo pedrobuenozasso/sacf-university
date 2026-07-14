@@ -26,7 +26,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const valid = await bcrypt.compare(password, user.passwordHash);
         if (!valid) return null;
 
-        return { id: user.id, email: user.email, name: user.name, image: user.avatarUrl ?? undefined };
+        return { id: user.id, email: user.email, name: user.name };
       }
     }),
     // Temporary demo shortcut so we can click through role screens during
@@ -52,7 +52,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user) return null;
 
-        return { id: user.id, email: user.email, name: user.name, image: user.avatarUrl ?? undefined };
+        return { id: user.id, email: user.email, name: user.name };
       }
     })
   ],
@@ -80,7 +80,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       if (trigger === "update" && session) {
         if (typeof session.name === "string") token.name = session.name;
-        if ("avatarUrl" in session) token.picture = session.avatarUrl ?? null;
+        // Profile images must never be stored in the JWT. A base64 image would
+        // inflate the session cookie past proxy header limits and make the app
+        // unreachable before a request even reaches Next.js.
+        delete token.picture;
       }
 
       return token;
@@ -94,6 +97,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.organizationName =
         (token.organizationName as string | null | undefined) ?? null;
       session.user.groups = (token.groups as string[] | undefined) ?? [];
+      session.user.image = null;
       return session;
     }
   }
