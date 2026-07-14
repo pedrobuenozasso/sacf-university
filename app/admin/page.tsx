@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAdminUsers, getDraftCourseCount, getOrganizations } from "@/lib/data";
+import { getAdminUsers, getCertificationOverview, getDraftCourseCount, getOrganizations, getTrainingDeadlineOverview } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { interpolate } from "@/lib/i18n/interpolate";
 import { requireAdminScope } from "@/lib/admin-scope";
@@ -9,9 +9,11 @@ export const dynamic = "force-dynamic";
 export default async function AdminPage() {
   const scope = await requireAdminScope();
   const organizationSlug = scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined;
-  const [organizations, adminUsers, { dict }] = await Promise.all([
+  const [organizations, adminUsers, certifications, deadlines, { dict }] = await Promise.all([
     getOrganizations(organizationSlug),
     getAdminUsers(organizationSlug),
+    getCertificationOverview(organizationSlug),
+    getTrainingDeadlineOverview(organizationSlug),
     getDictionary(),
   ]);
   const t = dict.admin.overview;
@@ -87,6 +89,14 @@ export default async function AdminPage() {
           <strong>{totalCertificates}</strong>
           <span>{t.certificates}</span>
         </div>
+        <div className="metric">
+          <strong>{deadlines.overdue}</strong>
+          <span>Treinamentos atrasados</span>
+        </div>
+        <div className="metric">
+          <strong>{certifications.expiring + certifications.expired}</strong>
+          <span>Certificados em risco</span>
+        </div>
       </section>
 
       <section className="detailPanel">
@@ -121,8 +131,12 @@ export default async function AdminPage() {
           </div>
           <div className="checklist">
             <div className="checkItem">
-              <span>{interpolate(t.queueExpiring, { count: expiring })}</span>
+              <span>{interpolate(t.queueExpiring, { count: certifications.expiring + certifications.expired || expiring })}</span>
               <span>{t.high}</span>
+            </div>
+            <div className="checkItem">
+              <span>{deadlines.overdue} treinamento(s) obrigatório(s) com prazo vencido</span>
+              <Link className="buttonGhost" href="/admin/relatorios">Ver pendências</Link>
             </div>
             <div className="checkItem">
               <span>{interpolate(t.queueInvites, { count: pendingInvites })}</span>
@@ -151,6 +165,20 @@ export default async function AdminPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="split">
+        <div className="detailPanel">
+          <div className="sectionHead"><div><p className="eyebrow">Atenção imediata</p><h2>Prazos próximos</h2></div><Link className="buttonGhost" href="/admin/relatorios">Abrir acompanhamento</Link></div>
+          <div className="moduleList">
+            {deadlines.records.slice(0, 4).map((item) => <div className="moduleItem" key={item.id}><h3>{item.userName} · {item.courseTitle}</h3><p>{item.organizationName} · {item.status === "overdue" ? "Atrasado" : item.status === "due_soon" ? "Vence em breve" : "Agendado"}</p></div>)}
+            {!deadlines.records.length ? <p className="formHint">Nenhum prazo pendente no momento.</p> : null}
+          </div>
+        </div>
+        <div className="detailPanel">
+          <div className="sectionHead"><div><p className="eyebrow">Certificação</p><h2>Risco de validade</h2></div><Link className="buttonGhost" href="/admin/certificacoes">Ver certificados</Link></div>
+          <div className="checklist"><div className="checkItem"><span>Vencem nos próximos 30 dias</span><strong>{certifications.expiring}</strong></div><div className="checkItem"><span>Já vencidos</span><strong>{certifications.expired}</strong></div><div className="checkItem"><span>Revogados</span><strong>{certifications.revoked}</strong></div></div>
         </div>
       </section>
     </>
