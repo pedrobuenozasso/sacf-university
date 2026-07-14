@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { supportedLocales } from "@/lib/i18n";
 import { requireAdminScope } from "@/lib/admin-scope";
 import { getAdminCourseEditor, getCourseAssignmentOptions } from "@/lib/data";
+import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
 import { addLesson, addModule, assignCourse, deleteLesson, deleteModule, updateCourse } from "../actions";
 
 export const dynamic = "force-dynamic";
@@ -76,11 +77,11 @@ export default async function CourseEditorPage({ params }: { params: Promise<{ c
             <div className="moduleItem" key={module.id}>
               <div className="sectionHead compactLibraryHead">
                 <h3>{module.title}</h3>
-                <form action={deleteModule}><input name="courseId" type="hidden" value={course.id} /><input name="moduleId" type="hidden" value={module.id} /><button className="dangerButton" type="submit">Excluir módulo</button></form>
+                <form action={deleteModule}><input name="courseId" type="hidden" value={course.id} /><input name="moduleId" type="hidden" value={module.id} /><ConfirmSubmitButton className="dangerButton" message="Excluir este módulo e todas as aulas dentro dele?">Excluir módulo</ConfirmSubmitButton></form>
               </div>
               <ul>
                 {module.lessons.map((lesson) => (
-                  <li key={lesson.id}><Link href={`/admin/cursos/${course.id}/aulas/${lesson.id}`}>{lesson.title}</Link> <span className="formHint">{lesson.lessonType === "quiz" ? "Prova" : lesson.lessonType === "file" ? "Documento" : lesson.lessonType === "video" ? "Vídeo" : "Texto"}</span> <form className="inlineForm" action={deleteLesson}><input name="courseId" type="hidden" value={course.id} /><input name="lessonId" type="hidden" value={lesson.id} /><button type="submit">Excluir</button></form></li>
+                  <li key={lesson.id}><Link href={`/admin/cursos/${course.id}/aulas/${lesson.id}`}>{lesson.title}</Link> <span className="formHint">{lesson.lessonType === "quiz" ? "Prova" : lesson.lessonType === "file" ? "Documento" : lesson.lessonType === "video" ? "Vídeo" : "Texto"}</span> <form className="inlineForm" action={deleteLesson}><input name="courseId" type="hidden" value={course.id} /><input name="lessonId" type="hidden" value={lesson.id} /><ConfirmSubmitButton message="Excluir esta aula?">Excluir</ConfirmSubmitButton></form></li>
                 ))}
               </ul>
               <form className="formGrid" action={addLesson}>

@@ -1839,6 +1839,9 @@ h3 {
 
 .detailPanel[id] { scroll-margin-top: 100px; }
 
+.uploadDropzone { border: 1px dashed rgba(0, 209, 255, 0.42); border-radius: var(--radius); padding: 14px; background: rgba(0, 209, 255, 0.045); }
+.uploadDropzone .buttonGhost { width: 100%; min-height: 48px; }
+
 .adminPage {
   max-width: 1180px;
   margin: 0 auto;
@@ -3914,4 +3917,14 @@ textarea.field {
   .implementationSteps article {
     grid-template-columns: 1fr;
   }
+
+  .pageShell { padding-inline: 14px; }
+  .detailPanel { padding: 18px; }
+  .metrics { grid-template-columns: 1fr; }
+  .tableRow { padding: 14px; gap: 6px; }
+  .editorSteps { margin-inline: -2px; }
+  .editorSteps a { padding: 10px 12px; }
+  .moduleItem { padding: 12px; }
+  .inlineForm { display: inline-flex; margin-top: 8px; }
+  .button, .buttonGhost, .dangerButton { min-height: 44px; }
 }
