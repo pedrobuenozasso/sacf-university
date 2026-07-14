@@ -130,8 +130,8 @@ a {
 }
 
 .brandLockup {
-  width: clamp(142px, 16vw, 178px);
-  height: 48px;
+  width: clamp(160px, 18vw, 210px);
+  height: 56px;
   display: block;
   border-radius: 12px;
   object-fit: cover;
