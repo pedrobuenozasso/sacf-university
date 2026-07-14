@@ -6,6 +6,7 @@ import { randomBytes } from "crypto";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@prisma/client";
+import { createDownloadUrl } from "@/lib/storage";
 
 type LearningSession = {
   userId: string;
@@ -126,8 +127,8 @@ export async function getLearningCourse(slug: string): Promise<LearningCourse | 
   if (!enrollment) return null;
 
   const progressByLesson = new Map(enrollment.lessonProgress.map((progress) => [progress.lessonId, progress]));
-  const lessons = enrollment.course.modules.flatMap((module) =>
-    module.lessons.map((lesson) => {
+  const lessons = await Promise.all(enrollment.course.modules.flatMap((module) =>
+    module.lessons.map(async (lesson) => {
       const progress = progressByLesson.get(lesson.id);
       return {
         id: lesson.id,
@@ -139,12 +140,12 @@ export async function getLearningCourse(slug: string): Promise<LearningCourse | 
         lessonType: lesson.lessonType,
         description: lesson.description,
         content: lesson.content,
-        videoUrl: lesson.videoUrl,
-        attachmentUrl: lesson.attachmentUrl,
+        videoUrl: lesson.videoUrl ? await createDownloadUrl(lesson.videoUrl) : null,
+        attachmentUrl: lesson.attachmentUrl ? await createDownloadUrl(lesson.attachmentUrl) : null,
         questions: lesson.questions.map((question) => ({ id: question.id, question: question.question, options: question.options.map((option) => ({ id: option.id, optionText: option.optionText })) }))
       };
     })
-  );
+  ));
   const requiredLessons = lessons.length;
   const completedLessons = lessons.filter((lesson) => lesson.status === "completed").length;
   const progressPercent = requiredLessons ? Math.round((completedLessons / requiredLessons) * 100) : 0;

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdminScope } from "@/lib/admin-scope";
 import { getAdminLessonEditor } from "@/lib/data";
+import { FileUpload } from "@/components/file-upload";
 import { addQuizQuestion, deleteQuizQuestion, updateLesson } from "../../../actions";
 
 export const dynamic = "force-dynamic";
@@ -32,8 +33,10 @@ export default async function LessonEditorPage({ params }: { params: Promise<{ c
           </div>
           <label>Origem do vídeo<select className="field" name="videoProvider" defaultValue={lesson.videoProvider ?? ""}><option value="">Não se aplica</option><option value="unlisted_youtube">YouTube não listado</option><option value="vimeo">Vimeo</option><option value="mux">Mux</option><option value="cloud_storage">Armazenamento em nuvem</option><option value="external_url">URL externa</option></select></label>
           <label>URL do vídeo<input className="field" name="videoUrl" type="url" defaultValue={lesson.videoUrl ?? ""} placeholder="https://..." /></label>
+          <FileUpload courseId={courseId} existingUrl={lesson.videoUrl} inputName="videoUploadUrl" kind="video" />
           <label>Texto da aula<textarea className="field" name="content" defaultValue={lesson.content ?? ""} placeholder="Escreva o conteúdo que o aluno verá." /></label>
           <label>URL do PDF ou documento<input className="field" name="attachmentUrl" type="url" defaultValue={lesson.attachmentUrl ?? ""} placeholder="https://..." /></label>
+          <FileUpload courseId={courseId} existingUrl={lesson.attachmentUrl} inputName="attachmentUploadUrl" kind="document" />
           <label className="checkItem"><input name="required" type="checkbox" defaultChecked={lesson.required} /> Exigir esta aula para conclusão</label>
           <label className="checkItem"><input name="previewEnabled" type="checkbox" defaultChecked={lesson.previewEnabled} /> Liberar prévia no catálogo</label>
           <p className="formHint">Os documentos e vídeos são vinculados por URL. Assim, o administrador pode usar o provedor de armazenamento que preferir.</p>

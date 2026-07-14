@@ -264,9 +264,9 @@ export async function updateLesson(formData: FormData) {
       videoProvider: videoProviders.includes(videoProviderValue as (typeof videoProviders)[number])
         ? videoProviderValue as (typeof videoProviders)[number]
         : null,
-      videoUrl: String(formData.get("videoUrl") ?? "").trim() || null,
+      videoUrl: String(formData.get("videoUploadUrl") ?? "").trim() || String(formData.get("videoUrl") ?? "").trim() || null,
       content: String(formData.get("content") ?? "").trim() || null,
-      attachmentUrl: String(formData.get("attachmentUrl") ?? "").trim() || null,
+      attachmentUrl: String(formData.get("attachmentUploadUrl") ?? "").trim() || String(formData.get("attachmentUrl") ?? "").trim() || null,
       language: String(formData.get("language") ?? "pt-BR"),
       durationMinutes: Number.isFinite(durationMinutes) && durationMinutes > 0 ? durationMinutes : null,
       previewEnabled: formData.get("previewEnabled") === "on",
