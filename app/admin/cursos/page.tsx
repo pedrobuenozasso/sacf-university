@@ -26,18 +26,9 @@ export default async function AdminCoursesPage() {
         </div>
       </div>
 
-      <div className="adminToolbar">
-        <input className="field" placeholder={t.searchPlaceholder} />
-        <select className="field" defaultValue="todos">
-          <option value="todos">{t.allVerticals}</option>
-          <option>{t.operator}</option>
-          <option>{t.mechanic}</option>
-          <option>{t.electric}</option>
-          <option>{t.trainer}</option>
-        </select>
-        <button className="buttonGhost" type="button">
-          {t.export}
-        </button>
+      <div className="adminListMeta">
+        <strong>{courses.length} curso{courses.length === 1 ? "" : "s"} no escopo atual</strong>
+        <span>Abra um curso para editar conteúdo, módulos, avaliações e atribuições.</span>
       </div>
 
       <section className="split">

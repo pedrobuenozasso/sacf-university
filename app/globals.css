@@ -1353,7 +1353,7 @@ h3 {
   font-size: 0.84rem;
   font-weight: 600;
   padding: 0 8px;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .catalogContext strong {
@@ -2850,22 +2850,59 @@ textarea.field {
 .buttonGhost,
 .dangerButton {
   border-radius: 999px;
-  min-height: 46px;
-  padding: 0 20px;
+  min-height: 44px;
+  gap: 8px;
+  padding: 0 18px;
+  font-size: 0.9rem;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 .button {
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: #dde9e9;
-  color: #111;
+  border: 1px solid rgba(92, 147, 255, 0.5);
+  background: linear-gradient(135deg, #2f6dff, #1555e8);
+  color: #fff;
   box-shadow:
-    0 0 18px rgba(221, 233, 233, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    0 10px 24px rgba(21, 85, 232, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .buttonGhost {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--soft);
+}
+
+.dangerButton {
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: 0.82rem;
+}
+
+.button:hover:not(:disabled),
+.buttonGhost:hover:not(:disabled),
+.dangerButton:hover:not(:disabled) {
+  border-color: rgba(126, 171, 255, 0.72);
+  color: #fff;
+}
+
+.button:focus-visible,
+.buttonGhost:focus-visible,
+.dangerButton:focus-visible,
+.courseRowActions button:focus-visible {
+  outline: 3px solid rgba(83, 151, 255, 0.52);
+  outline-offset: 3px;
+}
+
+.button:disabled,
+.buttonGhost:disabled,
+.dangerButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  transform: none;
 }
 
 .button:hover,
@@ -2875,14 +2912,105 @@ textarea.field {
 }
 
 .sidebar {
+  position: fixed;
+  top: 24px;
+  left: 24px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 28px;
   height: calc(100vh - 48px);
-  margin: 24px 0 24px 24px;
+  margin: 0;
+}
+
+.appShell {
+  display: block;
+  padding-left: 284px;
 }
 
 .sidebarMain {
   padding-top: 46px;
+}
+
+.adminListMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 13px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.adminListMeta strong {
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.adminListMeta span,
+.actionHint {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.actionHint {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: 14px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.reportCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.reportCard p {
+  min-height: 3.1em;
+}
+
+.supportUnavailable {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.courseRowActions {
+  gap: 8px;
+}
+
+.courseRowActions button {
+  min-height: 30px;
+  padding: 0 9px;
+  border: 1px solid rgba(0, 209, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(0, 209, 255, 0.06);
+  line-height: 1;
+}
+
+.courseRowActions button:hover {
+  border-color: rgba(0, 209, 255, 0.5);
+  background: rgba(0, 209, 255, 0.12);
+}
+
+.field {
+  border-radius: 14px;
+  padding: 12px 14px;
+  transition: border-color 160ms var(--ease), box-shadow 160ms var(--ease), background 160ms var(--ease);
+}
+
+.field:focus {
+  border-color: rgba(82, 145, 255, 0.78);
+  background: rgba(12, 20, 42, 0.86);
+  box-shadow: 0 0 0 4px rgba(46, 103, 255, 0.15);
+  outline: none;
 }
 
 .sidebarNav a {
@@ -3717,6 +3845,7 @@ textarea.field {
 
   .appShell {
     flex-direction: column;
+    padding-left: 0;
   }
 
   .sidebar {
@@ -3832,6 +3961,16 @@ textarea.field {
 
   .sidebarMain {
     padding: 24px 16px calc(84px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .adminListMeta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .reportCard p {
+    min-height: 0;
   }
 
   .loginHero h1 {

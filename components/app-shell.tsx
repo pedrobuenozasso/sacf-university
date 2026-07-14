@@ -68,8 +68,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const canManage =
     user.role === "sacf_admin" || user.role === "org_admin" || user.role === "instructor";
-  const inAdmin = pathname.startsWith("/admin");
-  const items = inAdmin ? adminNav : studentNav;
+  const items = canManage ? adminNav : studentNav;
 
   return (
     <div className="appShell">
@@ -98,12 +97,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               {dict.nav[item.labelKey]}
             </Link>
           ))}
-          {!inAdmin && canManage ? (
-            <Link href="/admin" data-active={false}>
-              {navIcon("admin")}
-              {dict.nav.admin}
-            </Link>
-          ) : null}
         </nav>
 
         <div className="sidebarUser">

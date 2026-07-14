@@ -28,33 +28,25 @@ export default async function AdminReportsPage() {
           <span className="reportStatus">{t.weekly}</span>
           <h2>{t.progressTitle}</h2>
           <p>{t.progressBody}</p>
-          <button className="buttonGhost" type="button">
-            {t.exportCsv}
-          </button>
+          <span className="actionHint">Exportação CSV em implantação</span>
         </div>
         <div className="detailPanel reportCard">
           <span className="reportStatus">{t.critical}</span>
           <h2>{t.certificatesTitle}</h2>
           <p>{t.certificatesBody}</p>
-          <button className="buttonGhost" type="button">
-            {t.exportCsv}
-          </button>
+          <span className="actionHint">Exportação CSV em implantação</span>
         </div>
         <div className="detailPanel reportCard">
           <span className="reportStatus">{t.operation}</span>
           <h2>{t.usageTitle}</h2>
           <p>{t.usageBody}</p>
-          <button className="buttonGhost" type="button">
-            {t.exportCsv}
-          </button>
+          <span className="actionHint">Exportação CSV em implantação</span>
         </div>
         <div className="detailPanel reportCard">
           <span className="reportStatus">{t.executive}</span>
           <h2>{t.execSummaryTitle}</h2>
           <p>{t.execSummaryBody}</p>
-          <button className="buttonGhost" type="button">
-            {t.generatePreview}
-          </button>
+          <span className="actionHint">Resumo automatizado em implantação</span>
         </div>
       </section>
 

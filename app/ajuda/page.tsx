@@ -32,16 +32,12 @@ export default async function HelpPage() {
           </div>
         </div>
 
-        <form className="supportCard">
+        <aside className="supportCard supportUnavailable">
+          <p className="eyebrow">Atendimento</p>
           <h2>{t.sendMessageTitle}</h2>
-          <input className="field" placeholder={t.namePlaceholder} />
-          <input className="field" placeholder={t.emailPlaceholder} />
-          <input className="field" placeholder={t.subjectPlaceholder} />
-          <textarea className="field" placeholder={t.messagePlaceholder} />
-          <button className="button" type="button">
-            {t.send}
-          </button>
-        </form>
+          <p>O envio de solicitações pelo portal está sendo preparado. Enquanto isso, use o canal de suporte definido pela sua empresa.</p>
+          <span className="actionHint">Canal no portal em implantação</span>
+        </aside>
       </section>
     </>
   );
