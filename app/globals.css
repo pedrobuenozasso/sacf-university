@@ -2456,6 +2456,17 @@ h3 {
   margin: 0;
 }
 
+.implementationTrust,
+.loginTrust {
+  max-width: 520px;
+  margin-top: 24px;
+  border-left: 2px solid var(--cyan);
+  padding-left: 13px;
+  color: var(--soft);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
 .modalBackdrop {
   position: fixed;
   inset: 0;

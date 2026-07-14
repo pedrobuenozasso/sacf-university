@@ -1,7 +1,6 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useLocale } from "@/components/locale-provider";
@@ -50,17 +49,10 @@ export default function LoginPage() {
     <section className="loginShell">
       <div className="loginHero">
         <div>
-          <Image
-            className="loginBrand"
-            src="/brand/sacf-academy-symbol.png"
-            alt="SACF Academy"
-            width={360}
-            height={360}
-            priority
-          />
           <p className="eyebrow">SACF Academy</p>
           <h1>{t.title}</h1>
           <p className="lead">{t.lead}</p>
+          <p className="loginTrust">Ambiente corporativo privado para capacitação, evidências e certificação.</p>
         </div>
 
         <form className="loginForm" onSubmit={loginWithEmail}>

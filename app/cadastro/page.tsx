@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useLocale } from "@/components/locale-provider";
@@ -46,14 +45,6 @@ export default function SignupPage() {
     <section className="loginShell">
       <div className="loginHero implementationHero">
         <div>
-          <Image
-            className="implementationBrand"
-            src="/brand/sacf-academy-horizontal-onDark.png"
-            alt="SACF Academy"
-            width={420}
-            height={237}
-            priority
-          />
           <p className="eyebrow">{t.eyebrow}</p>
           <h1>{t.title}</h1>
           <p className="lead">{t.lead}</p>
@@ -74,6 +65,7 @@ export default function SignupPage() {
               <p>{t.step3Body}</p>
             </article>
           </div>
+          <p className="implementationTrust">Implantação orientada pela equipe SACF. Sem necessidade de configuração técnica pela sua empresa.</p>
         </div>
 
         <div className="loginForm">
