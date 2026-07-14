@@ -82,6 +82,12 @@ export type LearningLesson = {
   durationMinutes: number | null;
   status: "not_started" | "in_progress" | "completed";
   progressPercent: number;
+  lessonType: "video" | "text" | "file" | "quiz";
+  description: string | null;
+  content: string | null;
+  videoUrl: string | null;
+  attachmentUrl: string | null;
+  questions: { id: string; question: string; options: { id: string; optionText: string }[] }[];
 };
 
 export type LearningCourse = {
@@ -89,6 +95,7 @@ export type LearningCourse = {
   title: string;
   instructor: string;
   certificate: string;
+  passingScore: number | null;
   progressPercent: number;
   lessons: LearningLesson[];
 };
@@ -109,7 +116,7 @@ export async function getLearningCourse(slug: string): Promise<LearningCourse | 
         include: {
           modules: {
             orderBy: { position: "asc" },
-            include: { lessons: { orderBy: { position: "asc" } } }
+            include: { lessons: { orderBy: { position: "asc" }, include: { questions: { orderBy: { position: "asc" }, include: { options: { orderBy: { position: "asc" } } } } } } }
           }
         }
       },
@@ -128,7 +135,13 @@ export async function getLearningCourse(slug: string): Promise<LearningCourse | 
         moduleTitle: module.title,
         durationMinutes: lesson.durationMinutes,
         status: progress?.status ?? "not_started",
-        progressPercent: progress?.progressPercent ?? 0
+        progressPercent: progress?.progressPercent ?? 0,
+        lessonType: lesson.lessonType,
+        description: lesson.description,
+        content: lesson.content,
+        videoUrl: lesson.videoUrl,
+        attachmentUrl: lesson.attachmentUrl,
+        questions: lesson.questions.map((question) => ({ id: question.id, question: question.question, options: question.options.map((option) => ({ id: option.id, optionText: option.optionText })) }))
       };
     })
   );
@@ -141,6 +154,7 @@ export async function getLearningCourse(slug: string): Promise<LearningCourse | 
     title: enrollment.course.title,
     instructor: enrollment.course.instructorName ?? "SACF Academy",
     certificate: enrollment.course.certificateEnabled ? "Certificado" : "Sem certificado",
+    passingScore: enrollment.course.passingScore,
     progressPercent,
     lessons
   };
@@ -170,9 +184,14 @@ export async function completeLesson(courseSlug: string, lessonId: string) {
 
   const lesson = await prisma.lesson.findFirst({
     where: { id: lessonId, courseId: enrollment.courseId },
-    select: { id: true }
+    select: { id: true, lessonType: true }
   });
   if (!lesson) return { ok: false as const, error: "invalid_lesson" };
+
+  if (lesson.lessonType === "quiz") {
+    const attempt = await prisma.quizAttempt.findFirst({ where: { enrollmentId: enrollment.id, lessonId: lesson.id, submittedAt: { not: null }, passed: true } });
+    if (!attempt) return { ok: false as const, error: "quiz_required" };
+  }
 
   const now = new Date();
   await prisma.lessonProgress.upsert({
@@ -231,4 +250,31 @@ export async function completeLesson(courseSlug: string, lessonId: string) {
   revalidatePath("/meus-cursos");
   revalidatePath("/certificados");
   return { ok: true as const, completed, certificateIssued: completed && enrollment.course.certificateEnabled };
+}
+
+export async function submitQuiz(courseSlug: string, lessonId: string, answers: Record<string, string>) {
+  const session = await getLearningSession();
+  if (!session) return { ok: false as const, error: "unauthorized" };
+  const enrollment = await prisma.enrollment.findFirst({
+    where: { userId: session.userId, organizationId: session.organizationId, course: { slug: courseSlug, status: "published" } },
+    orderBy: { cycleNumber: "desc" },
+    select: { id: true, courseId: true, course: { select: { passingScore: true } } }
+  });
+  if (!enrollment) return { ok: false as const, error: "not_enrolled" };
+  const lesson = await prisma.lesson.findFirst({
+    where: { id: lessonId, courseId: enrollment.courseId, lessonType: "quiz" },
+    include: { questions: { orderBy: { position: "asc" }, include: { options: true } } }
+  });
+  if (!lesson || !lesson.questions.length) return { ok: false as const, error: "invalid_quiz" };
+
+  const score = Math.round((lesson.questions.filter((question) => question.options.some((option) => option.isCorrect && answers[question.id] === option.id)).length / lesson.questions.length) * 100);
+  const passingScore = enrollment.course.passingScore ?? 0;
+  const passed = score >= passingScore;
+  await prisma.quizAttempt.create({
+    data: { enrollmentId: enrollment.id, lessonId: lesson.id, userId: session.userId, score, passed, answers, submittedAt: new Date() }
+  });
+  if (!passed) return { ok: true as const, passed: false as const, score, passingScore };
+
+  const completion = await completeLesson(courseSlug, lessonId);
+  return { ok: completion.ok, passed: true as const, score, passingScore, completed: completion.ok && completion.completed, certificateIssued: completion.ok && completion.certificateIssued };
 }
