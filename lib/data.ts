@@ -195,11 +195,30 @@ export type CourseEditorData = {
   language: string;
   instructorName: string | null;
   workloadMinutes: number | null;
+  passingScore: number | null;
   certificateEnabled: boolean;
   certificateValidityDays: number | null;
   mandatory: boolean;
   status: "draft" | "published" | "archived";
-  modules: { id: string; title: string; lessons: { id: string; title: string }[] }[];
+  modules: { id: string; title: string; lessons: { id: string; title: string; lessonType: "video" | "text" | "file" | "quiz" }[] }[];
+};
+
+export type LessonEditorData = {
+  id: string;
+  courseId: string;
+  moduleTitle: string;
+  title: string;
+  description: string | null;
+  lessonType: "video" | "text" | "file" | "quiz";
+  videoProvider: "unlisted_youtube" | "vimeo" | "mux" | "cloud_storage" | "external_url" | null;
+  videoUrl: string | null;
+  content: string | null;
+  attachmentUrl: string | null;
+  language: string;
+  durationMinutes: number | null;
+  previewEnabled: boolean;
+  required: boolean;
+  questions: { id: string; question: string; options: { id: string; optionText: string; isCorrect: boolean }[] }[];
 };
 
 export async function getAdminCourseEditor(courseId: string, organizationSlug?: string): Promise<CourseEditorData | null> {
@@ -229,6 +248,7 @@ export async function getAdminCourseEditor(courseId: string, organizationSlug?: 
     language: course.language,
     instructorName: course.instructorName,
     workloadMinutes: course.workloadMinutes,
+    passingScore: course.passingScore,
     certificateEnabled: course.certificateEnabled,
     certificateValidityDays: course.certificateValidityDays,
     mandatory: course.mandatory,
@@ -236,7 +256,43 @@ export async function getAdminCourseEditor(courseId: string, organizationSlug?: 
     modules: course.modules.map((module) => ({
       id: module.id,
       title: module.title,
-      lessons: module.lessons.map((lesson) => ({ id: lesson.id, title: lesson.title }))
+      lessons: module.lessons.map((lesson) => ({ id: lesson.id, title: lesson.title, lessonType: lesson.lessonType }))
+    }))
+  };
+}
+
+export async function getAdminLessonEditor(courseId: string, lessonId: string, organizationSlug?: string): Promise<LessonEditorData | null> {
+  const prisma = await getPrisma();
+  if (!prisma) return null;
+
+  const lesson = await prisma.lesson.findFirst({
+    where: { id: lessonId, courseId, ...(organizationSlug ? { course: { organization: { slug: organizationSlug } } } : {}) },
+    include: {
+      module: { select: { title: true } },
+      questions: { orderBy: { position: "asc" }, include: { options: { orderBy: { position: "asc" } } } }
+    }
+  });
+  if (!lesson) return null;
+
+  return {
+    id: lesson.id,
+    courseId: lesson.courseId,
+    moduleTitle: lesson.module.title,
+    title: lesson.title,
+    description: lesson.description,
+    lessonType: lesson.lessonType,
+    videoProvider: lesson.videoProvider,
+    videoUrl: lesson.videoUrl,
+    content: lesson.content,
+    attachmentUrl: lesson.attachmentUrl,
+    language: lesson.language,
+    durationMinutes: lesson.durationMinutes,
+    previewEnabled: lesson.previewEnabled,
+    required: lesson.required,
+    questions: lesson.questions.map((question) => ({
+      id: question.id,
+      question: question.question,
+      options: question.options.map((option) => ({ id: option.id, optionText: option.optionText, isCorrect: option.isCorrect }))
     }))
   };
 }
@@ -314,7 +370,19 @@ export async function getCourseBySlug(slug: string): Promise<Course | null> {
   return row ? mapCourse(row) : null;
 }
 
-function sessionToCourseViewer(session: Awaited<ReturnType<typeof auth>>): SessionUser | null {
+type CourseViewerSession = {
+  user?: {
+    id?: string;
+    name?: string | null;
+    email?: string | null;
+    organizationSlug?: string | null;
+    organizationName?: string | null;
+    role?: string | null;
+    groups?: string[];
+  };
+} | null;
+
+function sessionToCourseViewer(session: CourseViewerSession): SessionUser | null {
   if (!session?.user?.id || !session.user.organizationSlug || !session.user.organizationName || !session.user.email) return null;
   return {
     id: session.user.id,

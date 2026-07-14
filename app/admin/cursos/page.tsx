@@ -115,6 +115,10 @@ export default async function AdminCoursesPage() {
               Validade do certificado (meses)
               <input className="field" name="validityMonths" type="number" min="1" step="1" placeholder="Ex.: 12" />
             </label>
+            <label>
+              Nota mínima da prova (%)
+              <input className="field" name="passingScore" type="number" min="0" max="100" step="1" placeholder="Ex.: 70" />
+            </label>
           </div>
           <select className="field" name="language" defaultValue="pt-BR">
             {supportedLocales.map((locale) => (

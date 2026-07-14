@@ -45,6 +45,9 @@ function revalidateCourseEditor(courseId: string) {
   revalidatePath("/catalogo");
 }
 
+const lessonTypes = ["video", "text", "file", "quiz"] as const;
+const videoProviders = ["unlisted_youtube", "vimeo", "mux", "cloud_storage", "external_url"] as const;
+
 // Course creation is tenant-scoped on the server. A company admin/instructor
 // can only create content for their own company; SACF admins choose a tenant.
 export async function createCourse(formData: FormData) {
@@ -69,6 +72,7 @@ export async function createCourse(formData: FormData) {
 
   const workloadHours = Number.parseFloat(String(formData.get("workloadHours") ?? ""));
   const validityMonths = Number.parseInt(String(formData.get("validityMonths") ?? ""), 10);
+  const passingScore = Number.parseInt(String(formData.get("passingScore") ?? ""), 10);
   const lessonTitles = String(formData.get("lessons") ?? "")
     .split("\n")
     .map((lesson) => lesson.trim())
@@ -92,6 +96,7 @@ export async function createCourse(formData: FormData) {
       workloadMinutes: Number.isFinite(workloadHours) && workloadHours > 0 ? Math.round(workloadHours * 60) : null,
       certificateEnabled: formData.get("certificateEnabled") === "on",
       certificateValidityDays: Number.isFinite(validityMonths) && validityMonths > 0 ? validityMonths * 30 : null,
+      passingScore: Number.isFinite(passingScore) && passingScore >= 0 && passingScore <= 100 ? passingScore : null,
       mandatory: formData.get("mandatory") === "on",
       visibilityScope: "private_org",
       status: published ? "published" : "draft",
@@ -162,6 +167,7 @@ export async function updateCourse(formData: FormData) {
 
   const workloadHours = Number.parseFloat(String(formData.get("workloadHours") ?? ""));
   const validityMonths = Number.parseInt(String(formData.get("validityMonths") ?? ""), 10);
+  const passingScore = Number.parseInt(String(formData.get("passingScore") ?? ""), 10);
   await prisma.course.update({
     where: { id: course.id },
     data: {
@@ -175,6 +181,7 @@ export async function updateCourse(formData: FormData) {
       workloadMinutes: Number.isFinite(workloadHours) && workloadHours > 0 ? Math.round(workloadHours * 60) : null,
       certificateEnabled: formData.get("certificateEnabled") === "on",
       certificateValidityDays: Number.isFinite(validityMonths) && validityMonths > 0 ? validityMonths * 30 : null,
+      passingScore: Number.isFinite(passingScore) && passingScore >= 0 && passingScore <= 100 ? passingScore : null,
       mandatory: formData.get("mandatory") === "on"
     }
   });
@@ -200,6 +207,10 @@ export async function addLesson(formData: FormData) {
   const courseId = String(formData.get("courseId") ?? "");
   const moduleId = String(formData.get("moduleId") ?? "");
   const title = String(formData.get("title") ?? "").trim();
+  const lessonTypeValue = String(formData.get("lessonType") ?? "text");
+  const lessonType = lessonTypes.includes(lessonTypeValue as (typeof lessonTypes)[number])
+    ? lessonTypeValue as (typeof lessonTypes)[number]
+    : "text";
   const course = await getManagedCourse(courseId);
   if (!course || !moduleId || !title) return;
 
@@ -219,10 +230,82 @@ export async function addLesson(formData: FormData) {
       moduleId: courseModule.id,
       title,
       position: (lastLesson?.position ?? -1) + 1,
-      lessonType: "text"
+      lessonType,
+      durationMinutes: Number.parseInt(String(formData.get("durationMinutes") ?? ""), 10) || null
     }
   });
   revalidateCourseEditor(course.id);
+}
+
+async function getManagedLesson(courseId: string, lessonId: string) {
+  const course = await getManagedCourse(courseId);
+  if (!course) return null;
+  const lesson = await prisma.lesson.findFirst({ where: { id: lessonId, courseId: course.id }, select: { id: true, courseId: true, lessonType: true } });
+  return lesson ? { course, lesson } : null;
+}
+
+export async function updateLesson(formData: FormData) {
+  const courseId = String(formData.get("courseId") ?? "");
+  const lessonId = String(formData.get("lessonId") ?? "");
+  const managed = await getManagedLesson(courseId, lessonId);
+  if (!managed) return;
+
+  const title = String(formData.get("title") ?? "").trim();
+  const lessonTypeValue = String(formData.get("lessonType") ?? "text");
+  if (!title || !lessonTypes.includes(lessonTypeValue as (typeof lessonTypes)[number])) return;
+  const videoProviderValue = String(formData.get("videoProvider") ?? "");
+  const durationMinutes = Number.parseInt(String(formData.get("durationMinutes") ?? ""), 10);
+  await prisma.lesson.update({
+    where: { id: managed.lesson.id },
+    data: {
+      title,
+      description: String(formData.get("description") ?? "").trim() || null,
+      lessonType: lessonTypeValue as (typeof lessonTypes)[number],
+      videoProvider: videoProviders.includes(videoProviderValue as (typeof videoProviders)[number])
+        ? videoProviderValue as (typeof videoProviders)[number]
+        : null,
+      videoUrl: String(formData.get("videoUrl") ?? "").trim() || null,
+      content: String(formData.get("content") ?? "").trim() || null,
+      attachmentUrl: String(formData.get("attachmentUrl") ?? "").trim() || null,
+      language: String(formData.get("language") ?? "pt-BR"),
+      durationMinutes: Number.isFinite(durationMinutes) && durationMinutes > 0 ? durationMinutes : null,
+      previewEnabled: formData.get("previewEnabled") === "on",
+      required: formData.get("required") === "on"
+    }
+  });
+  revalidatePath(`/admin/cursos/${managed.course.id}/aulas/${managed.lesson.id}`);
+  revalidateCourseEditor(managed.course.id);
+}
+
+export async function addQuizQuestion(formData: FormData) {
+  const courseId = String(formData.get("courseId") ?? "");
+  const lessonId = String(formData.get("lessonId") ?? "");
+  const managed = await getManagedLesson(courseId, lessonId);
+  if (!managed || managed.lesson.lessonType !== "quiz") return;
+  const question = String(formData.get("question") ?? "").trim();
+  const options = ["optionA", "optionB", "optionC", "optionD"].map((name) => String(formData.get(name) ?? "").trim()).filter(Boolean);
+  const correctOption = Number.parseInt(String(formData.get("correctOption") ?? ""), 10);
+  if (!question || options.length < 2 || !Number.isInteger(correctOption) || correctOption < 0 || correctOption >= options.length) return;
+  const lastQuestion = await prisma.quizQuestion.findFirst({ where: { lessonId }, orderBy: { position: "desc" }, select: { position: true } });
+  await prisma.quizQuestion.create({
+    data: {
+      lessonId,
+      question,
+      position: (lastQuestion?.position ?? -1) + 1,
+      options: { create: options.map((optionText, position) => ({ optionText, position, isCorrect: position === correctOption })) }
+    }
+  });
+  revalidatePath(`/admin/cursos/${managed.course.id}/aulas/${lessonId}`);
+}
+
+export async function deleteQuizQuestion(formData: FormData) {
+  const courseId = String(formData.get("courseId") ?? "");
+  const lessonId = String(formData.get("lessonId") ?? "");
+  const questionId = String(formData.get("questionId") ?? "");
+  const managed = await getManagedLesson(courseId, lessonId);
+  if (!managed || !questionId) return;
+  await prisma.quizQuestion.deleteMany({ where: { id: questionId, lessonId: managed.lesson.id } });
+  revalidatePath(`/admin/cursos/${managed.course.id}/aulas/${lessonId}`);
 }
 
 export async function deleteModule(formData: FormData) {

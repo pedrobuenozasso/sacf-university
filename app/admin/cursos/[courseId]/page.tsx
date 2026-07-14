@@ -49,6 +49,10 @@ export default async function CourseEditorPage({ params }: { params: Promise<{ c
               Validade do certificado (meses)
               <input className="field" name="validityMonths" type="number" min="1" defaultValue={course.certificateValidityDays ? Math.round(course.certificateValidityDays / 30) : ""} placeholder="Sem vencimento" />
             </label>
+            <label>
+              Nota mínima da prova (%)
+              <input className="field" name="passingScore" type="number" min="0" max="100" defaultValue={course.passingScore ?? ""} placeholder="Sem exigência" />
+            </label>
           </div>
           <select className="field" name="language" defaultValue={course.language}>
             {supportedLocales.map((locale) => <option key={locale.code} value={locale.code}>{locale.label}</option>)}
@@ -56,7 +60,7 @@ export default async function CourseEditorPage({ params }: { params: Promise<{ c
           <textarea className="field" name="summary" defaultValue={course.shortDescription ?? ""} placeholder="Resumo do curso" />
           <label className="checkItem"><input name="certificateEnabled" type="checkbox" defaultChecked={course.certificateEnabled} /> Emitir certificado ao concluir</label>
           <label className="checkItem"><input name="mandatory" type="checkbox" defaultChecked={course.mandatory} /> Curso obrigatório</label>
-          <p className="formHint">A validade é aplicada aos certificados emitidos depois da alteração.</p>
+          <p className="formHint">A validade é aplicada aos certificados emitidos depois da alteração. A nota mínima será usada nas provas do curso.</p>
           <button className="button" type="submit">Salvar alterações</button>
         </form>
 
@@ -70,12 +74,14 @@ export default async function CourseEditorPage({ params }: { params: Promise<{ c
               </div>
               <ul>
                 {module.lessons.map((lesson) => (
-                  <li key={lesson.id}>{lesson.title} <form className="inlineForm" action={deleteLesson}><input name="courseId" type="hidden" value={course.id} /><input name="lessonId" type="hidden" value={lesson.id} /><button type="submit">Excluir</button></form></li>
+                  <li key={lesson.id}><Link href={`/admin/cursos/${course.id}/aulas/${lesson.id}`}>{lesson.title}</Link> <span className="formHint">{lesson.lessonType === "quiz" ? "Prova" : lesson.lessonType === "file" ? "Documento" : lesson.lessonType === "video" ? "Vídeo" : "Texto"}</span> <form className="inlineForm" action={deleteLesson}><input name="courseId" type="hidden" value={course.id} /><input name="lessonId" type="hidden" value={lesson.id} /><button type="submit">Excluir</button></form></li>
                 ))}
               </ul>
               <form className="formGrid" action={addLesson}>
                 <input name="courseId" type="hidden" value={course.id} /><input name="moduleId" type="hidden" value={module.id} />
                 <input className="field" name="title" placeholder="Título da nova aula" required />
+                <select className="field" name="lessonType" defaultValue="text"><option value="text">Texto</option><option value="video">Vídeo</option><option value="file">PDF ou documento</option><option value="quiz">Prova</option></select>
+                <input className="field" name="durationMinutes" type="number" min="1" placeholder="Duração (min)" />
                 <button className="buttonGhost" type="submit">Adicionar aula</button>
               </form>
             </div>
