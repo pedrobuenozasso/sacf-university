@@ -3019,6 +3019,23 @@ textarea.field {
   gap: 12px;
 }
 
+.productProof {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.productProof div {
+  border-left: 2px solid var(--cyan);
+  padding: 2px 0 2px 11px;
+}
+
+.productProof strong,
+.productProof span { display: block; }
+.productProof strong { color: var(--text); font-size: 0.82rem; }
+.productProof span { color: var(--muted); font-size: 0.72rem; line-height: 1.35; margin-top: 3px; }
+
 .productHeroActions {
   margin-top: 34px;
 }
@@ -3608,6 +3625,8 @@ textarea.field {
   .topbar {
     grid-template-columns: 1fr;
   }
+
+  .productProof { grid-template-columns: 1fr; margin-top: 22px; }
 
   .topbar {
     position: relative;

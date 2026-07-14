@@ -25,6 +25,11 @@ export default async function Home() {
               {home.ctaSecondary}
             </Link>
           </div>
+          <div className="productProof" aria-label="Principais benefícios">
+            <div><strong>Privado por empresa</strong><span>Dados, pessoas e cursos isolados</span></div>
+            <div><strong>Certificação verificável</strong><span>Validade, renovação e evidência</span></div>
+            <div><strong>Visão de risco</strong><span>Prazos e pendências em um só lugar</span></div>
+          </div>
         </div>
 
         <aside className="productPreview" aria-label={home.previewLabel}>
@@ -148,28 +153,6 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="productFlow">
-        <div>
-          <p className="eyebrow">{home.flowEyebrow}</p>
-          <h2>{home.flowTitle}</h2>
-          <p>{home.flowBody}</p>
-        </div>
-        <div className="flowStack">
-          <div>
-            <span>{home.flowSacf}</span>
-            <strong>{home.flowSacfBody}</strong>
-          </div>
-          <div>
-            <span>{home.flowCompany}</span>
-            <strong>{home.flowCompanyBody}</strong>
-          </div>
-          <div>
-            <span>{home.flowUser}</span>
-            <strong>{home.flowUserBody}</strong>
-          </div>
-        </div>
-      </section>
-
       <section className="productCourses">
         <div className="sectionHead">
           <div>
@@ -182,7 +165,7 @@ export default async function Home() {
           </Link>
         </div>
         <div className="grid">
-          {courses.slice(0, 4).map((course) => (
+          {courses.slice(0, 3).map((course) => (
             <CourseCard course={course} href={`/catalogo/${course.slug}`} key={course.slug} />
           ))}
         </div>
