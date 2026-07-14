@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import { AppShell } from "@/components/app-shell";
 import { LocaleProvider } from "@/components/locale-provider";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { auth } from "@/lib/auth";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -30,14 +31,14 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const { locale, dict } = await getDictionary();
+  const [{ locale, dict }, session] = await Promise.all([getDictionary(), auth()]);
 
   return (
     <html lang={locale} className={`${spaceGrotesk.variable} ${inter.variable} ${ibmPlexMono.variable}`}>
       <body>
         <div className="shell">
           <LocaleProvider locale={locale} dict={dict}>
-            <SessionProvider>
+            <SessionProvider session={session}>
               <AppShell>{children}</AppShell>
             </SessionProvider>
           </LocaleProvider>

@@ -57,7 +57,7 @@ const COURSES = [
     slug: "operador-eletroherb", title: "Operação segura do sistema Eletroherb",
     orgs: ["zasso", "zasso-latam"], accessGroups: ["operadores", "treinadores", "representantes"],
     vertical: "Operador", level: "Essencial", language: "PT-BR", workloadMinutes: 200,
-    certificateEnabled: true, certificateValidityDays: 365, mandatory: false,
+    certificateEnabled: true, certificateValidityDays: 365, passingScore: 70, mandatory: false,
     instructorName: "Equipe técnica SACF",
     summary: "Treinamento base para operar o equipamento com segurança, rotina correta e leitura dos principais indicadores de campo.",
     audience: "Operadores, líderes de campo e novos representantes técnicos.",
@@ -107,6 +107,26 @@ const COURSES = [
     ]
   }
 ];
+
+const DEMO_QUIZZES = {
+  "operador-eletroherb:Prova de certificação": [
+    {
+      question: "Antes de iniciar a operação, qual é a conduta correta?",
+      options: ["Executar o checklist de segurança", "Aumentar a velocidade imediatamente", "Ignorar alertas do painel"],
+      correctOption: 0
+    },
+    {
+      question: "Ao identificar um risco operacional, o operador deve:",
+      options: ["Seguir o procedimento e comunicar a ocorrência", "Continuar para não atrasar a operação", "Desativar os alertas"],
+      correctOption: 0
+    },
+    {
+      question: "Qual é o objetivo principal do treinamento Eletroherb?",
+      options: ["Operar o sistema com segurança e consistência", "Substituir a manutenção preventiva", "Eliminar a necessidade de registros"],
+      correctOption: 0
+    }
+  ]
+};
 
 const PRESENTATION_ENROLLMENTS = [
   {
@@ -231,6 +251,7 @@ async function main() {
         title: c.title, vertical: c.vertical, level: c.level, language: c.language,
         workloadMinutes: c.workloadMinutes, status: "published",
         certificateEnabled: c.certificateEnabled, certificateValidityDays: c.certificateValidityDays,
+        passingScore: c.passingScore ?? null,
         mandatory: c.mandatory, instructorName: c.instructorName,
         shortDescription: c.summary, description: c.summary, targetAudience: c.audience, publishedAt: new Date()
       },
@@ -239,6 +260,7 @@ async function main() {
         vertical: c.vertical, level: c.level, language: c.language,
         workloadMinutes: c.workloadMinutes, status: "published",
         certificateEnabled: c.certificateEnabled, certificateValidityDays: c.certificateValidityDays,
+        passingScore: c.passingScore ?? null,
         mandatory: c.mandatory, instructorName: c.instructorName,
         shortDescription: c.summary, description: c.summary, targetAudience: c.audience, publishedAt: new Date()
       }
@@ -257,8 +279,32 @@ async function main() {
       });
       let lPos = 0;
       for (const lessonTitle of m.lessons) {
+        const quiz = DEMO_QUIZZES[`${c.slug}:${lessonTitle}`];
         await prisma.lesson.create({
-          data: { moduleId: mod.id, courseId: course.id, title: lessonTitle, lessonType: "video", language: c.language, position: lPos++, required: true }
+          data: {
+            moduleId: mod.id,
+            courseId: course.id,
+            title: lessonTitle,
+            lessonType: quiz ? "quiz" : "video",
+            language: c.language,
+            position: lPos++,
+            required: true,
+            ...(quiz ? {
+              questions: {
+                create: quiz.map((item, questionPosition) => ({
+                  question: item.question,
+                  position: questionPosition,
+                  options: {
+                    create: item.options.map((optionText, optionPosition) => ({
+                      optionText,
+                      position: optionPosition,
+                      isCorrect: optionPosition === item.correctOption
+                    }))
+                  }
+                }))
+              }
+            } : {})
+          }
         });
       }
     }
