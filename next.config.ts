@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
   // This makes Next generate routes and static assets below sacf.io/academy.
   basePath,
   output: "standalone",
+  // Next's built-in optimizer resolves public assets from the domain root.
+  // Under /academy that points to the main SACF site, so serve local images directly.
+  images: {
+    unoptimized: Boolean(basePath)
+  },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   }
