@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CourseCover } from "@/components/course-cover";
 import { useLocale } from "@/components/locale-provider";
+import { appPath } from "@/lib/app-path";
 import type { Course } from "@/lib/courses";
 
 export function CourseCard({
@@ -56,7 +57,7 @@ export function CoursePreviewPanel({ label }: { label?: string }) {
   const { dict } = useLocale();
   return (
     <div className="lessonPreview">
-      <Image src="/brand/sacf-academy-horizontal-onDark.png" alt="SACF Academy" width={170} height={96} />
+      <Image src={appPath("/brand/sacf-academy-horizontal-onDark.png")} alt="SACF Academy" width={170} height={96} />
       <div>
         <p className="eyebrow">{label ?? dict.courseCard.safeLesson}</p>
         <h3>{dict.courseCard.protectedContentTitle}</h3>

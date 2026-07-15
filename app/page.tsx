@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { HomeCourseCarousel } from "@/components/home-course-carousel";
 import { courses as demoCourses } from "@/lib/courses";
+import { appPath } from "@/lib/app-path";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
 export const dynamic = "force-dynamic";
@@ -37,7 +38,7 @@ export default async function Home() {
             <div className="previewSidebar">
               <Image
                 className="previewLogoImage"
-                src="/brand/sacf-academy-symbol.png"
+                src={appPath("/brand/sacf-academy-symbol.png")}
                 alt=""
                 width={64}
                 height={64}
@@ -115,7 +116,7 @@ export default async function Home() {
         </div>
         <Image
           className="academySeal"
-          src="/brand/sacf-academy-seal-onDark.png"
+          src={appPath("/brand/sacf-academy-seal-onDark.png")}
           alt="Selo SACF Academy"
           width={260}
           height={260}

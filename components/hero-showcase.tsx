@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Course } from "@/lib/courses";
+import { appPath } from "@/lib/app-path";
 
 export function HeroShowcase({ course }: { course: Course }) {
   const watched = Math.round((course.lessons * course.progress) / 100);
@@ -16,7 +17,7 @@ export function HeroShowcase({ course }: { course: Course }) {
               <span className="showcaseBrandGroup">
                 <Image
                   className="showcaseBrand"
-                  src="/brand/sacf-academy-symbol-onLight.png"
+                  src={appPath("/brand/sacf-academy-symbol-onLight.png")}
                   alt="SACF Academy"
                   width={40}
                   height={40}

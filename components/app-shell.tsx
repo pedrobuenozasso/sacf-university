@@ -7,6 +7,7 @@ import { navIcon, type IconKey } from "@/components/nav-icons";
 import { clearSessionUser, useSessionUser } from "@/components/use-session-user";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useLocale } from "@/components/locale-provider";
+import { appPath } from "@/lib/app-path";
 import type { Dictionary } from "@/lib/i18n/dictionaries/types";
 
 type NavItem = { href: string; labelKey: keyof Dictionary["nav"]; icon?: IconKey };
@@ -43,7 +44,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link href="/" className="brand" aria-label="SACF Academy">
             <Image
               className="brandLockup"
-              src="/brand/sacf-academy-horizontal-onDark.png"
+              src={appPath("/brand/sacf-academy-horizontal-onDark.png")}
               alt="SACF Academy"
               width={190}
               height={107}
@@ -83,7 +84,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <Link href="/" className="sidebarBrand" aria-label="SACF Academy">
           <Image
             className="brandMark"
-            src="/brand/sacf-academy-symbol.png"
+            src={appPath("/brand/sacf-academy-symbol.png")}
             alt="SACF Academy"
             width={38}
             height={38}

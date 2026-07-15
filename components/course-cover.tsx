@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { ReactElement } from "react";
 import { getOrganization, type Course } from "@/lib/courses";
+import { appPath } from "@/lib/app-path";
 
 function verticalIcon(vertical: string, className: string): ReactElement {
   const key = vertical.toLowerCase();
@@ -72,7 +73,7 @@ export function CourseCover({ course, showTenantBrand = false }: { course: Cours
       <div className="coverTop">
         <span className="coverBrandGroup">
           <span className="coverBrand">
-            <Image src="/brand/sacf-academy-symbol-onLight.png" alt="SACF Academy" width={26} height={26} />
+            <Image src={appPath("/brand/sacf-academy-symbol-onLight.png")} alt="SACF Academy" width={26} height={26} />
           </span>
           {showTenantBrand && ownerOrg?.brandLogo ? (
             <span className="coverBrand coverBrandTenant">
