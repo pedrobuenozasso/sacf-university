@@ -7,8 +7,6 @@ services:
         NEXT_PUBLIC_BASE_PATH: ${NEXT_PUBLIC_BASE_PATH:-/academy}
     container_name: sacf-academy
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:3001:3000"
     environment:
       NODE_ENV: production
       NEXT_PUBLIC_BASE_PATH: ${NEXT_PUBLIC_BASE_PATH:-/academy}
@@ -25,3 +23,23 @@ services:
       RESEND_API_KEY: ${RESEND_API_KEY}
       GCS_MEDIA_BUCKET: ${GCS_MEDIA_BUCKET}
       GCS_SERVICE_ACCOUNT_JSON: ${GCS_SERVICE_ACCOUNT_JSON}
+    networks:
+      - traefik-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-proxy"
+      - "traefik.http.routers.sacf-academy-http.rule=(Host(`sacf.io`) || Host(`www.sacf.io`)) && PathPrefix(`/academy`)"
+      - "traefik.http.routers.sacf-academy-http.priority=50"
+      - "traefik.http.routers.sacf-academy-http.entrypoints=web"
+      - "traefik.http.routers.sacf-academy-http.middlewares=sacf-academy-https-redirect"
+      - "traefik.http.middlewares.sacf-academy-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.sacf-academy-https.rule=(Host(`sacf.io`) || Host(`www.sacf.io`)) && PathPrefix(`/academy`)"
+      - "traefik.http.routers.sacf-academy-https.priority=50"
+      - "traefik.http.routers.sacf-academy-https.entrypoints=websecure"
+      - "traefik.http.routers.sacf-academy-https.tls=true"
+      - "traefik.http.routers.sacf-academy-https.tls.certresolver=letsencrypt"
+      - "traefik.http.services.sacf-academy.loadbalancer.server.port=3000"
+
+networks:
+  traefik-proxy:
+    external: true
