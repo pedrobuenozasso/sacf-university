@@ -33,11 +33,11 @@ export function InviteUserForm({
       : null;
 
   return (
-    <form action={formAction} key={state?.ok ? "sent" : "form"}>
-      <input className="field" name="name" placeholder={t.namePlaceholder} required />
-      <input className="field" name="email" type="email" placeholder={t.emailPlaceholder} required />
+    <form className="stackForm" action={formAction} key={state?.ok ? "sent" : "form"}>
+      <label>{t.nameLabel}<input className="field" name="name" placeholder={t.namePlaceholder} required /></label>
+      <label>{t.emailLabel}<input className="field" name="email" type="email" placeholder={t.emailPlaceholder} required /></label>
       {showOrgSelect ? (
-        <select className="field" name="organizationSlug" defaultValue="" required>
+        <label>{t.companyLabel}<select className="field" name="organizationSlug" defaultValue="" required>
           <option value="" disabled>
             {t.companySelect}
           </option>
@@ -46,9 +46,9 @@ export function InviteUserForm({
               {org.name}
             </option>
           ))}
-        </select>
+        </select></label>
       ) : null}
-      <select className="field" name="role" defaultValue="" required>
+      <label>{t.accessProfile}<select className="field" name="role" defaultValue="" required>
         <option value="" disabled>
           {t.roleSelect}
         </option>
@@ -56,7 +56,7 @@ export function InviteUserForm({
         <option value="trainer">{t.trainer}</option>
         <option value="student">{t.student}</option>
         <option value="partner">{t.externalPartner}</option>
-      </select>
+      </select></label>
       {errorMessage ? <p className="formError">{errorMessage}</p> : null}
       {state?.ok ? <p className="formSuccess">{t.inviteSuccess}</p> : null}
       <button className="button" type="submit" disabled={pending}>

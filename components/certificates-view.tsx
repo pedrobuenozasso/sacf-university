@@ -5,20 +5,12 @@ import { useSessionUser } from "@/components/use-session-user";
 import { useLocale, interpolate } from "@/components/locale-provider";
 import type { UserCertificate } from "@/lib/certificates";
 
-function formatDate(isoDate: string) {
-  return new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(new Date(isoDate));
-}
-
-function statusLabel(status: UserCertificate["status"]) {
-  if (status === "revoked") return "Revogado";
-  if (status === "expired") return "Vencido";
-  return "Válido";
-}
-
 export function CertificatesView({ certificates }: { certificates: UserCertificate[] }) {
   const user = useSessionUser();
-  const { dict } = useLocale();
+  const { dict, locale } = useLocale();
   const t = dict.certificatesView;
+  const formatDate = (isoDate: string) => new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(isoDate));
+  const statusLabel = (status: UserCertificate["status"]) => status === "revoked" ? t.revoked : status === "expired" ? t.expired : t.valid;
 
   if (!user) {
     return <LoginRequiredPanel title={t.loginTitle} />;
@@ -37,8 +29,8 @@ export function CertificatesView({ certificates }: { certificates: UserCertifica
       <section className="certificateList">
         {certificates.length === 0 ? (
           <div className="detailPanel">
-            <h2>Nenhum certificado emitido ainda.</h2>
-            <p>Quando você concluir um curso com certificação habilitada, ele aparecerá aqui.</p>
+            <h2>{t.emptyTitle}</h2>
+            <p>{t.emptyBody}</p>
           </div>
         ) : null}
         {certificates.map((certificate) => (
@@ -46,18 +38,18 @@ export function CertificatesView({ certificates }: { certificates: UserCertifica
             <div>
               <p className="eyebrow">{certificate.organizationName} · {certificate.courseVertical}</p>
               <h3>{certificate.courseTitle}</h3>
-              <p>Emitido em {formatDate(certificate.issuedAt)}</p>
+              <p>{interpolate(t.issuedOn, { date: formatDate(certificate.issuedAt) })}</p>
             </div>
             <div className="certificateMeta">
               <div>
                 <strong>{formatDate(certificate.issuedAt)}</strong>
-                <span>emissão</span>
+                <span>{t.issue}</span>
               </div>
               <span className="statusTag">{statusLabel(certificate.status)}</span>
             </div>
             <div className="certificateFoot">
               <span>{interpolate(t.code, { code: certificate.code })}</span>
-              <span>{certificate.expiresAt ? `Válido até ${formatDate(certificate.expiresAt)}` : "Sem vencimento"}</span>
+              <span>{certificate.expiresAt ? interpolate(t.validUntil, { date: formatDate(certificate.expiresAt) }) : t.noExpiry}</span>
             </div>
             <div className="certificateActions">
               <span className="buttonGhost">{t.view} disponível após a validação pública</span>

@@ -1,16 +1,7 @@
 import { VerifyPasswordForm } from "@/components/verify-password-form";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { getCertificateForVerification } from "@/lib/certificates";
-
-function formatDate(isoDate: string) {
-  return new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(new Date(isoDate));
-}
-
-function certificateStatusLabel(status: "valid" | "expired" | "revoked") {
-  if (status === "revoked") return "Certificado revogado";
-  if (status === "expired") return "Certificado vencido";
-  return "Certificado válido";
-}
+import { interpolate } from "@/lib/i18n/interpolate";
 
 export default async function VerifyPage({
   searchParams
@@ -18,8 +9,11 @@ export default async function VerifyPage({
   searchParams: Promise<{ token?: string; email?: string; codigo?: string }>;
 }) {
   const { token = "", email = "", codigo = "" } = await searchParams;
-  const { dict } = await getDictionary();
+  const { dict, locale } = await getDictionary();
   const t = dict.verify;
+  const verification = dict.certificateVerification;
+  const formatDate = (isoDate: string) => new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date(isoDate));
+  const certificateStatusLabel = (status: "valid" | "expired" | "revoked") => status === "revoked" ? verification.revoked : status === "expired" ? verification.expired : verification.valid;
 
   // Keep the invitation password flow on the same stable URL.
   if (token && email) {
@@ -55,30 +49,30 @@ export default async function VerifyPage({
       <div className="loginHero">
         <div>
           <p className="eyebrow">SACF Academy</p>
-          <h1>Verificar certificado</h1>
-          <p className="lead">Confirme a autenticidade de uma certificação emitida pela SACF Academy.</p>
+          <h1>{verification.title}</h1>
+          <p className="lead">{verification.lead}</p>
         </div>
 
         <div className="loginForm">
           <form className="formGrid" action="/verificar" method="get">
-            <label htmlFor="codigo">Código do certificado</label>
+            <label htmlFor="codigo">{verification.codeLabel}</label>
             <input className="field" defaultValue={codigo} id="codigo" name="codigo" placeholder="SACF-2026-XXXXXXXXXX" required />
-            <button className="button" type="submit">Verificar certificado</button>
+            <button className="button" type="submit">{verification.verify}</button>
           </form>
 
           {codigo && !certificate ? (
-            <div className="formHint">Não encontramos um certificado válido com esse código.</div>
+            <div className="formHint">{verification.notFound}</div>
           ) : null}
 
           {certificate ? (
             <div className="detailPanel">
               <p className="eyebrow">{certificateStatusLabel(certificate.status)}</p>
               <h2>{certificate.courseTitle}</h2>
-              <p>Emitido para {certificate.recipientName} pela organização {certificate.organizationName}.</p>
+              <p>{interpolate(verification.issuedFor, { name: certificate.recipientName, organization: certificate.organizationName })}</p>
               <div className="certificateFoot">
-                <span>Código: {certificate.code}</span>
-                <span>Emissão: {formatDate(certificate.issuedAt)}</span>
-                <span>{certificate.expiresAt ? `Validade: ${formatDate(certificate.expiresAt)}` : "Sem vencimento"}</span>
+                <span>{interpolate(verification.code, { code: certificate.code })}</span>
+                <span>{interpolate(verification.issueDate, { date: formatDate(certificate.issuedAt) })}</span>
+                <span>{certificate.expiresAt ? interpolate(verification.validity, { date: formatDate(certificate.expiresAt) }) : verification.noExpiry}</span>
               </div>
             </div>
           ) : null}

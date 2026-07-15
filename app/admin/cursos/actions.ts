@@ -24,6 +24,32 @@ async function uniqueSlug(organizationId: string, title: string) {
   return slug;
 }
 
+async function resolveVerticalGroup(organizationId: string, formData: FormData) {
+  const newVertical = String(formData.get("newVertical") ?? "").trim();
+  const groupId = String(formData.get("verticalGroupId") ?? "").trim();
+  if (newVertical) {
+    const existing = await prisma.group.findFirst({ where: { organizationId, name: { equals: newVertical, mode: "insensitive" } }, select: { id: true, name: true } });
+    if (existing) return existing;
+    const base = slugify(newVertical) || "vertical";
+    let slug = base;
+    let suffix = 2;
+    while (await prisma.group.findUnique({ where: { organizationId_slug: { organizationId, slug } }, select: { id: true } })) slug = `${base}-${suffix++}`;
+    return prisma.group.create({ data: { organizationId, name: newVertical, slug, description: "Vertical de treinamento" }, select: { id: true, name: true } });
+  }
+  if (!groupId) return null;
+  return prisma.group.findFirst({ where: { id: groupId, organizationId }, select: { id: true, name: true } });
+}
+
+async function setCourseAudience(courseId: string, organizationId: string, formData: FormData) {
+  const allVerticals = String(formData.get("audienceScope") ?? "group") === "all_verticals";
+  if (!allVerticals) {
+    await prisma.courseVisibilityRule.deleteMany({ where: { courseId, organizationId, ruleType: "organization" } });
+    return;
+  }
+  const existing = await prisma.courseVisibilityRule.findFirst({ where: { courseId, organizationId, ruleType: "organization" }, select: { id: true } });
+  if (!existing) await prisma.courseVisibilityRule.create({ data: { courseId, organizationId, ruleType: "organization" } });
+}
+
 async function getManagedCourse(courseId: string) {
   const session = await auth();
   const role = session?.user?.role;
@@ -58,9 +84,8 @@ export async function createCourse(formData: FormData) {
   }
 
   const title = String(formData.get("title") ?? "").trim();
-  const vertical = String(formData.get("vertical") ?? "").trim();
   const intent = String(formData.get("intent") ?? "draft");
-  if (!title || !vertical) return;
+  if (!title) return;
 
   const targetSlug = role === "sacf_admin"
     ? String(formData.get("organizationSlug") ?? "").trim()
@@ -69,6 +94,8 @@ export async function createCourse(formData: FormData) {
 
   const organization = await prisma.organization.findUnique({ where: { slug: targetSlug } });
   if (!organization) return;
+  const verticalGroup = await resolveVerticalGroup(organization.id, formData);
+  if (!verticalGroup) return;
 
   const workloadHours = Number.parseFloat(String(formData.get("workloadHours") ?? ""));
   const validityMonths = Number.parseInt(String(formData.get("validityMonths") ?? ""), 10);
@@ -89,7 +116,7 @@ export async function createCourse(formData: FormData) {
       slug,
       shortDescription: String(formData.get("summary") ?? "").trim() || null,
       description: String(formData.get("summary") ?? "").trim() || null,
-      vertical,
+      vertical: verticalGroup.name,
       level: String(formData.get("level") ?? "Essencial"),
       language: String(formData.get("language") ?? "pt-BR"),
       instructorName: String(formData.get("instructor") ?? "").trim() || null,
@@ -103,6 +130,9 @@ export async function createCourse(formData: FormData) {
       publishedAt: published ? new Date() : null
     }
   });
+
+  await prisma.courseVisibilityRule.create({ data: { courseId: course.id, organizationId: organization.id, groupId: verticalGroup.id, ruleType: "group" } });
+  await setCourseAudience(course.id, organization.id, formData);
 
   if (lessonTitles.length) {
     const courseModule = await prisma.courseModule.create({
@@ -162,8 +192,10 @@ export async function updateCourse(formData: FormData) {
   if (!course) return;
 
   const title = String(formData.get("title") ?? "").trim();
-  const vertical = String(formData.get("vertical") ?? "").trim();
-  if (!title || !vertical) return;
+  if (!title) return;
+  const currentCourse = await prisma.course.findFirst({ where: { id: course.id }, select: { vertical: true } });
+  const verticalGroup = await resolveVerticalGroup(course.organizationId, formData);
+  if (!verticalGroup) return;
 
   const workloadHours = Number.parseFloat(String(formData.get("workloadHours") ?? ""));
   const validityMonths = Number.parseInt(String(formData.get("validityMonths") ?? ""), 10);
@@ -172,7 +204,7 @@ export async function updateCourse(formData: FormData) {
     where: { id: course.id },
     data: {
       title,
-      vertical,
+      vertical: verticalGroup.name,
       level: String(formData.get("level") ?? "Essencial"),
       language: String(formData.get("language") ?? "pt-BR"),
       instructorName: String(formData.get("instructor") ?? "").trim() || null,
@@ -185,6 +217,13 @@ export async function updateCourse(formData: FormData) {
       mandatory: formData.get("mandatory") === "on"
     }
   });
+  if (currentCourse?.vertical !== verticalGroup.name) {
+    const previousGroup = await prisma.group.findFirst({ where: { organizationId: course.organizationId, name: currentCourse?.vertical }, select: { id: true } });
+    if (previousGroup) await prisma.courseVisibilityRule.deleteMany({ where: { courseId: course.id, groupId: previousGroup.id, ruleType: "group" } });
+    const existingRule = await prisma.courseVisibilityRule.findFirst({ where: { courseId: course.id, organizationId: course.organizationId, groupId: verticalGroup.id, ruleType: "group" }, select: { id: true } });
+    if (!existingRule) await prisma.courseVisibilityRule.create({ data: { courseId: course.id, organizationId: course.organizationId, groupId: verticalGroup.id, ruleType: "group" } });
+  }
+  await setCourseAudience(course.id, course.organizationId, formData);
   revalidateCourseEditor(course.id);
 }
 

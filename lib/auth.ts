@@ -59,16 +59,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (user?.id) {
-        const [membership, groupMemberships] = await Promise.all([
-          prisma.organizationMember.findFirst({
-            where: { userId: user.id },
-            include: { organization: true }
-          }),
-          prisma.groupMember.findMany({
-            where: { userId: user.id },
-            include: { group: true }
-          })
-        ]);
+        const membership = await prisma.organizationMember.findFirst({
+          where: { userId: user.id },
+          include: { organization: true }
+        });
+        const groupMemberships = await prisma.groupMember.findMany({
+          where: { userId: user.id, ...(membership ? { organizationId: membership.organizationId } : {}) },
+          include: { group: true }
+        });
 
         token.userId = user.id;
         token.role = membership?.role ?? "student";

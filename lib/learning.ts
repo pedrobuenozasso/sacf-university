@@ -18,18 +18,24 @@ type LearningSession = {
 async function getLearningSession(): Promise<LearningSession | null> {
   const session = await auth();
   if (!session?.user?.id || !session.user.organizationId) return null;
+  // Group membership may change while the learner is signed in. Read it from
+  // the tenant database instead of relying on the JWT snapshot, so catalogue
+  // and course access reflect an admin change immediately.
+  const memberships = await prisma.groupMember.findMany({
+    where: { userId: session.user.id, organizationId: session.user.organizationId },
+    include: { group: { select: { slug: true } } }
+  });
   return {
     userId: session.user.id,
     organizationId: session.user.organizationId,
     role: session.user.role ?? "student",
-    groups: session.user.groups ?? []
+    groups: memberships.map((membership) => membership.group.slug)
   };
 }
 
 async function findAccessibleCourse(slug: string, session: LearningSession) {
   const organizationAccess: Prisma.CourseWhereInput = {
     OR: [
-      { organizationId: session.organizationId },
       { visibilityRules: { some: { organizationId: session.organizationId, ruleType: "organization" } } },
       { visibilityRules: { some: { organizationId: session.organizationId, userId: session.userId } } },
       ...(session.groups.length

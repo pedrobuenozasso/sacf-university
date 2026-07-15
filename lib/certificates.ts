@@ -32,9 +32,10 @@ function certificateStatus({ revokedAt, expiresAt }: { revokedAt: Date | null; e
 // multiple tenants in a future Hub-integrated session.
 export async function getMyCertificates(): Promise<UserCertificate[]> {
   const session = await auth();
-  if (!session?.user?.id || !session.user.organizationId || !process.env.DATABASE_URL) return [];
+  if (!session?.user?.id || !session.user.organizationId) return [];
 
-  const { prisma } = await import("@/lib/db");
+  const { hasDatabaseConfig, prisma } = await import("@/lib/db");
+  if (!hasDatabaseConfig()) return [];
   const rows = await prisma.certificate.findMany({
     where: {
       userId: session.user.id,
@@ -63,9 +64,10 @@ export async function getMyCertificates(): Promise<UserCertificate[]> {
 // details never leave the authenticated area.
 export async function getCertificateForVerification(code: string): Promise<PublicCertificate | null> {
   const normalizedCode = code.trim().toUpperCase();
-  if (!normalizedCode || normalizedCode.length > 100 || !process.env.DATABASE_URL) return null;
+  if (!normalizedCode || normalizedCode.length > 100) return null;
 
-  const { prisma } = await import("@/lib/db");
+  const { hasDatabaseConfig, prisma } = await import("@/lib/db");
+  if (!hasDatabaseConfig()) return null;
   const certificate = await prisma.certificate.findUnique({
     where: { certificateCode: normalizedCode },
     include: {

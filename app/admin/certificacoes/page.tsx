@@ -8,11 +8,12 @@ export const dynamic = "force-dynamic";
 export default async function AdminCertificationsPage() {
   const scope = await requireAdminScope();
   const organizationSlug = scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined;
-  const [overview, { dict }] = await Promise.all([
+  const [overview, { dict, locale }] = await Promise.all([
     getCertificationOverview(organizationSlug),
     getDictionary()
   ]);
   const t = dict.admin.certificacoes;
+  const formatDate = (isoDate: string) => new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(isoDate));
   return (
     <>
       <div className="sectionHead">
@@ -34,49 +35,49 @@ export default async function AdminCertificationsPage() {
         </div>
         <div className="metric">
           <strong>{overview.expired}</strong>
-          <span>Vencidos</span>
+          <span>{t.expired}</span>
         </div>
         <div className="metric">
           <strong>{overview.revoked}</strong>
-          <span>Revogados</span>
+          <span>{t.revoked}</span>
         </div>
       </section>
 
-      <div className="tablePanel">
+      <div className="tablePanel certificationsTable">
         <div className="tableHead">
-          <span>Aluno</span>
+          <span>{t.student}</span>
           <span>{t.course}</span>
           <span>{t.validity}</span>
-          <span>Código</span>
+          <span>{t.code}</span>
           <span>{t.status}</span>
         </div>
         {overview.records.map((record) => (
           <div className="tableRow" key={record.id}>
-            <div>
+            <div className="certificateIdentity">
               <strong>{record.userName}</strong>
               <p>{record.organizationName}</p>
             </div>
             <span>{record.courseTitle}</span>
-            <span>{record.expiresAt ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(new Date(record.expiresAt)) : "Sem vencimento"}</span>
+            <span>{record.expiresAt ? formatDate(record.expiresAt) : t.noExpiry}</span>
             <span>{record.code}</span>
-            <div>
-              <span className="statusTag">{record.status === "valid" ? "Válido" : record.status === "expiring" ? "Vencendo" : record.status === "expired" ? "Vencido" : "Revogado"}</span>
+            <div className="certificateControls">
+              <span className="statusTag">{record.status === "valid" ? t.valid : record.status === "expiring" ? t.expiringStatus : record.status === "expired" ? t.expired : t.revoked}</span>
               {record.status !== "revoked" ? (
                 <form className="courseRowActions" action={revokeCertificate}>
                   <input name="certificateId" type="hidden" value={record.id} />
-                  <button type="submit">Revogar</button>
+                  <button className="tableAction tableActionDanger" type="submit">{t.revoke}</button>
                 </form>
               ) : null}
               {record.status === "expired" ? (
                 <form className="courseRowActions" action={startRecertification}>
                   <input name="certificateId" type="hidden" value={record.id} />
-                  <button type="submit">Iniciar reciclagem</button>
+                  <button className="tableAction" type="submit">{t.recertify}</button>
                 </form>
               ) : null}
             </div>
           </div>
         ))}
-        {overview.records.length === 0 ? <div className="tableRow"><div><strong>Nenhum certificado emitido</strong><p>Os certificados emitidos aparecerão aqui.</p></div></div> : null}
+        {overview.records.length === 0 ? <div className="tableRow"><div><strong>{t.emptyTitle}</strong><p>{t.emptyBody}</p></div></div> : null}
       </div>
     </>
   );

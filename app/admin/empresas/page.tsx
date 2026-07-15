@@ -24,7 +24,7 @@ export default async function AdminCompaniesPage() {
       </div>
 
       <section className={scope.isSacfAdmin ? "split" : undefined}>
-        <div className="tablePanel">
+        <div className="tablePanel companiesTable">
           <div className="tableHead">
             <span>{t.company}</span>
             <span>{t.status}</span>
@@ -56,17 +56,10 @@ export default async function AdminCompaniesPage() {
               </div>
             </div>
             <h2>{t.addCompany}</h2>
-            <input className="field" name="name" placeholder={t.namePlaceholder} required />
-            <input className="field" name="slug" placeholder={t.slugPlaceholder} />
-            <input className="field" name="adminEmail" type="email" placeholder={t.adminEmailPlaceholder} />
-            <input
-              className="field"
-              name="seatLimit"
-              type="number"
-              min={1}
-              step={1}
-              placeholder={t.seatLimitPlaceholder}
-            />
+            <label>Nome da empresa<input className="field" name="name" placeholder={t.namePlaceholder} required /></label>
+            <label>Identificador da empresa<small>Usado internamente na URL e nas permissões.</small><input className="field" name="slug" placeholder={t.slugPlaceholder} /></label>
+            <label>Email do administrador inicial<input className="field" name="adminEmail" type="email" placeholder={t.adminEmailPlaceholder} /></label>
+            <label>Limite de usuários <small>Opcional. Deixe em branco para não limitar.</small><input className="field" name="seatLimit" type="number" min={1} step={1} placeholder={t.seatLimitPlaceholder} /></label>
             <button className="button" type="submit">
               {t.createCompany}
             </button>

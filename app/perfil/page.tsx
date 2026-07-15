@@ -42,8 +42,6 @@ export default function ProfilePage() {
     setSuccess(true);
   }
 
-  const initial = (name || user.name).slice(0, 1).toUpperCase();
-
   return (
     <div className="profilePage">
       <section className="sectionHead profilePageHead">
@@ -56,16 +54,6 @@ export default function ProfilePage() {
 
       <section className="detailPanel profilePanel">
         <form onSubmit={handleSubmit}>
-          <div className="profileAvatarRow">
-            <div className="profileAvatarPreview" aria-hidden="true">
-              <span>{initial}</span>
-            </div>
-            <div className="profileAvatarActions">
-              <p className="formHint">{t.photoLabel}</p>
-              <p className="formHint">O envio de foto será liberado quando o armazenamento seguro estiver configurado.</p>
-            </div>
-          </div>
-
           <div className="profileFields">
             <label>
               {t.nameLabel}
@@ -85,8 +73,8 @@ export default function ProfilePage() {
           </div>
 
           <div className="profilePanelFoot">
-            {error ? <p className="formError">{error}</p> : null}
-            {success ? <p className="formSuccess">{t.saved}</p> : null}
+            {error ? <p className="formError" role="alert">{error}</p> : null}
+            {success ? <p className="formSuccess" role="status">{t.saved}</p> : null}
             <button className="button fullButton" type="submit" disabled={submitting}>
               {submitting ? t.saving : t.save}
             </button>

@@ -22,7 +22,8 @@ const dictionary: Dictionary = {
     adminCourses: "Cursos",
     adminUsers: "Usuarios",
     adminCertifications: "Certificaciones",
-    adminReports: "Informes"
+    adminReports: "Informes",
+    primaryNavigation: "Navegación principal"
   },
   home: {
     eyebrow: "Educación corporativa privada",
@@ -76,6 +77,8 @@ const dictionary: Dictionary = {
     coursesTitle: "Cursos oficiales que las empresas pueden asignar, adaptar y certificar.",
     coursesBody: "La biblioteca aporta la base de SACF. El entorno privado permite complementar con capacitaciones internas y reglas de acceso por función.",
     coursesCta: "Solicitar implementación",
+    pauseCarousel: "Pausar carrusel de cursos",
+    playCarousel: "Reanudar carrusel de cursos",
     ctaEyebrow: "SACF Academy",
     ctaTitle: "Lleva capacitación, evidencia y certificación a tu operación.",
     ctaBody: "Una experiencia privada, premium y lista para crecer con empresas, socios y equipos."
@@ -83,6 +86,7 @@ const dictionary: Dictionary = {
   login: {
     title: "Accede a tu universidad corporativa.",
     lead: "Cada cuenta pertenece a una empresa, grupos y permisos. La plataforma dirige al usuario a cursos, certificados e informes según su rol operativo.",
+    trust: "Entorno corporativo privado para capacitación, evidencias y certificación.",
     statusTitle: "Acceso a SACF Academy",
     statusSub: "Entorno privado por organización",
     heading: "Entrar",
@@ -114,6 +118,8 @@ const dictionary: Dictionary = {
     eyebrow: "Implementación de SACF Academy",
     title: "Lleva capacitación y certificación a tu empresa.",
     lead: "SACF configura el entorno inicial de la empresa, crea al administrador responsable y apoya la primera estructura de cursos, usuarios y rutas obligatorias.",
+    meta: "Solo toma unos minutos. El equipo SACF se pondrá en contacto para alinear el entorno y las primeras capacitaciones.",
+    trust: "La implementación está guiada por el equipo SACF. Tu empresa no necesita ninguna configuración técnica.",
     step1Title: "Solicitud",
     step1Body: "Proporcionas los datos de la empresa y el tamaño aproximado del equipo.",
     step2Title: "Implementación asistida",
@@ -242,10 +248,10 @@ const dictionary: Dictionary = {
     inProgress: "En curso",
     pending: "Pendiente",
     code: "Código: {code}",
-    validUntil: "Válido hasta el 24/06/2027",
+    validUntil: "Válido hasta {date}",
     awaitingCompletion: "Esperando finalización",
     view: "Ver",
-    history: "Historial"
+    history: "Historial", emptyTitle: "Aún no se ha emitido ningún certificado.", emptyBody: "Cuando completes un curso con certificación habilitada, aparecerá aquí.", issuedOn: "Emitido el {date}", issue: "emisión", revoked: "Revocado", expired: "Vencido", valid: "Válido", noExpiry: "Sin vencimiento"
   },
   courseCard: {
     lessons: "lecciones",
@@ -275,7 +281,7 @@ const dictionary: Dictionary = {
     inProgress: "En curso",
     certification: "Certificación",
     markComplete: "Marcar como completada",
-    viewDetails: "Ver detalles"
+    viewDetails: "Ver detalles", lessonFallback: "Completa esta lección para registrar tu avance en el curso.", lesson: "Lección", completedLesson: "Completada", lessonMaterial: "Material de la lección", content: "Contenido", watchVideo: "Ver el video", openAttachment: "Abrir material complementario", exam: "Examen", passingScore: "Calificación mínima: {score}%.", answerAll: "Responde todas las preguntas antes de enviar.", examError: "No fue posible calificar el examen. Inténtalo de nuevo.", examFailed: "Obtuviste {score}%. La calificación mínima es {passingScore}%. Revisa el contenido e inténtalo de nuevo.", examPassed: "Examen aprobado: {score}% de aciertos.", examApproved: "Examen aprobado", grading: "Calificando...", submitExam: "Enviar examen", lessonCompleted: "Lección completada", saving: "Guardando..."
   },
   admin: {
     overview: {
@@ -346,7 +352,7 @@ const dictionary: Dictionary = {
       course: "Curso",
       vertical: "Categoría",
       level: "Nivel",
-      lessons: "Lecciones",
+      lessons: "Lecciones", scopeCount: "{count} curso{suffix} en el alcance actual", scopeHint: "Abre un curso para editar contenido, módulos, evaluaciones y asignaciones.", draft: "Borrador", archived: "Archivado", published: "Publicado", archive: "Archivar",
       status: "Estado",
       editorTitle: "Editor de curso",
       editorSub: "Contenido interno o curso oficial de SACF en un solo flujo",
@@ -394,7 +400,11 @@ const dictionary: Dictionary = {
       inviteSub: "El rol, la empresa y los grupos definen el catálogo del usuario",
       inviteUser: "Invitar usuario",
       namePlaceholder: "Nombre",
+      nameLabel: "Nombre completo",
       emailPlaceholder: "Correo",
+      emailLabel: "Correo profesional",
+      companyLabel: "Empresa",
+      accessProfile: "Perfil de acceso",
       roleSelect: "Rol",
       companyAdmin: "Administrador de la empresa",
       trainer: "Instructor",
@@ -430,7 +440,7 @@ const dictionary: Dictionary = {
       months24: "24 meses",
       months12: "12 meses",
       alertDays: "30 días antes",
-      active: "Activa"
+      active: "Activa", expired: "Vencidos", revoked: "Revocados", student: "Alumno", code: "Código", noExpiry: "Sin vencimiento", valid: "Válido", expiringStatus: "Por vencer", revoke: "Revocar", recertify: "Iniciar reciclaje", emptyTitle: "Ningún certificado emitido", emptyBody: "Los certificados emitidos aparecerán aquí."
     },
     relatorios: {
       eyebrow: "Informes",
@@ -474,12 +484,15 @@ const dictionary: Dictionary = {
     emailPlaceholder: "Correo",
     subjectPlaceholder: "Asunto",
     messagePlaceholder: "Describe tu duda o sugerencia",
-    send: "Enviar"
+    send: "Enviar",
+    serviceEyebrow: "Atención", serviceUnavailable: "El envío de solicitudes por el portal está en preparación. Mientras tanto, usa el canal de soporte definido por tu empresa.", serviceStatus: "Canal del portal en implementación"
   },
+  upload: { preparing: "Preparando envío...", rejected: "Archivo no aceptado. Revisa el tipo y el límite de tamaño.", failed: "No fue posible enviar el archivo. Inténtalo de nuevo.", completed: "Archivo enviado de forma segura.", sending: "Enviando archivo...", choose: "Arrastra un archivo aquí o selecciónalo en tu computadora", videoLimit: "Video de hasta 500 MB.", documentLimit: "PDF, DOC o DOCX de hasta 25 MB.", linked: "Material vinculado a la lección." },
+  certificateVerification: { title: "Verificar certificado", lead: "Confirma la autenticidad de una certificación emitida por SACF Academy.", codeLabel: "Código del certificado", verify: "Verificar certificado", notFound: "No encontramos un certificado válido con ese código.", revoked: "Certificado revocado", expired: "Certificado vencido", valid: "Certificado válido", issuedFor: "Emitido para {name} por la organización {organization}.", code: "Código: {code}", issueDate: "Emisión: {date}", validity: "Validez: {date}", noExpiry: "Sin vencimiento" },
   profile: {
     eyebrow: "Perfil",
     title: "Tus datos de acceso.",
-    body: "Actualiza tu foto y nombre de exhibición. Los cambios aparecen para toda tu empresa.",
+    body: "Mantén tu nombre de visualización actualizado. El cambio aparece en toda la plataforma.",
     photoLabel: "Foto de perfil",
     changePhoto: "Cambiar foto",
     removePhoto: "Quitar foto",

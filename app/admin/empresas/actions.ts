@@ -2,6 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { createVerificationToken } from "@/lib/verification-tokens";
+import { sendVerificationEmail } from "@/lib/send-verification-email";
 
 function slugify(input: string): string {
   return input
@@ -19,8 +22,8 @@ export async function createOrganization(formData: FormData) {
   const session = await auth();
   if (session?.user?.role !== "sacf_admin") return;
 
-  if (!process.env.DATABASE_URL) return;
-  const { prisma } = await import("@/lib/db");
+  const { hasDatabaseConfig, prisma } = await import("@/lib/db");
+  if (!hasDatabaseConfig()) return;
 
   const name = String(formData.get("name") ?? "").trim();
   const slugInput = String(formData.get("slug") ?? "").trim();
@@ -46,7 +49,7 @@ export async function createOrganization(formData: FormData) {
   const domain = adminEmail.includes("@") ? adminEmail.split("@")[1] : null;
   const domainFree = domain ? !(await prisma.organizationDomain.findUnique({ where: { domain } })) : false;
 
-  await prisma.organization.create({
+  const organization = await prisma.organization.create({
     data: {
       name,
       slug,
@@ -55,6 +58,30 @@ export async function createOrganization(formData: FormData) {
       ...(domain && domainFree ? { domains: { create: { domain } } } : {})
     }
   });
+
+  // The initial administrator is part of the actual onboarding flow, not
+  // merely a field stored beside the company. They receive the same secure
+  // invitation used when an admin adds a new user later.
+  if (adminEmail.includes("@")) {
+    const user = await prisma.user.upsert({
+      where: { email: adminEmail },
+      update: {},
+      create: { email: adminEmail, name: adminEmail.split("@")[0] || "Administrador" }
+    });
+    const existingMember = await prisma.organizationMember.findUnique({
+      where: { organizationId_userId: { organizationId: organization.id, userId: user.id } },
+      select: { id: true }
+    });
+    if (!existingMember) {
+      await prisma.organizationMember.create({
+        data: { organizationId: organization.id, userId: user.id, role: "org_admin", status: "invited", invitedAt: new Date() }
+      });
+      const token = await createVerificationToken(adminEmail, "email_verify");
+      const host = (await headers()).get("host") ?? "localhost:3000";
+      const protocol = host.startsWith("localhost") ? "http" : "https";
+      await sendVerificationEmail(adminEmail, `${protocol}://${host}/verificar?token=${token}&email=${encodeURIComponent(adminEmail)}`);
+    }
+  }
 
   revalidatePath("/admin/empresas");
 }

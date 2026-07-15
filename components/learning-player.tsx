@@ -2,8 +2,11 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { completeLesson, submitQuiz, type LearningCourse } from "@/lib/learning";
+import { interpolate, useLocale } from "@/components/locale-provider";
 
 export function LearningPlayer({ course }: { course: LearningCourse }) {
+  const { dict } = useLocale();
+  const t = dict.learn;
   const [lessons, setLessons] = useState(course.lessons);
   const [currentLessonId, setCurrentLessonId] = useState(
     course.lessons.find((lesson) => lesson.status !== "completed")?.id ?? course.lessons[0]?.id
@@ -44,20 +47,20 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
     setQuizFeedback(null);
     startTransition(async () => {
       if (currentLesson.questions.some((question) => !quizAnswers[question.id])) {
-        setQuizFeedback("Responda todas as questões antes de enviar.");
+        setQuizFeedback(t.answerAll);
         return;
       }
       const answers = Object.fromEntries(currentLesson.questions.map((question) => [question.id, quizAnswers[question.id]]));
       const result = await submitQuiz(course.slug, currentLesson.id, answers);
       if (!result.ok) {
-        setQuizFeedback("Não foi possível corrigir a prova. Tente novamente.");
+        setQuizFeedback(t.examError);
         return;
       }
       if (!result.passed) {
-        setQuizFeedback(`Você acertou ${result.score}%. A nota mínima é ${result.passingScore}%. Revise o conteúdo e tente novamente.`);
+        setQuizFeedback(interpolate(t.examFailed, { score: result.score, passingScore: result.passingScore }));
         return;
       }
-      setQuizFeedback(`Prova aprovada: ${result.score}% de acerto.`);
+      setQuizFeedback(interpolate(t.examPassed, { score: result.score }));
       setLessons((current) => current.map((lesson) => lesson.id === currentLesson.id ? { ...lesson, status: "completed", progressPercent: 100 } : lesson));
     });
   }
@@ -67,7 +70,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
       <aside className="playerSidebar">
         <p className="eyebrow">{course.title}</p>
         <div className="progressTrack"><div className="progressFill" style={{ width: `${progress}%` }} /></div>
-        <p>{progress}% concluído</p>
+        <p>{progress}{t.completed}</p>
         {groupedLessons.map((module) => (
           <div className="moduleList" key={module.title}>
             <h3>{module.title}</h3>
@@ -86,31 +89,31 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
         ))}
       </aside>
       <div className="playerMain">
-        {currentLesson.lessonType === "video" ? <div className="videoSurface">{currentLesson.videoUrl ? <a className="buttonGhost" href={currentLesson.videoUrl} rel="noreferrer" target="_blank">Assistir ao vídeo</a> : <span className="videoPlay" aria-hidden="true" />}</div> : null}
+        {currentLesson.lessonType === "video" ? <div className="videoSurface">{currentLesson.videoUrl ? <a className="buttonGhost" href={currentLesson.videoUrl} rel="noreferrer" target="_blank">{t.watchVideo}</a> : <span className="videoPlay" aria-hidden="true" />}</div> : null}
         <div className="sectionHead">
           <div>
             <p className="eyebrow">{course.instructor}</p>
             <h1>{currentLesson.title}</h1>
-            <p>{currentLesson.description ?? "Conclua esta aula para registrar seu avanço no curso."}</p>
+            <p>{currentLesson.description ?? t.lessonFallback}</p>
           </div>
         </div>
         <div className="lessonOps">
-          <div><strong>Tempo estimado</strong><span>{currentLesson.durationMinutes ? `${currentLesson.durationMinutes} min` : "Aula"}</span></div>
-          <div><strong>Status</strong><span>{currentLesson.status === "completed" ? "Concluída" : "Em andamento"}</span></div>
-          <div><strong>Certificação</strong><span>{course.certificate}</span></div>
+          <div><strong>{t.estimatedTime}</strong><span>{currentLesson.durationMinutes ? `${currentLesson.durationMinutes} min` : t.lesson}</span></div>
+          <div><strong>{t.status}</strong><span>{currentLesson.status === "completed" ? t.completedLesson : t.inProgress}</span></div>
+          <div><strong>{t.certification}</strong><span>{course.certificate}</span></div>
         </div>
-        {currentLesson.content ? <article className="lessonContent"><p className="eyebrow">Material da aula</p><h2>Conteúdo</h2><div>{currentLesson.content}</div></article> : null}
-        {currentLesson.attachmentUrl ? <div className="actions"><a className="buttonGhost" href={currentLesson.attachmentUrl} rel="noreferrer" target="_blank">Abrir material complementar</a></div> : null}
+        {currentLesson.content ? <article className="lessonContent"><p className="eyebrow">{t.lessonMaterial}</p><h2>{t.content}</h2><div>{currentLesson.content}</div></article> : null}
+        {currentLesson.attachmentUrl ? <div className="actions"><a className="buttonGhost" href={currentLesson.attachmentUrl} rel="noreferrer" target="_blank">{t.openAttachment}</a></div> : null}
         {currentLesson.lessonType === "quiz" ? <section className="quizPanel">
-          <h2>Prova</h2>
-          <p className="formHint">Nota mínima: {course.passingScore ?? 0}%.</p>
+          <h2>{t.exam}</h2>
+          <p className="formHint">{interpolate(t.passingScore, { score: course.passingScore ?? 0 })}</p>
           {currentLesson.questions.map((question, index) => <fieldset key={question.id}><legend>{index + 1}. {question.question}</legend>{question.options.map((option) => <label className="quizOption" key={option.id}><input checked={quizAnswers[question.id] === option.id} name={question.id} onChange={() => setQuizAnswers((current) => ({ ...current, [question.id]: option.id }))} type="radio" /> <span>{option.optionText}</span></label>)}</fieldset>)}
           {quizFeedback ? <p className="formHint">{quizFeedback}</p> : null}
-          <button className="button" disabled={isPending || currentLesson.status === "completed" || !currentLesson.questions.length} onClick={submitCurrentQuiz} type="button">{currentLesson.status === "completed" ? "Prova aprovada" : isPending ? "Corrigindo..." : "Enviar prova"}</button>
+          <button className="button" disabled={isPending || currentLesson.status === "completed" || !currentLesson.questions.length} onClick={submitCurrentQuiz} type="button">{currentLesson.status === "completed" ? t.examApproved : isPending ? t.grading : t.submitExam}</button>
         </section> : null}
         <div className="actions">
           {currentLesson.lessonType !== "quiz" ? <button className="button" disabled={isPending || currentLesson.status === "completed"} onClick={markCurrentLessonComplete} type="button">
-            {currentLesson.status === "completed" ? "Aula concluída" : isPending ? "Salvando..." : "Marcar como concluída"}
+            {currentLesson.status === "completed" ? t.lessonCompleted : isPending ? t.saving : t.markComplete}
           </button> : null}
         </div>
       </div>

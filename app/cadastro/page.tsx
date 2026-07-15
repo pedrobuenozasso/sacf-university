@@ -48,7 +48,7 @@ export default function SignupPage() {
           <p className="eyebrow">{t.eyebrow}</p>
           <h1>{t.title}</h1>
           <p className="lead">{t.lead}</p>
-          <p className="implementationMeta">Leva poucos minutos. A equipe SACF retorna para alinhar o ambiente e os primeiros treinamentos.</p>
+          <p className="implementationMeta">{t.meta}</p>
           <div className="implementationSteps">
             <article>
               <span>01</span>
@@ -66,7 +66,7 @@ export default function SignupPage() {
               <p>{t.step3Body}</p>
             </article>
           </div>
-          <p className="implementationTrust">Implantação orientada pela equipe SACF. Sem necessidade de configuração técnica pela sua empresa.</p>
+          <p className="implementationTrust">{t.trust}</p>
         </div>
 
         <div className="loginForm">
@@ -151,7 +151,7 @@ export default function SignupPage() {
                     value={form.message}
                   />
                 </label>
-                {error ? <p className="formError">{error}</p> : null}
+                {error ? <p className="formError" role="alert" aria-live="polite">{error}</p> : null}
                 <button className="button fullButton" type="submit" disabled={submitting}>
                   {submitting ? t.submitting : t.submit}
                 </button>

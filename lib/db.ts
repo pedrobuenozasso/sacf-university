@@ -6,6 +6,16 @@ import { parse } from "pg-connection-string";
 // process.env, so DATABASE_URL is available at runtime (proxy must be up locally).
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
+// Local development uses DATABASE_URL through the Cloud SQL proxy. Vercel uses
+// discrete credentials because the password cannot safely live inside a URL.
+// Every server-side reader must recognise both configurations.
+export function hasDatabaseConfig() {
+  return Boolean(
+    process.env.DATABASE_URL ||
+      (process.env.DB_HOST && process.env.DB_NAME && process.env.DB_USER && process.env.DB_PASSWORD)
+  );
+}
+
 // Cloud SQL requires TLS when reached over its public IP. We pass the CA
 // certificate as an env var (DATABASE_CA_CERT, raw PEM content) instead of a
 // sslrootcert=<path> query param — serverless bundlers don't know to include

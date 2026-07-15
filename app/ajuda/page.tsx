@@ -33,10 +33,10 @@ export default async function HelpPage() {
         </div>
 
         <aside className="supportCard supportUnavailable">
-          <p className="eyebrow">Atendimento</p>
+          <p className="eyebrow">{t.serviceEyebrow}</p>
           <h2>{t.sendMessageTitle}</h2>
-          <p>O envio de solicitações pelo portal está sendo preparado. Enquanto isso, use o canal de suporte definido pela sua empresa.</p>
-          <span className="actionHint">Canal no portal em implantação</span>
+          <p>{t.serviceUnavailable}</p>
+          <span className="actionHint">{t.serviceStatus}</span>
         </aside>
       </section>
     </>

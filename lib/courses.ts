@@ -4,6 +4,7 @@ export type Course = {
   title: string;
   organizationSlugs: string[];
   accessGroups: string[];
+  organizationWide?: boolean;
   assignedUserIds?: string[];
   vertical: string;
   level: string;
@@ -49,6 +50,7 @@ export type Organization = {
 };
 
 export type AdminUser = {
+  id?: string;
   name: string;
   email: string;
   organization: string;
@@ -56,6 +58,7 @@ export type AdminUser = {
   role: string;
   status: "Ativo" | "Pendente" | "Bloqueado";
   progress: number;
+  groups?: { id: string; name: string }[];
 };
 
 export const courses: Course[] = [
@@ -326,7 +329,7 @@ export function canAccessCourse(course: Course, user: SessionUser) {
   const directlyAssigned = course.assignedUserIds?.includes(user.id);
   const groupAllowed = course.accessGroups.some((group) => user.groups.includes(group));
 
-  return Boolean(directlyAssigned || groupAllowed);
+  return Boolean(course.organizationWide || directlyAssigned || groupAllowed);
 }
 
 export function getSessionUser(userId: string | null) {

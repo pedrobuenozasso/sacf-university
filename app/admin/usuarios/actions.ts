@@ -103,3 +103,69 @@ export async function inviteUser(
   revalidatePath("/admin/empresas");
   return { ok: true };
 }
+
+async function getManagedMember(userId: string) {
+  const session = await auth();
+  const role = session?.user?.role;
+  if (!session?.user?.id || !["sacf_admin", "org_admin"].includes(role ?? "")) return null;
+  const organizationSlug = session.user.organizationSlug;
+  if (role !== "sacf_admin" && !organizationSlug) return null;
+  const organizationFilter = role === "sacf_admin"
+    ? { slug: { not: "sacf" } }
+    : { slug: organizationSlug! };
+  return prisma.organizationMember.findFirst({
+    where: { userId, organization: organizationFilter },
+    select: { id: true, userId: true, organizationId: true }
+  });
+}
+
+const editableRoles: MemberRole[] = ["org_admin", "instructor", "student", "external_partner"];
+const editableStatuses = ["active", "invited", "blocked"] as const;
+
+export async function updateUser(formData: FormData) {
+  const userId = String(formData.get("userId") ?? "").trim();
+  const member = await getManagedMember(userId);
+  if (!member) return;
+  const name = String(formData.get("name") ?? "").trim();
+  const role = String(formData.get("role") ?? "") as MemberRole;
+  const status = String(formData.get("status") ?? "");
+  if (!name || !editableRoles.includes(role) || !editableStatuses.includes(status as (typeof editableStatuses)[number])) return;
+  await prisma.$transaction([
+    prisma.user.update({ where: { id: member.userId }, data: { name } }),
+    prisma.organizationMember.update({ where: { id: member.id }, data: { role, status: status as (typeof editableStatuses)[number] } })
+  ]);
+  revalidatePath("/admin/usuarios");
+}
+
+export async function updateUserGroups(formData: FormData) {
+  const userId = String(formData.get("userId") ?? "").trim();
+  const member = await getManagedMember(userId);
+  if (!member) return;
+  const requestedGroupIds = Array.from(new Set(formData.getAll("groupIds").map(String).filter(Boolean)));
+  const validGroups = await prisma.group.findMany({ where: { organizationId: member.organizationId, id: { in: requestedGroupIds } }, select: { id: true } });
+  await prisma.groupMember.deleteMany({ where: { organizationId: member.organizationId, userId: member.userId } });
+  if (validGroups.length) {
+    await prisma.groupMember.createMany({ data: validGroups.map((group) => ({ organizationId: member.organizationId, userId: member.userId, groupId: group.id })) });
+  }
+  revalidatePath("/admin/usuarios");
+  revalidatePath("/admin/cursos");
+}
+
+export async function createGroup(formData: FormData) {
+  const session = await auth();
+  const role = session?.user?.role;
+  if (!session?.user?.id || !["sacf_admin", "org_admin"].includes(role ?? "")) return;
+  const name = String(formData.get("name") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim() || null;
+  const requestedSlug = String(formData.get("organizationSlug") ?? "").trim();
+  const organizationSlug = role === "sacf_admin" ? requestedSlug : session.user.organizationSlug;
+  if (!name || !organizationSlug) return;
+  const organization = await prisma.organization.findUnique({ where: { slug: organizationSlug }, select: { id: true, slug: true } });
+  if (!organization || (role !== "sacf_admin" && organization.slug !== session.user.organizationSlug)) return;
+  const baseSlug = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "grupo";
+  let slug = baseSlug;
+  let suffix = 2;
+  while (await prisma.group.findUnique({ where: { organizationId_slug: { organizationId: organization.id, slug } }, select: { id: true } })) slug = `${baseSlug}-${suffix++}`;
+  await prisma.group.create({ data: { organizationId: organization.id, name, slug, description } });
+  revalidatePath("/admin/usuarios");
+}

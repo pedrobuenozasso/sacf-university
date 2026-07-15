@@ -1,13 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
-import { CourseCard } from "@/components/course-card";
-import { getCourses } from "@/lib/data";
+import { HomeCourseCarousel } from "@/components/home-course-carousel";
+import { courses as demoCourses } from "@/lib/courses";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [courses, { dict }] = await Promise.all([getCourses(), getDictionary()]);
+  const { dict } = await getDictionary();
   const home = dict.home;
 
   return (
@@ -160,15 +160,8 @@ export default async function Home() {
             <h2>{home.coursesTitle}</h2>
             <p>{home.coursesBody}</p>
           </div>
-          <Link className="buttonGhost" href="/cadastro">
-            {home.coursesCta}
-          </Link>
         </div>
-        <div className="grid">
-          {courses.slice(0, 3).map((course) => (
-            <CourseCard course={course} href={`/catalogo/${course.slug}`} key={course.slug} />
-          ))}
-        </div>
+        <HomeCourseCarousel courses={demoCourses.slice(0, 3)} href="/cadastro" />
       </section>
 
       <section className="productCta">
@@ -177,7 +170,7 @@ export default async function Home() {
         <p>{home.ctaBody}</p>
         <div className="productHeroActions">
           <Link className="button" href="/cadastro">
-            {home.coursesCta}
+            {home.ctaPrimary}
           </Link>
           <Link className="buttonGhost" href="/login">
             {home.ctaSecondary}

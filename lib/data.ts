@@ -63,11 +63,14 @@ type OrganizationRow = {
 };
 
 type AdminMemberRow = {
+  userId: string;
   role: string;
   status: string;
   user: {
+    id: string;
     name: string;
     email: string;
+    groupMemberships: { group: { id: string; name: string } }[];
     enrollments: {
       status: string;
       lessonProgress: { status: string; progressPercent: number }[];
@@ -78,8 +81,8 @@ type AdminMemberRow = {
 };
 
 async function getPrisma() {
-  if (!process.env.DATABASE_URL) return null;
   const db = await import("@/lib/db");
+  if (!db.hasDatabaseConfig()) return null;
   return db.prisma;
 }
 
@@ -156,6 +159,9 @@ function mapCourse(course: CourseRow): Course {
         .map((rule) => rule.user!.id)
     )
   );
+  const organizationWide = course.visibilityRules.some(
+    (rule) => rule.ruleType === "organization" && rule.organization?.slug === course.organization.slug
+  );
 
   const enrollment = enrollmentProgress(course);
 
@@ -165,6 +171,7 @@ function mapCourse(course: CourseRow): Course {
     title: course.title,
     organizationSlugs,
     accessGroups,
+    organizationWide,
     assignedUserIds,
     vertical: course.vertical,
     level: course.level,
@@ -200,6 +207,7 @@ export type CourseEditorData = {
   certificateValidityDays: number | null;
   mandatory: boolean;
   status: "draft" | "published" | "archived";
+  organizationWide: boolean;
   modules: { id: string; title: string; lessons: { id: string; title: string; lessonType: "video" | "text" | "file" | "quiz" }[] }[];
 };
 
@@ -231,6 +239,7 @@ export async function getAdminCourseEditor(courseId: string, organizationSlug?: 
       ...(organizationSlug ? { organization: { slug: organizationSlug } } : {})
     },
     include: {
+      visibilityRules: { where: { ruleType: "organization" }, select: { id: true } },
       modules: {
         orderBy: { position: "asc" },
         include: { lessons: { orderBy: { position: "asc" } } }
@@ -253,6 +262,7 @@ export async function getAdminCourseEditor(courseId: string, organizationSlug?: 
     certificateValidityDays: course.certificateValidityDays,
     mandatory: course.mandatory,
     status: course.status,
+    organizationWide: course.visibilityRules.length > 0,
     modules: course.modules.map((module) => ({
       id: module.id,
       title: module.title,
@@ -395,16 +405,29 @@ function sessionToCourseViewer(session: CourseViewerSession): SessionUser | null
   };
 }
 
+async function getCurrentViewer() {
+  const session = await auth();
+  const viewer = sessionToCourseViewer(session);
+  if (!viewer) return null;
+  const prisma = await getPrisma();
+  if (!prisma) return viewer;
+  const memberships = await prisma.groupMember.findMany({
+    where: { userId: viewer.id, group: { organization: { slug: viewer.organizationSlug } } },
+    include: { group: { select: { slug: true } } }
+  });
+  return { ...viewer, groups: memberships.map((membership) => membership.group.slug) };
+}
+
 // Course visibility is enforced before private catalog data is sent to the
 // browser. Client-side filters remain only as a presentation convenience.
 export async function getCoursesForCurrentUser(): Promise<Course[]> {
-  const viewer = sessionToCourseViewer(await auth());
+  const viewer = await getCurrentViewer();
   if (!viewer) return [];
   return (await getCourses()).filter((course) => canAccessCourse(course, viewer));
 }
 
 export async function getCourseForCurrentUser(slug: string): Promise<Course | null> {
-  const viewer = sessionToCourseViewer(await auth());
+  const viewer = await getCurrentViewer();
   if (!viewer) return null;
   return (await getCourses()).find((course) => course.slug === slug && canAccessCourse(course, viewer)) ?? null;
 }
@@ -465,6 +488,7 @@ export async function getAdminUsers(organizationSlug?: string): Promise<AdminUse
     include: {
       user: {
         include: {
+          groupMemberships: { include: { group: { select: { id: true, name: true } } } },
           enrollments: {
             include: { lessonProgress: true, course: { select: { id: true, _count: { select: { lessons: true } } } } }
           }
@@ -489,15 +513,30 @@ export async function getAdminUsers(organizationSlug?: string): Promise<AdminUse
       : 0;
 
     return {
+      id: member.user.id,
       name: member.user.name,
       email: member.user.email,
       organization: member.organization.name,
       organizationSlug: member.organization.slug,
       role: ROLE_LABEL[member.role] ?? member.role,
       status: MEMBER_STATUS_LABEL[member.status] ?? "Ativo",
-      progress: averageProgress
+      progress: averageProgress,
+      groups: member.user.groupMemberships.map((membership) => membership.group)
     };
   });
+}
+
+export type AdminGroup = { id: string; name: string; description: string | null; organizationSlug: string; memberCount: number };
+
+export async function getAdminGroups(organizationSlug?: string): Promise<AdminGroup[]> {
+  const prisma = await getPrisma();
+  if (!prisma) return [];
+  const groups = await prisma.group.findMany({
+    where: organizationSlug ? { organization: { slug: organizationSlug } } : { organization: { slug: { not: "sacf" } } },
+    include: { organization: { select: { slug: true } }, _count: { select: { members: true } } },
+    orderBy: [{ organization: { name: "asc" } }, { name: "asc" }]
+  });
+  return groups.map((group) => ({ id: group.id, name: group.name, description: group.description, organizationSlug: group.organization.slug, memberCount: group._count.members }));
 }
 
 // Courses an org has started but hasn't published yet — used by the admin

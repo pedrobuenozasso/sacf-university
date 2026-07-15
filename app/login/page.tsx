@@ -1,11 +1,14 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useLocale } from "@/components/locale-provider";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { status } = useSession();
   const { dict } = useLocale();
   const t = dict.login;
   const [email, setEmail] = useState("");
@@ -15,6 +18,12 @@ export default function LoginPage() {
   const [demoLoading, setDemoLoading] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const demoLoginEnabled = process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_DEMO_LOGIN_ENABLED === "true";
+
+  useEffect(() => {
+    if (status === "authenticated") router.replace("/home");
+  }, [router, status]);
+
+  if (status === "authenticated") return null;
 
   async function loginWithEmail(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -51,7 +60,7 @@ export default function LoginPage() {
           <p className="eyebrow">SACF Academy</p>
           <h1>{t.title}</h1>
           <p className="lead">{t.lead}</p>
-          <p className="loginTrust">Ambiente corporativo privado para capacitação, evidências e certificação.</p>
+          <p className="loginTrust">{t.trust}</p>
         </div>
 
         <form className="loginForm" onSubmit={loginWithEmail}>
@@ -70,6 +79,7 @@ export default function LoginPage() {
               onChange={(event) => setEmail(event.target.value)}
               placeholder={t.emailPlaceholder}
               type="email"
+              autoComplete="email"
               value={email}
               required
             />
@@ -82,6 +92,7 @@ export default function LoginPage() {
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder={t.passwordPlaceholder}
                 type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
                 value={password}
                 required
               />
@@ -122,7 +133,7 @@ export default function LoginPage() {
               </button>
             </div>
           </label>
-          {error ? <p className="formError">{error}</p> : null}
+          {error ? <p className="formError" role="alert" aria-live="polite">{error}</p> : null}
           <button className="button" type="submit" disabled={submitting}>
             {submitting ? t.submitting : t.submit}
           </button>

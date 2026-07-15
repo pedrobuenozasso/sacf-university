@@ -26,6 +26,14 @@ export default async function AdminPage() {
   const pendingInvites = adminUsers.filter((user) => user.status === "Pendente").length;
 
   const primaryOrgName = organizations[0]?.name ?? scope.organizationSlug ?? "";
+  const isCompanyAdmin = !scope.isSacfAdmin;
+  const pageEyebrow = isCompanyAdmin ? `Administração · ${primaryOrgName}` : t.eyebrow;
+  const pageTitle = isCompanyAdmin
+    ? `Painel da ${primaryOrgName}`
+    : t.title;
+  const pageBody = isCompanyAdmin
+    ? "Acompanhe usuários, cursos, certificações e pendências da sua empresa."
+    : t.body;
   const ctaLabel = scope.isSacfAdmin
     ? t.ctaSetupCompany
     : interpolate(t.ctaContinueImplementation, { org: primaryOrgName });
@@ -63,9 +71,9 @@ export default async function AdminPage() {
     <>
       <div className="sectionHead">
         <div>
-          <p className="eyebrow">{t.eyebrow}</p>
-          <h1>{t.title}</h1>
-          <p>{t.body}</p>
+          <p className="eyebrow">{pageEyebrow}</p>
+          <h1>{pageTitle}</h1>
+          <p>{pageBody}</p>
         </div>
         <Link className="button" href={ctaHref}>
           {ctaLabel}
@@ -73,10 +81,17 @@ export default async function AdminPage() {
       </div>
 
       <section className="metrics">
-        <Link className="metric metricLink" href="/admin/empresas">
-          <strong>{organizations.length}</strong>
-          <span>{t.companies}</span>
-        </Link>
+        {scope.isSacfAdmin ? (
+          <Link className="metric metricLink" href="/admin/empresas">
+            <strong>{organizations.length}</strong>
+            <span>{t.companies}</span>
+          </Link>
+        ) : (
+          <div className="metric">
+            <strong>{primaryOrgName}</strong>
+            <span>Ambiente da empresa</span>
+          </div>
+        )}
         <Link className="metric metricLink" href="/admin/usuarios">
           <strong>{totalUsers}</strong>
           <span>{t.users}</span>

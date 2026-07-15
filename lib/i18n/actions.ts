@@ -9,6 +9,8 @@ export async function setLocale(next: string) {
   store.set(localeCookieName, next, {
     path: "/",
     maxAge: 60 * 60 * 24 * 365,
-    sameSite: "lax"
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true
   });
 }

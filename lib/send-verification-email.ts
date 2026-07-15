@@ -2,10 +2,11 @@ export async function sendVerificationEmail(email: string, url: string) {
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
-    // Dev fallback: no Resend key configured yet — log the link so the flow is
-    // testable end-to-end without sending a real email.
-    console.log(`[auth] Link de verificação para ${email}: ${url}`);
-    return;
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[auth] Development verification link for ${email}: ${url}`);
+      return;
+    }
+    throw new Error("Email delivery is not configured.");
   }
 
   const { Resend } = await import("resend");

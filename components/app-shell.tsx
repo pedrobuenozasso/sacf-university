@@ -51,7 +51,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             />
           </Link>
           <div className="topbarActions">
-            <nav className="nav" aria-label="Navegação principal">
+            <nav className="nav" aria-label={dict.nav.primaryNavigation}>
               <Link href="/">{dict.nav.product}</Link>
               <Link href="/login">{dict.nav.login}</Link>
             </nav>
@@ -68,11 +68,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const canManage =
     user.role === "sacf_admin" || user.role === "org_admin" || user.role === "instructor";
-  const items = canManage ? adminNav : studentNav;
+  // Company administrators manage their own team and content. The tenant
+  // registry belongs exclusively to SACF and is intentionally not exposed in
+  // their navigation.
+  const items = canManage
+    ? user.role === "sacf_admin"
+      ? adminNav
+      : adminNav.filter((item) => item.href !== "/admin/empresas")
+    : studentNav;
 
   return (
     <div className="appShell">
-      <aside className="sidebar" aria-label="Navegação principal">
+      <aside className="sidebar" aria-label={dict.nav.primaryNavigation}>
         <Link href="/" className="sidebarBrand" aria-label="SACF Academy">
           <Image
             className="brandMark"

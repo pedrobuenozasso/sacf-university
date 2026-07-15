@@ -56,7 +56,7 @@ export default async function AdminReportsPage() {
         <div className="metric"><strong>{deadlines.records.length}</strong><span>Com prazo definido</span></div>
       </section>
 
-      <div className="tablePanel">
+      <div className="tablePanel deadlinesTable">
         <div className="tableHead"><span>Aluno</span><span>Curso</span><span>Empresa</span><span>Prazo</span><span>Status</span></div>
         {deadlines.records.map((record) => (
           <div className="tableRow" key={record.id}>
@@ -73,7 +73,7 @@ export default async function AdminReportsPage() {
           <h2>{t.monitoredCompanies}</h2>
         </div>
       </div>
-      <div className="tablePanel">
+      <div className="tablePanel companiesTable">
         <div className="tableHead">
           <span>{t.company}</span>
           <span>{t.status}</span>

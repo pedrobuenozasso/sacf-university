@@ -22,8 +22,11 @@ export async function sendImplementationRequest(request: ImplementationRequestIn
   };
 
   if (!apiKey) {
-    console.log("[implementation-request]", JSON.stringify({ to, ...request }, null, 2));
-    return;
+    if (process.env.NODE_ENV !== "production") {
+      console.log("[implementation-request]", JSON.stringify({ to, ...request }, null, 2));
+      return;
+    }
+    throw new Error("Implementation inbox is not configured.");
   }
 
   const { Resend } = await import("resend");

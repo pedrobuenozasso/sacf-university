@@ -22,7 +22,8 @@ const dictionary: Dictionary = {
     adminCourses: "Courses",
     adminUsers: "Users",
     adminCertifications: "Certifications",
-    adminReports: "Reports"
+    adminReports: "Reports",
+    primaryNavigation: "Main navigation"
   },
   home: {
     eyebrow: "Private corporate education",
@@ -76,6 +77,8 @@ const dictionary: Dictionary = {
     coursesTitle: "Official courses that companies can assign, adapt and certify.",
     coursesBody: "The library gives you the SACF foundation. The private environment lets you complement it with internal training and role-based access rules.",
     coursesCta: "Request rollout",
+    pauseCarousel: "Pause course carousel",
+    playCarousel: "Resume course carousel",
     ctaEyebrow: "SACF Academy",
     ctaTitle: "Bring training, evidence and certification into your operation.",
     ctaBody: "A private, premium experience ready to grow with companies, partners and teams."
@@ -83,6 +86,7 @@ const dictionary: Dictionary = {
   login: {
     title: "Access your corporate university.",
     lead: "Every account belongs to a company, groups and permissions. The platform routes users to courses, certificates and reports based on their operational role.",
+    trust: "Private corporate environment for training, evidence and certification.",
     statusTitle: "SACF Academy access",
     statusSub: "Private environment per organization",
     heading: "Log in",
@@ -114,6 +118,8 @@ const dictionary: Dictionary = {
     eyebrow: "SACF Academy rollout",
     title: "Bring training and certification into your company.",
     lead: "SACF configures the company's initial environment, creates the responsible administrator and supports the first structure of courses, users and mandatory tracks.",
+    meta: "It only takes a few minutes. The SACF team will follow up to align the environment and the first training sessions.",
+    trust: "Implementation is guided by the SACF team. Your company does not need any technical setup.",
     step1Title: "Request",
     step1Body: "You provide the company details and the approximate team size.",
     step2Title: "Guided rollout",
@@ -242,10 +248,10 @@ const dictionary: Dictionary = {
     inProgress: "In progress",
     pending: "Pending",
     code: "Code: {code}",
-    validUntil: "Valid until 06/24/2027",
+    validUntil: "Valid until {date}",
     awaitingCompletion: "Awaiting completion",
     view: "View",
-    history: "History"
+    history: "History", emptyTitle: "No certificates have been issued yet.", emptyBody: "When you complete a course with certification enabled, it will appear here.", issuedOn: "Issued on {date}", issue: "issue", revoked: "Revoked", expired: "Expired", valid: "Valid", noExpiry: "No expiry"
   },
   courseCard: {
     lessons: "lessons",
@@ -275,7 +281,7 @@ const dictionary: Dictionary = {
     inProgress: "In progress",
     certification: "Certification",
     markComplete: "Mark as complete",
-    viewDetails: "View details"
+    viewDetails: "View details", lessonFallback: "Complete this lesson to record your progress in the course.", lesson: "Lesson", completedLesson: "Completed", lessonMaterial: "Lesson material", content: "Content", watchVideo: "Watch video", openAttachment: "Open supplementary material", exam: "Exam", passingScore: "Minimum score: {score}%.", answerAll: "Answer all questions before submitting.", examError: "We couldn't grade the exam. Try again.", examFailed: "You scored {score}%. The minimum score is {passingScore}%. Review the content and try again.", examPassed: "Exam passed: {score}% correct.", examApproved: "Exam passed", grading: "Grading...", submitExam: "Submit exam", lessonCompleted: "Lesson completed", saving: "Saving..."
   },
   admin: {
     overview: {
@@ -346,7 +352,7 @@ const dictionary: Dictionary = {
       course: "Course",
       vertical: "Category",
       level: "Level",
-      lessons: "Lessons",
+      lessons: "Lessons", scopeCount: "{count} course{suffix} in the current scope", scopeHint: "Open a course to edit content, modules, assessments and assignments.", draft: "Draft", archived: "Archived", published: "Published", archive: "Archive",
       status: "Status",
       editorTitle: "Course editor",
       editorSub: "Internal content or an official SACF course in a single flow",
@@ -394,7 +400,11 @@ const dictionary: Dictionary = {
       inviteSub: "Role, company and groups define the user's catalog",
       inviteUser: "Invite user",
       namePlaceholder: "Name",
+      nameLabel: "Full name",
       emailPlaceholder: "Email",
+      emailLabel: "Work email",
+      companyLabel: "Company",
+      accessProfile: "Access profile",
       roleSelect: "Role",
       companyAdmin: "Company admin",
       trainer: "Trainer",
@@ -430,7 +440,7 @@ const dictionary: Dictionary = {
       months24: "24 months",
       months12: "12 months",
       alertDays: "30 days before",
-      active: "Active"
+      active: "Active", expired: "Expired", revoked: "Revoked", student: "Student", code: "Code", noExpiry: "No expiry", valid: "Valid", expiringStatus: "Expiring", revoke: "Revoke", recertify: "Start recertification", emptyTitle: "No certificates issued", emptyBody: "Issued certificates will appear here."
     },
     relatorios: {
       eyebrow: "Reports",
@@ -474,12 +484,21 @@ const dictionary: Dictionary = {
     emailPlaceholder: "Email",
     subjectPlaceholder: "Subject",
     messagePlaceholder: "Describe your question or suggestion",
-    send: "Send"
+    send: "Send",
+    serviceEyebrow: "Support",
+    serviceUnavailable: "Sending requests through the portal is being prepared. In the meantime, use your company's designated support channel.",
+    serviceStatus: "Portal channel being implemented"
+  },
+  upload: {
+    preparing: "Preparing upload...", rejected: "File not accepted. Check its type and size limit.", failed: "We couldn't upload the file. Try again.", completed: "File uploaded securely.", sending: "Uploading file...", choose: "Drag a file here or choose it from your computer", videoLimit: "Video up to 500 MB.", documentLimit: "PDF, DOC or DOCX up to 25 MB.", linked: "Material attached to this lesson."
+  },
+  certificateVerification: {
+    title: "Verify certificate", lead: "Confirm the authenticity of a certification issued by SACF Academy.", codeLabel: "Certificate code", verify: "Verify certificate", notFound: "We couldn't find a valid certificate with this code.", revoked: "Certificate revoked", expired: "Certificate expired", valid: "Certificate valid", issuedFor: "Issued to {name} by {organization}.", code: "Code: {code}", issueDate: "Issued: {date}", validity: "Valid until: {date}", noExpiry: "No expiry"
   },
   profile: {
     eyebrow: "Profile",
     title: "Your account details.",
-    body: "Update your photo and display name. Changes appear across your company.",
+    body: "Keep your display name up to date. The change appears across the platform.",
     photoLabel: "Profile photo",
     changePhoto: "Change photo",
     removePhoto: "Remove photo",
