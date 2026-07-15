@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useLocale } from "@/components/locale-provider";
+import { appPath } from "@/lib/app-path";
 
 export function FileUpload({ courseId, inputName, kind, existingUrl }: { courseId: string; inputName: string; kind: "document" | "video"; existingUrl?: string | null }) {
   const { dict } = useLocale();
@@ -13,7 +14,7 @@ export function FileUpload({ courseId, inputName, kind, existingUrl }: { courseI
   async function upload(file: File) {
     setUploading(true);
     setMessage(t.preparing);
-    const response = await fetch("/api/admin/uploads", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ courseId, name: file.name, type: file.type, size: file.size, kind }) });
+    const response = await fetch(appPath("/api/admin/uploads"), { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ courseId, name: file.name, type: file.type, size: file.size, kind }) });
     const data = await response.json();
     if (!response.ok) { setUploading(false); return setMessage(t.rejected); }
     const sent = await fetch(data.url, { method: "PUT", headers: { "content-type": file.type }, body: file });

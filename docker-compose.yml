@@ -1,0 +1,27 @@
+services:
+  academy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BASE_PATH: ${NEXT_PUBLIC_BASE_PATH:-/academy}
+    container_name: sacf-academy
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3001:3000"
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_BASE_PATH: ${NEXT_PUBLIC_BASE_PATH:-/academy}
+      AUTH_SECRET: ${AUTH_SECRET}
+      AUTH_URL: ${AUTH_URL:-https://sacf.io/academy}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-https://sacf.io/academy}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DATABASE_CA_CERT: ${DATABASE_CA_CERT}
+      DATABASE_CA_SERVERNAME: ${DATABASE_CA_SERVERNAME}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      GCS_MEDIA_BUCKET: ${GCS_MEDIA_BUCKET}
+      GCS_SERVICE_ACCOUNT_JSON: ${GCS_SERVICE_ACCOUNT_JSON}

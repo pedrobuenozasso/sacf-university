@@ -1,6 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import { appPath } from "@/lib/app-path";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { verifyAndSetPassword } from "@/app/verificar/actions";
@@ -41,7 +42,7 @@ export function VerifyPasswordForm({ token, email }: { token: string; email: str
       return;
     }
 
-    window.location.href = "/home";
+    window.location.href = appPath("/home");
   }
 
   if (!token || !email) {

@@ -5,6 +5,7 @@ import { AppShell } from "@/components/app-shell";
 import { LocaleProvider } from "@/components/locale-provider";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { auth } from "@/lib/auth";
+import { appPath } from "@/lib/app-path";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -38,7 +39,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body>
         <div className="shell">
           <LocaleProvider locale={locale} dict={dict}>
-            <SessionProvider session={session}>
+            <SessionProvider basePath={appPath("/api/auth")} session={session}>
               <AppShell>{children}</AppShell>
             </SessionProvider>
           </LocaleProvider>

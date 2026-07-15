@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/components/locale-provider";
+import { appPath } from "@/lib/app-path";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -39,7 +40,7 @@ export default function LoginPage() {
       return;
     }
 
-    window.location.href = "/home";
+    window.location.href = appPath("/home");
   }
 
   async function loginAsDemo(role: "sacf_admin" | "org_admin" | "student") {
@@ -50,7 +51,7 @@ export default function LoginPage() {
       setError(t.error);
       return;
     }
-    window.location.href = "/home";
+    window.location.href = appPath("/home");
   }
 
   return (

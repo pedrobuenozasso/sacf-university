@@ -7,7 +7,13 @@ const securityHeaders = [
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" }
 ];
 
+const basePath = (process.env.NEXT_PUBLIC_BASE_PATH ?? "").replace(/\/$/, "");
+
 const nextConfig: NextConfig = {
+  // Empty on local/Vercel previews; /academy in the Hostinger VPS build.
+  // This makes Next generate routes and static assets below sacf.io/academy.
+  basePath,
+  output: "standalone",
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   }
