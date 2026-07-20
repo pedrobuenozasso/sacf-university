@@ -15,7 +15,6 @@ export default async function Home() {
     <>
       <section className="productHero">
         <div className="productHeroCopy">
-          <p className="eyebrow">{home.eyebrow}</p>
           <h1>{home.title}</h1>
           <p className="lead">{home.lead}</p>
           <div className="productHeroActions">
@@ -25,11 +24,6 @@ export default async function Home() {
             <Link className="buttonGhost" href="/login">
               {home.ctaSecondary}
             </Link>
-          </div>
-          <div className="productProof" aria-label="Principais benefícios">
-            <div><strong>Privado por empresa</strong><span>Dados, pessoas e cursos isolados</span></div>
-            <div><strong>Certificação verificável</strong><span>Validade, renovação e evidência</span></div>
-            <div><strong>Visão de risco</strong><span>Prazos e pendências em um só lugar</span></div>
           </div>
         </div>
 
@@ -59,32 +53,32 @@ export default async function Home() {
               <div className="previewHeroCard">
                 <div>
                   <small>{home.previewCompliance}</small>
-                  <strong>86%</strong>
+                  <strong>68%</strong>
                   <span>{home.previewComplianceSub}</span>
                 </div>
               </div>
               <div className="previewGrid">
                 <div>
-                  <strong>128</strong>
+                  <strong>2</strong>
                   <span>{home.previewActiveCert}</span>
                 </div>
                 <div>
-                  <strong>12m</strong>
+                  <strong>4h30</strong>
                   <span>{home.previewStandardRecycle}</span>
                 </div>
               </div>
               <div className="previewList">
                 <div>
                   <span>{home.previewNr}</span>
-                  <strong>92%</strong>
+                  <strong>68%</strong>
                 </div>
                 <div>
                   <span>{home.previewOnboarding}</span>
-                  <strong>74%</strong>
+                  <strong>42%</strong>
                 </div>
                 <div>
                   <span>{home.previewExpiring}</span>
-                  <strong>18</strong>
+                  <strong>1</strong>
                 </div>
               </div>
             </div>

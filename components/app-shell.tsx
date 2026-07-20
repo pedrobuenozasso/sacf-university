@@ -63,6 +63,30 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         <main>{children}</main>
+        {pathname === "/" ? (
+          <footer className="siteFooter">
+            <div className="siteFooterMain">
+              <Link href="/" className="siteFooterBrand" aria-label="SACF Academy">
+                <Image
+                  src={appPath("/brand/sacf-academy-horizontal-onDark.png")}
+                  alt="SACF Academy"
+                  width={158}
+                  height={89}
+                />
+              </Link>
+              <nav className="siteFooterNav" aria-label={dict.nav.primaryNavigation}>
+                <Link href="/">{dict.nav.product}</Link>
+                <Link href="/login">{dict.nav.login}</Link>
+                <Link href="/cadastro">{dict.nav.requestImplementation}</Link>
+              </nav>
+              <LanguageSwitcher />
+            </div>
+            <div className="siteFooterBottom">
+              <span>{dict.footer.rights.replace("{year}", String(new Date().getFullYear()))}</span>
+              <span>SACF Academy</span>
+            </div>
+          </footer>
+        ) : null}
       </>
     );
   }

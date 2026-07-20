@@ -3638,8 +3638,10 @@ textarea.field {
 
 .productHero .lead {
   max-width: 680px;
+  margin-inline: auto;
   color: #c9d3d3;
   font-size: clamp(1.06rem, 1.8vw, 1.32rem);
+  text-align: center;
 }
 
 .productHeroActions {
@@ -3877,6 +3879,11 @@ textarea.field {
 
 .productStory h2 {
   max-width: 620px;
+  margin-inline: auto;
+}
+
+.productStory > div:first-child {
+  text-align: center;
 }
 
 .storyCards {
@@ -4105,6 +4112,15 @@ textarea.field {
 }
 
 .productCourses .sectionHead > div {
+  max-width: 720px;
+}
+
+.productWhy .sectionHead {
+  justify-content: center;
+  text-align: center;
+}
+
+.productWhy .sectionHead > div {
   max-width: 720px;
 }
 
@@ -4677,4 +4693,465 @@ textarea.field {
   .moduleItem { padding: 12px; }
   .inlineForm { display: inline-flex; margin-top: 8px; }
   .button, .buttonGhost, .dangerButton { min-height: 44px; }
+}
+
+/* ===== SACF core visual system: public product surfaces ===== */
+.topbar {
+  width: min(1220px, calc(100% - 36px));
+  margin: 18px auto 0;
+  padding: 10px 12px 10px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 999px;
+  background: rgba(12, 12, 12, 0.78);
+  box-shadow:
+    0 22px 70px rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.nav {
+  border-color: transparent;
+  background: transparent;
+}
+
+.nav a {
+  color: rgba(255, 255, 255, 0.66);
+  font-weight: 650;
+}
+
+.nav a::before {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.profilePill {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: #f4f6f4;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  color: #111;
+}
+
+.profilePill::after {
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.72) 46%, rgba(255, 255, 255, 0.72) 54%, transparent 70%);
+}
+
+.productHero {
+  min-height: min(760px, calc(100vh - 136px));
+  border-color: rgba(255, 255, 255, 0.1);
+  border-radius: 38px;
+  background:
+    radial-gradient(circle at 78% 22%, rgba(255, 255, 255, 0.1), transparent 25%),
+    radial-gradient(circle at 18% 100%, rgba(55, 78, 99, 0.2), transparent 42%),
+    linear-gradient(135deg, #090909 0%, #101010 54%, #070707 100%);
+}
+
+.productHero::before {
+  opacity: 0.68;
+  background:
+    linear-gradient(115deg, transparent 0 36%, rgba(255, 255, 255, 0.06) 36.1%, transparent 36.4%),
+    linear-gradient(90deg, transparent 0 70%, rgba(255, 255, 255, 0.035) 70.1%, transparent 70.3%);
+  background-size: 210px 210px, 100% 100%;
+}
+
+.productHero h1 {
+  max-width: 720px;
+  color: #f5f7f6;
+  letter-spacing: -0.075em;
+}
+
+.productHero .lead {
+  color: rgba(240, 243, 241, 0.7);
+}
+
+.productHero .button,
+.productCta .button,
+.loginForm .button {
+  border-color: rgba(255, 255, 255, 0.72);
+  background: #f4f6f4;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.26);
+  color: #000;
+}
+
+.profilePill,
+.productHero .button,
+.productCta .button,
+.loginForm .button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    transform 200ms var(--ease),
+    box-shadow 200ms var(--ease),
+    border-color 200ms var(--ease),
+    background 200ms var(--ease),
+    color 200ms var(--ease);
+}
+
+.productHero .button::after,
+.productCta .button::after,
+.loginForm .button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    112deg,
+    transparent 28%,
+    rgba(255, 255, 255, 0.78) 45%,
+    rgba(255, 255, 255, 0.78) 55%,
+    transparent 72%
+  );
+  transform: translateX(-135%);
+  transition: transform 580ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.productHero .button:hover:not(:disabled),
+.productCta .button:hover:not(:disabled),
+.loginForm .button:hover:not(:disabled) {
+  border-color: #fff;
+  background: #fff;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34);
+  color: #000;
+  transform: translateY(-2px) scale(1.01);
+}
+
+.productHero .button:hover::after,
+.productCta .button:hover::after,
+.loginForm .button:hover::after {
+  transform: translateX(135%);
+}
+
+.productHero .buttonGhost,
+.productCta .buttonGhost,
+.loginForm .buttonGhost {
+  border-color: rgba(255, 255, 255, 0.19);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.productProof div {
+  border-left-color: rgba(255, 255, 255, 0.72);
+}
+
+.productProof strong {
+  color: #f3f5f3;
+}
+
+.previewWindow {
+  border-color: rgba(255, 255, 255, 0.16);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02)),
+    rgba(9, 9, 9, 0.9);
+}
+
+.previewSidebar {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), transparent 34%), rgba(255, 255, 255, 0.025);
+}
+
+.previewTop > span {
+  background: #edf0ee;
+}
+
+.productFeatureGrid article,
+.productFlow,
+.productCta,
+.storyCards div {
+  border-color: rgba(255, 255, 255, 0.13);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.018)),
+    rgba(13, 13, 13, 0.78);
+}
+
+.productFeatureGrid article > span,
+.storyCards span,
+.flowStack span {
+  color: rgba(239, 244, 242, 0.7);
+}
+
+.loginShell {
+  position: relative;
+  overflow: hidden;
+  min-height: calc(100vh - 142px);
+  padding: clamp(26px, 5vw, 70px) clamp(6px, 2vw, 18px);
+}
+
+.loginShell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.58), transparent 100%),
+    radial-gradient(1px 1px at 32% 72%, rgba(255, 255, 255, 0.38), transparent 100%),
+    radial-gradient(1px 1px at 78% 28%, rgba(255, 255, 255, 0.46), transparent 100%),
+    radial-gradient(1.5px 1.5px at 88% 81%, rgba(255, 255, 255, 0.42), transparent 100%);
+  background-size: 280px 280px, 340px 340px, 420px 420px, 460px 460px;
+  opacity: 0.58;
+}
+
+.loginHero {
+  position: relative;
+  z-index: 1;
+  max-width: 1120px;
+  min-height: 540px;
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 64px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 36px;
+  background:
+    radial-gradient(circle at 14% 12%, rgba(255, 255, 255, 0.08), transparent 34%),
+    linear-gradient(130deg, rgba(10, 10, 10, 0.9), rgba(20, 20, 20, 0.76));
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.34);
+}
+
+.loginHero > div:first-child {
+  align-self: center;
+}
+
+.loginHero h1 {
+  max-width: 620px;
+  font-size: clamp(3rem, 6vw, 5.7rem);
+  letter-spacing: -0.07em;
+  line-height: 0.94;
+}
+
+.loginForm {
+  display: grid;
+  gap: 16px;
+  border-color: rgba(255, 255, 255, 0.14);
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.025)),
+    rgba(12, 12, 12, 0.8);
+}
+
+.loginForm .field {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.loginForm .field:focus {
+  border-color: rgba(255, 255, 255, 0.66);
+  background: rgba(0, 0, 0, 0.48);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.09);
+}
+
+.implementationSteps article,
+.loginContractBox {
+  border-color: rgba(255, 255, 255, 0.13);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.loginContractBox {
+  justify-items: center;
+  text-align: center;
+}
+
+.loginContractBox > span {
+  max-width: 328px;
+}
+
+.loginContractBox .loginContractButton {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  min-height: 40px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  padding: 0 14px 0 16px;
+  background: #f4f6f4;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+  color: #000;
+  font-size: 0.78rem;
+  font-weight: 800;
+  justify-self: center;
+  transition:
+    transform 200ms var(--ease),
+    box-shadow 200ms var(--ease),
+    background 200ms var(--ease),
+    color 200ms var(--ease);
+}
+
+.loginContractBox .loginContractButton > span,
+.loginContractBox .loginContractButton > svg {
+  position: relative;
+  z-index: 2;
+  color: #000;
+}
+
+.loginContractBox .loginContractButton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(112deg, transparent 28%, rgba(255, 255, 255, 0.78) 45%, rgba(255, 255, 255, 0.78) 55%, transparent 72%);
+  transform: translateX(-135%);
+  transition: transform 580ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.loginContractBox .loginContractButton:hover {
+  background: #fff;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
+  color: #000;
+  transform: translateY(-2px);
+}
+
+.loginContractBox .loginContractButton:hover::after {
+  transform: translateX(135%);
+}
+
+.loginContractButton svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+.loginForm > .button {
+  align-self: center;
+  justify-self: center;
+  width: min(100%, 228px);
+  margin-inline: auto;
+}
+
+.implementationTrust,
+.loginTrust {
+  border-left-color: rgba(255, 255, 255, 0.72);
+}
+
+@media (min-width: 981px) {
+  .topbar + main {
+    padding-top: 22px;
+  }
+
+  .productHero {
+    grid-template-columns: minmax(0, 1.12fr) minmax(360px, 0.78fr);
+    gap: clamp(36px, 5vw, 64px);
+    min-height: min(650px, calc(100vh - 162px));
+    margin-top: 0;
+    padding-block: clamp(38px, 5.2vw, 68px);
+  }
+
+  .productHero h1 {
+    font-size: clamp(4.25rem, 8.4vw, 7.45rem);
+  }
+}
+
+.siteFooter {
+  width: min(1220px, calc(100% - 36px));
+  margin: 0 auto 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.siteFooterMain {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 22px;
+  min-height: 104px;
+}
+
+.siteFooterBrand {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.siteFooterBrand img {
+  display: block;
+  width: 144px;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.82;
+}
+
+.siteFooterNav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.siteFooterNav a {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.82rem;
+  font-weight: 650;
+  transition: color 180ms ease;
+}
+
+.siteFooterNav a:hover {
+  color: #fff;
+}
+
+.siteFooterMain .languageSwitcher {
+  justify-self: end;
+}
+
+.siteFooterBottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.36);
+  font-size: 0.74rem;
+}
+
+@media (max-width: 720px) {
+  .topbar {
+    width: calc(100% - 24px);
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 26px;
+  }
+
+  .loginShell {
+    min-height: auto;
+    padding: 24px 0;
+  }
+
+  .loginHero {
+    padding: 24px 18px;
+    border-radius: 26px;
+  }
+
+  .productHero {
+    border-radius: 26px;
+  }
+
+  .siteFooter {
+    width: calc(100% - 24px);
+    margin-bottom: 18px;
+  }
+
+  .siteFooterMain {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 18px;
+    padding: 26px 0 22px;
+  }
+
+  .siteFooterNav {
+    grid-column: auto;
+    justify-content: center;
+    gap: 12px 18px;
+    text-align: center;
+  }
+
+  .siteFooterMain .languageSwitcher {
+    justify-self: center;
+  }
+
+  .siteFooterBottom {
+    align-items: center;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px 0 4px;
+    text-align: center;
+  }
 }

@@ -141,7 +141,12 @@ export default function LoginPage() {
           <div className="loginContractBox">
             <strong>{t.contractTitle}</strong>
             <span>{t.contractBody}</span>
-            <Link href="/cadastro">{t.contractLink}</Link>
+            <Link href="/cadastro" className="loginContractButton">
+              <span>{t.contractLink}</span>
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M4 10h11M11 5.5 15.5 10 11 14.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
           </div>
 
           {demoLoginEnabled ? (
