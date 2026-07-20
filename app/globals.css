@@ -5088,8 +5088,39 @@ textarea.field {
   color: #fff;
 }
 
-.siteFooterMain .languageSwitcher {
+.siteFooterMain .languageLinks {
   justify-self: end;
+}
+
+.languageLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px 14px;
+}
+
+.languageLinks button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.52);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+
+.languageLinks button:hover:not(:disabled),
+.languageLinks button:focus-visible {
+  color: #fff;
+}
+
+.languageLinks button[data-active="true"] {
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.48);
+  text-underline-offset: 4px;
 }
 
 .siteFooterBottom {
@@ -5143,8 +5174,13 @@ textarea.field {
     text-align: center;
   }
 
-  .siteFooterMain .languageSwitcher {
+  .siteFooterMain .languageLinks {
     justify-self: center;
+  }
+
+  .languageLinks {
+    justify-content: center;
+    gap: 6px 12px;
   }
 
   .siteFooterBottom {

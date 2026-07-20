@@ -79,7 +79,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <Link href="/login">{dict.nav.login}</Link>
                 <Link href="/cadastro">{dict.nav.requestImplementation}</Link>
               </nav>
-              <LanguageSwitcher />
+              <LanguageSwitcher variant="links" />
             </div>
             <div className="siteFooterBottom">
               <span>{dict.footer.rights.replace("{year}", String(new Date().getFullYear()))}</span>

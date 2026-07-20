@@ -6,7 +6,7 @@ import { useLocale } from "@/components/locale-provider";
 import { setLocale } from "@/lib/i18n/actions";
 import { locales, localeLabels } from "@/lib/i18n/locales";
 
-export function LanguageSwitcher({ variant = "light" }: { variant?: "light" | "dark" }) {
+export function LanguageSwitcher({ variant = "light" }: { variant?: "light" | "dark" | "links" }) {
   const { locale, dict } = useLocale();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -20,6 +20,25 @@ export function LanguageSwitcher({ variant = "light" }: { variant?: "light" | "d
       await setLocale(next);
       router.refresh();
     });
+  }
+
+  if (variant === "links") {
+    return (
+      <nav className="languageLinks" aria-label={dict.languageSwitcher.label}>
+        {locales.map((code) => (
+          <button
+            type="button"
+            key={code}
+            data-active={code === locale}
+            aria-current={code === locale ? "true" : undefined}
+            disabled={isPending}
+            onClick={() => selectLocale(code)}
+          >
+            {localeLabels[code].name}
+          </button>
+        ))}
+      </nav>
+    );
   }
 
   return (
