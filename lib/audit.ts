@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import type { Prisma } from "@prisma/client";
 
 type AuditEventInput = {
   organizationId: string;
@@ -6,7 +7,7 @@ type AuditEventInput = {
   action: string;
   entityType: string;
   entityId?: string | null;
-  metadata?: Record<string, unknown>;
+  metadata?: Prisma.InputJsonValue;
 };
 
 // Audit history must never prevent the business operation from completing.

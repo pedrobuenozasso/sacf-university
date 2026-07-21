@@ -117,7 +117,7 @@ export async function inviteUser(
   const protocol = host.startsWith("localhost") ? "http" : "https";
   const url = `${protocol}://${host}${appPath("/verificar")}?token=${token}&email=${encodeURIComponent(email)}`;
   await sendVerificationEmail(email, url);
-  await recordAuditEvent({ organizationId: organization.id, actorUserId: session.user.id, action: "user.invited", entityType: "user", entityId: user.id, metadata: { email, role } });
+  await recordAuditEvent({ organizationId: organization.id, actorUserId: session!.user.id, action: "user.invited", entityType: "user", entityId: user.id, metadata: { email, role } });
 
   revalidatePath("/admin/usuarios");
   revalidatePath("/admin/empresas");
