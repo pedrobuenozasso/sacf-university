@@ -2,6 +2,7 @@
 
 import { signOut, useSession } from "next-auth/react";
 import type { SessionUser } from "@/lib/courses";
+import { appPath } from "@/lib/app-path";
 
 export function useSessionUser(): SessionUser | null {
   const { data } = useSession();
@@ -23,5 +24,7 @@ export function useSessionUser(): SessionUser | null {
 }
 
 export function clearSessionUser() {
-  signOut({ callbackUrl: "/" });
+  // The server runs behind Traefik on 0.0.0.0:3000. Build the return URL from
+  // the browser's public origin so sign-out never exposes that internal host.
+  signOut({ callbackUrl: `${window.location.origin}${appPath("/")}` });
 }
