@@ -27,6 +27,11 @@ services:
       - traefik-proxy
       - sacf-net
     labels:
+      # Bump this release marker when application source changes. Hostinger's
+      # compose manager uses the compose document to decide whether a project
+      # must be rebuilt, while the application source itself is the build
+      # context behind this document URL.
+      - "com.sacf.academy.release=2026-07-21-operations"
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-proxy"
       - "traefik.http.routers.sacf-academy-http.rule=(Host(`sacf.io`) || Host(`www.sacf.io`)) && PathPrefix(`/academy`)"

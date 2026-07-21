@@ -27,6 +27,7 @@ services:
       - traefik-proxy
       - sacf-net
     labels:
+      - "com.sacf.academy.release=2026-07-21-operations"
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-proxy"
       - "traefik.http.routers.sacf-academy-http.rule=(Host(`sacf.io`) || Host(`www.sacf.io`)) && PathPrefix(`/academy`)"
