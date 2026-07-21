@@ -14,12 +14,19 @@ export function FileUpload({ courseId, inputName, kind, existingUrl, target = "c
   async function upload(file: File) {
     setUploading(true);
     setMessage(t.preparing);
-    const response = await fetch(appPath("/api/admin/uploads"), { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ courseId, name: file.name, type: file.type, size: file.size, kind, target }) });
-    const data = await response.json();
-    if (!response.ok) { setUploading(false); return setMessage(t.rejected); }
-    const sent = await fetch(data.url, { method: "PUT", headers: { "content-type": file.type }, body: file });
-    if (!sent.ok) { setUploading(false); return setMessage(t.failed); }
-    setUrl(data.storagePath); setMessage(t.completed); setUploading(false);
+    try {
+      const response = await fetch(appPath("/api/admin/uploads"), { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ courseId, name: file.name, type: file.type, size: file.size, kind, target }) });
+      const data = await response.json().catch(() => null);
+      if (!response.ok || !data?.url || !data?.storagePath) return setMessage(t.rejected);
+      const sent = await fetch(data.url, { method: "PUT", headers: { "content-type": file.type }, body: file });
+      if (!sent.ok) return setMessage(t.failed);
+      setUrl(data.storagePath);
+      setMessage(t.completed);
+    } catch {
+      setMessage(t.failed);
+    } finally {
+      setUploading(false);
+    }
   }
   const accept = kind === "video" ? "video/*" : kind === "image" ? "image/jpeg,image/png,image/webp" : ".pdf,.doc,.docx";
   const limit = kind === "video" ? t.videoLimit : kind === "image" ? "PNG, JPG ou WebP · até 8 MB." : t.documentLimit;
