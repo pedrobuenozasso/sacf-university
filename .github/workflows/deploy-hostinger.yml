@@ -23,8 +23,8 @@ jobs:
           environment-variables: |
             NODE_ENV=production
             NEXT_PUBLIC_BASE_PATH=/academy
-            AUTH_URL=https://sacf.io/academy
-            NEXTAUTH_URL=https://sacf.io/academy
+            AUTH_URL=https://sacf.io/academy/api/auth
+            NEXTAUTH_URL=https://sacf.io/academy/api/auth
             AUTH_SECRET=${{ secrets.AUTH_SECRET }}
             DATABASE_URL=${{ secrets.DATABASE_URL }}
             DATABASE_CA_CERT=${{ secrets.DATABASE_CA_CERT }}
