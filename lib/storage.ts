@@ -3,7 +3,14 @@ import { Storage } from "@google-cloud/storage";
 const bucketName = process.env.GCS_MEDIA_BUCKET ?? "sacf-university-media-cedar-context-456512-b9";
 
 function getStorage() {
-  const credentials = process.env.GCS_SERVICE_ACCOUNT_JSON;
+  // Hostinger's Docker API accepts only single-line environment values. The
+  // production credential is therefore supplied as Base64; local/Vercel can
+  // still use the raw JSON value when convenient.
+  const credentials =
+    process.env.GCS_SERVICE_ACCOUNT_JSON ??
+    (process.env.GCS_SERVICE_ACCOUNT_JSON_BASE64
+      ? Buffer.from(process.env.GCS_SERVICE_ACCOUNT_JSON_BASE64, "base64").toString("utf8")
+      : undefined);
   return credentials ? new Storage({ credentials: JSON.parse(credentials) }) : new Storage();
 }
 
