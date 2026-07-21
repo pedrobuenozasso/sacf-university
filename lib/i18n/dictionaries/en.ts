@@ -115,7 +115,8 @@ const dictionary: Dictionary = {
     demoOrgAdmin: "Log in as Zasso Admin",
     demoStudent: "Log in as Student",
     showPassword: "Show password",
-    hidePassword: "Hide password"
+    hidePassword: "Hide password",
+    forgotPassword: "Forgot your password?"
   },
   signup: {
     eyebrow: "SACF Academy rollout",
@@ -173,6 +174,7 @@ const dictionary: Dictionary = {
     submitting: "Confirming...",
     submit: "Confirm and log in"
   },
+  passwordReset: { requestTitle: "Recover your access.", requestLead: "Enter your email to receive a secure password-reset link.", requestHeading: "Reset password", resetTitle: "Create a new password.", resetLead: "Choose a secure password to return to the platform.", resetHeading: "New password", statusTitle: "Access recovery", statusSub: "Secure link valid for 30 minutes", emailLabel: "Email", emailPlaceholder: "you@company.com", newPassword: "New password", confirmPassword: "Confirm new password", passwordPlaceholder: "8 characters minimum", confirmPlaceholder: "Repeat your new password", passwordMismatch: "Passwords don't match.", invalidLink: "Invalid or expired link. Request a new reset.", sending: "Sending...", send: "Send link", saving: "Saving...", save: "Save new password", sentTitle: "If an account exists for this email, we sent a link.", sentBody: "Check your inbox and spam folder. The link expires in 30 minutes.", completeTitle: "Password updated.", completeBody: "You can now log in with your new password.", backToLogin: "Back to login", login: "Log in to the platform" },
   accessPanels: {
     defaultTitle: "Log in to continue.",
     defaultDescription: "This area belongs to the company's private environment. Log in to access courses, certificates and reports.",

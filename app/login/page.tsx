@@ -134,6 +134,7 @@ export default function LoginPage() {
               </button>
             </div>
           </label>
+          <Link className="loginForgotPassword" href="/recuperar-senha">{t.forgotPassword}</Link>
           {error ? <p className="formError" role="alert" aria-live="polite">{error}</p> : null}
           <button className="button" type="submit" disabled={submitting}>
             {submitting ? t.submitting : t.submit}

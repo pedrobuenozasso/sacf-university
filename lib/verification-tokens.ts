@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 
 const TOKEN_TTL_MINUTES = 30;
 
-export type VerificationPurpose = "email_verify";
+export type VerificationPurpose = "email_verify" | "password_reset";
 
 function hashToken(rawToken: string) {
   return createHash("sha256").update(rawToken).digest("hex");

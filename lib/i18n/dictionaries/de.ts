@@ -115,7 +115,8 @@ const dictionary: Dictionary = {
     demoOrgAdmin: "Als Zasso-Admin anmelden",
     demoStudent: "Als Lernender anmelden",
     showPassword: "Passwort anzeigen",
-    hidePassword: "Passwort verbergen"
+    hidePassword: "Passwort verbergen",
+    forgotPassword: "Passwort vergessen?"
   },
   signup: {
     eyebrow: "SACF Academy Einführung",
@@ -173,6 +174,7 @@ const dictionary: Dictionary = {
     submitting: "Wird bestätigt...",
     submit: "Bestätigen und anmelden"
   },
+  passwordReset: { requestTitle: "Zugang wiederherstellen.", requestLead: "Geben Sie Ihre E-Mail-Adresse ein, um einen sicheren Link zum Zurücksetzen zu erhalten.", requestHeading: "Passwort zurücksetzen", resetTitle: "Neues Passwort erstellen.", resetLead: "Wählen Sie ein sicheres Passwort für die Rückkehr zur Plattform.", resetHeading: "Neues Passwort", statusTitle: "Zugang wiederherstellen", statusSub: "Sicherer Link, 30 Minuten gültig", emailLabel: "E-Mail", emailPlaceholder: "sie@unternehmen.com", newPassword: "Neues Passwort", confirmPassword: "Neues Passwort bestätigen", passwordPlaceholder: "Mindestens 8 Zeichen", confirmPlaceholder: "Neues Passwort wiederholen", passwordMismatch: "Die Passwörter stimmen nicht überein.", invalidLink: "Ungültiger oder abgelaufener Link. Fordern Sie einen neuen Link an.", sending: "Wird gesendet...", send: "Link senden", saving: "Wird gespeichert...", save: "Neues Passwort speichern", sentTitle: "Falls ein Konto zu dieser E-Mail existiert, wurde ein Link gesendet.", sentBody: "Prüfen Sie Posteingang und Spam-Ordner. Der Link läuft in 30 Minuten ab.", completeTitle: "Passwort aktualisiert.", completeBody: "Sie können sich jetzt mit Ihrem neuen Passwort anmelden.", backToLogin: "Zurück zur Anmeldung", login: "Bei der Plattform anmelden" },
   accessPanels: {
     defaultTitle: "Melden Sie sich an, um fortzufahren.",
     defaultDescription: "Dieser Bereich gehört zur privaten Umgebung des Unternehmens. Melden Sie sich an, um auf Kurse, Zertifikate und Berichte zuzugreifen.",

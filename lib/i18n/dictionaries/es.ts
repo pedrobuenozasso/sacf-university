@@ -115,7 +115,8 @@ const dictionary: Dictionary = {
     demoOrgAdmin: "Entrar como Admin Zasso",
     demoStudent: "Entrar como Alumno",
     showPassword: "Mostrar contraseña",
-    hidePassword: "Ocultar contraseña"
+    hidePassword: "Ocultar contraseña",
+    forgotPassword: "¿Olvidaste tu contraseña?"
   },
   signup: {
     eyebrow: "Implementación de SACF Academy",
@@ -173,6 +174,7 @@ const dictionary: Dictionary = {
     submitting: "Confirmando...",
     submit: "Confirmar y entrar"
   },
+  passwordReset: { requestTitle: "Recupera tu acceso.", requestLead: "Ingresa tu correo para recibir un enlace seguro de restablecimiento.", requestHeading: "Restablecer contraseña", resetTitle: "Crea una nueva contraseña.", resetLead: "Elige una contraseña segura para volver a la plataforma.", resetHeading: "Nueva contraseña", statusTitle: "Recuperación de acceso", statusSub: "Enlace seguro válido por 30 minutos", emailLabel: "Correo electrónico", emailPlaceholder: "tu@empresa.com", newPassword: "Nueva contraseña", confirmPassword: "Confirmar nueva contraseña", passwordPlaceholder: "Mínimo 8 caracteres", confirmPlaceholder: "Repite tu nueva contraseña", passwordMismatch: "Las contraseñas no coinciden.", invalidLink: "Enlace inválido o vencido. Solicita un nuevo restablecimiento.", sending: "Enviando...", send: "Enviar enlace", saving: "Guardando...", save: "Guardar nueva contraseña", sentTitle: "Si existe una cuenta con este correo, enviamos un enlace.", sentBody: "Revisa tu bandeja de entrada y spam. El enlace vence en 30 minutos.", completeTitle: "Contraseña actualizada.", completeBody: "Ahora puedes iniciar sesión con tu nueva contraseña.", backToLogin: "Volver al inicio de sesión", login: "Entrar a la plataforma" },
   accessPanels: {
     defaultTitle: "Entra para continuar.",
     defaultDescription: "Esta área pertenece al entorno privado de la empresa. Inicia sesión para acceder a cursos, certificados e informes.",

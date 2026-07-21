@@ -115,7 +115,8 @@ const dictionary: Dictionary = {
     demoOrgAdmin: "Se connecter en tant qu'Admin Zasso",
     demoStudent: "Se connecter en tant qu'Étudiant",
     showPassword: "Afficher le mot de passe",
-    hidePassword: "Masquer le mot de passe"
+    hidePassword: "Masquer le mot de passe",
+    forgotPassword: "Mot de passe oublié ?"
   },
   signup: {
     eyebrow: "Déploiement SACF Academy",
@@ -173,6 +174,7 @@ const dictionary: Dictionary = {
     submitting: "Confirmation...",
     submit: "Confirmer et se connecter"
   },
+  passwordReset: { requestTitle: "Récupérez votre accès.", requestLead: "Saisissez votre e-mail pour recevoir un lien sécurisé de réinitialisation.", requestHeading: "Réinitialiser le mot de passe", resetTitle: "Créez un nouveau mot de passe.", resetLead: "Choisissez un mot de passe sécurisé pour revenir sur la plateforme.", resetHeading: "Nouveau mot de passe", statusTitle: "Récupération d’accès", statusSub: "Lien sécurisé valable 30 minutes", emailLabel: "E-mail", emailPlaceholder: "vous@entreprise.com", newPassword: "Nouveau mot de passe", confirmPassword: "Confirmer le nouveau mot de passe", passwordPlaceholder: "8 caractères minimum", confirmPlaceholder: "Répétez votre nouveau mot de passe", passwordMismatch: "Les mots de passe ne correspondent pas.", invalidLink: "Lien invalide ou expiré. Demandez une nouvelle réinitialisation.", sending: "Envoi...", send: "Envoyer le lien", saving: "Enregistrement...", save: "Enregistrer le nouveau mot de passe", sentTitle: "Si un compte existe pour cet e-mail, nous avons envoyé un lien.", sentBody: "Vérifiez votre boîte de réception et vos spams. Le lien expire dans 30 minutes.", completeTitle: "Mot de passe mis à jour.", completeBody: "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.", backToLogin: "Retour à la connexion", login: "Se connecter à la plateforme" },
   accessPanels: {
     defaultTitle: "Connectez-vous pour continuer.",
     defaultDescription: "Cette zone appartient à l'environnement privé de l'entreprise. Connectez-vous pour accéder aux cours, certificats et rapports.",

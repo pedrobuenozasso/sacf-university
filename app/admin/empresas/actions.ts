@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { createVerificationToken } from "@/lib/verification-tokens";
 import { sendVerificationEmail } from "@/lib/send-verification-email";
+import { appPath } from "@/lib/app-path";
 
 function slugify(input: string): string {
   return input
@@ -79,7 +80,7 @@ export async function createOrganization(formData: FormData) {
       const token = await createVerificationToken(adminEmail, "email_verify");
       const host = (await headers()).get("host") ?? "localhost:3000";
       const protocol = host.startsWith("localhost") ? "http" : "https";
-      await sendVerificationEmail(adminEmail, `${protocol}://${host}/verificar?token=${token}&email=${encodeURIComponent(adminEmail)}`);
+      await sendVerificationEmail(adminEmail, `${protocol}://${host}${appPath("/verificar")}?token=${token}&email=${encodeURIComponent(adminEmail)}`);
     }
   }
 

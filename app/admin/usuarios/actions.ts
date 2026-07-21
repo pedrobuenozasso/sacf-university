@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { createVerificationToken } from "@/lib/verification-tokens";
 import { sendVerificationEmail } from "@/lib/send-verification-email";
+import { appPath } from "@/lib/app-path";
 import type { MemberRole } from "@prisma/client";
 
 export type InviteUserErrorCode =
@@ -96,7 +97,7 @@ export async function inviteUser(
   const token = await createVerificationToken(email, "email_verify");
   const host = (await headers()).get("host") ?? "localhost:3000";
   const protocol = host.startsWith("localhost") ? "http" : "https";
-  const url = `${protocol}://${host}/verificar?token=${token}&email=${encodeURIComponent(email)}`;
+  const url = `${protocol}://${host}${appPath("/verificar")}?token=${token}&email=${encodeURIComponent(email)}`;
   await sendVerificationEmail(email, url);
 
   revalidatePath("/admin/usuarios");
