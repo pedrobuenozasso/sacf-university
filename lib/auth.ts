@@ -2,13 +2,8 @@ import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db";
-import { appBasePath } from "@/lib/app-path";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  // The VPS proxies the application below /academy while Vercel serves it at
-  // the domain root. Make Auth.js parse the same route that Next exposes in
-  // each environment; otherwise /academy/api/auth/* is rejected as 400.
-  basePath: `${appBasePath}/api/auth`,
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   trustHost: true,
