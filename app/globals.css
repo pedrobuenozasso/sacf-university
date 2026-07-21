@@ -2902,7 +2902,9 @@ h3 {
 
 .coursesTable .tableHead,
 .coursesTable .tableRow {
-  grid-template-columns: minmax(230px, 1.55fr) minmax(120px, 0.85fr) minmax(110px, 0.7fr) 72px minmax(122px, 0.8fr);
+  /* The course list shares this row with the creation panel. Keep every
+     column inside its card instead of letting the status actions get clipped. */
+  grid-template-columns: minmax(0, 1.45fr) minmax(104px, 0.78fr) minmax(96px, 0.64fr) 52px minmax(118px, 0.82fr);
 }
 
 .coursesTable .tableRow {
@@ -2948,24 +2950,30 @@ h3 {
 
 .courseStatusControl {
   display: grid;
+  min-width: 0;
   justify-items: center;
   gap: 8px;
 }
 
 .courseStatusControl .statusTag {
   margin: 0;
+  max-width: 100%;
+  white-space: nowrap;
 }
 
 .courseStatusControl .courseRowActions {
+  width: 100%;
   justify-content: center;
   margin: 0;
 }
 
 .courseStatusControl .tableAction {
+  width: 100%;
   min-height: 32px;
   border: 1px solid rgba(0, 209, 255, 0.28);
   border-radius: 999px;
   padding: 0 11px;
+  white-space: nowrap;
   background: rgba(0, 209, 255, 0.07);
   color: var(--cyan);
   font-size: 0.76rem;
