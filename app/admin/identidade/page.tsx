@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { requireAdminScope } from "@/lib/admin-scope";
 import { prisma } from "@/lib/db";
+import { mediaUrl } from "@/lib/media-url";
+import { FileUpload } from "@/components/file-upload";
 import { updateOrganizationBranding } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +22,8 @@ export default async function OrganizationBrandingPage() {
       <form className="detailPanel brandingForm" action={updateOrganizationBranding}>
         <div className="formStatus"><span className="statusDot" /><div><strong>Marca da empresa</strong><small>Aplicada no menu após o próximo login.</small></div></div>
         <h2>Personalização</h2>
-        <label>URL da logo <small>Use uma URL HTTPS ou um arquivo enviado ao armazenamento da empresa.</small><input className="field" name="logoUrl" type="url" defaultValue={organization.logoUrl ?? ""} placeholder="https://empresa.com/logo.png" /></label>
+        <label>Logo da empresa <small>Envie PNG, JPG ou WebP. Se preferir, também pode informar uma URL HTTPS.</small><FileUpload inputName="logoUrl" kind="image" target="organization_logo" existingUrl={organization.logoUrl} /></label>
+        <label>URL da logo (opcional) <small>Use somente se a imagem estiver hospedada em outro endereço HTTPS.</small><input className="field" name="externalLogoUrl" type="url" defaultValue={organization.logoUrl?.startsWith("https://") ? organization.logoUrl : ""} placeholder="https://empresa.com/logo.png" /></label>
         <div className="formGrid"><label>Cor principal<input className="field colorField" name="primaryColor" type="color" defaultValue={organization.primaryColor ?? "#00d1ff"} /></label><label>Cor de apoio<input className="field colorField" name="secondaryColor" type="color" defaultValue={organization.secondaryColor ?? "#6b5cff"} /></label></div>
         <label>Idioma padrão<select className="field" name="defaultLocale" defaultValue={organization.defaultLocale}>{locales.map(([code, label]) => <option key={code} value={code}>{label}</option>)}</select></label>
         <fieldset className="localeChecklist"><legend>Idiomas liberados para a empresa</legend>{locales.map(([code, label]) => <label className="checkItem" key={code}><input name="allowedLocales" type="checkbox" value={code} defaultChecked={organization.allowedLocales.includes(code)} />{label}</label>)}</fieldset>
@@ -29,7 +32,7 @@ export default async function OrganizationBrandingPage() {
       <aside className="detailPanel brandingPreview"><p className="eyebrow">Prévia</p><h2>{organization.name}</h2><div className="brandPreviewMark" style={{ background: organization.primaryColor ?? "#00d1ff" }}>{organization.logoUrl ? (
         // Logos use an organization-provided HTTPS or private storage URL.
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={organization.logoUrl} alt="Logo da empresa" />
+        <img src={mediaUrl(organization.logoUrl) ?? ""} alt="Logo da empresa" />
       ) : <span>{organization.name.slice(0, 1)}</span>}</div><p className="formHint">A logo, cores e idiomas ficam restritos ao ambiente da empresa. A marca SACF continua presente na plataforma.</p></aside>
     </section>
   </>;

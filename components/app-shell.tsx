@@ -8,6 +8,7 @@ import { clearSessionUser, useSessionUser } from "@/components/use-session-user"
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useLocale } from "@/components/locale-provider";
 import { appPath } from "@/lib/app-path";
+import { mediaUrl } from "@/lib/media-url";
 import type { Dictionary } from "@/lib/i18n/dictionaries/types";
 
 type NavItem = { href: string; labelKey: keyof Dictionary["nav"]; icon?: IconKey };
@@ -111,7 +112,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {user.logoUrl ? (
             // Tenant logos may come from each company's approved storage URL.
             // eslint-disable-next-line @next/next/no-img-element
-            <img className="tenantBrandLogo" src={user.logoUrl} alt={user.organization} />
+            <img className="tenantBrandLogo" src={mediaUrl(user.logoUrl) ?? ""} alt={user.organization} />
           ) : <Image
             className="brandMark"
             src={appPath("/brand/sacf-academy-symbol.png")}

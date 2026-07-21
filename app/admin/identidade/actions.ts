@@ -12,7 +12,9 @@ export async function updateOrganizationBranding(formData: FormData) {
   if (!session?.user?.id || !["sacf_admin", "org_admin"].includes(session.user.role ?? "") || !session.user.organizationSlug) return;
   const primaryColor = String(formData.get("primaryColor") ?? "").trim();
   const secondaryColor = String(formData.get("secondaryColor") ?? "").trim();
-  const logoUrl = String(formData.get("logoUrl") ?? "").trim();
+  const uploadedLogoUrl = String(formData.get("logoUrl") ?? "").trim();
+  const externalLogoUrl = String(formData.get("externalLogoUrl") ?? "").trim();
+  const logoUrl = externalLogoUrl || uploadedLogoUrl;
   const defaultLocale = String(formData.get("defaultLocale") ?? "pt-BR").trim();
   const allowedLocales = Array.from(new Set(formData.getAll("allowedLocales").map(String).filter((locale) => ["pt-BR", "en", "es", "de", "fr"].includes(locale))));
   const organization = await prisma.organization.findUnique({ where: { slug: session.user.organizationSlug }, select: { id: true } });
