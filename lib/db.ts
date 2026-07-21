@@ -27,7 +27,14 @@ export function hasDatabaseConfig() {
 // string URL. Keeping it as a separate field sidesteps that entirely.
 function buildPoolConfig() {
   const dbPassword = process.env.DB_PASSWORD;
-  const caCert = process.env.DATABASE_CA_CERT;
+  // The Hostinger Docker API only accepts single-line environment values, so
+  // production there supplies the PEM as Base64. Vercel can keep using the
+  // raw PEM value. Both resolve to the same certificate text for pg.
+  const caCert =
+    process.env.DATABASE_CA_CERT ??
+    (process.env.DATABASE_CA_CERT_BASE64
+      ? Buffer.from(process.env.DATABASE_CA_CERT_BASE64, "base64").toString("utf8")
+      : undefined);
 
   if (dbPassword) {
     return {
