@@ -23,6 +23,8 @@ const dictionary: Dictionary = {
     adminUsers: "Utilisateurs",
     adminCertifications: "Certifications",
     adminReports: "Rapports",
+    adminSettings: "Identité",
+    adminAudit: "Historique",
     primaryNavigation: "Navigation principale"
   },
   footer: {

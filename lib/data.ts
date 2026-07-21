@@ -197,6 +197,7 @@ export type CourseEditorData = {
   id: string;
   title: string;
   shortDescription: string | null;
+  coverUrl: string | null;
   vertical: string;
   level: string;
   language: string;
@@ -252,6 +253,7 @@ export async function getAdminCourseEditor(courseId: string, organizationSlug?: 
     id: course.id,
     title: course.title,
     shortDescription: course.shortDescription,
+    coverUrl: course.coverUrl,
     vertical: course.vertical,
     level: course.level,
     language: course.language,

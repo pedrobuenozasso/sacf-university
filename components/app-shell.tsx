@@ -25,7 +25,9 @@ const adminNav: NavItem[] = [
   { href: "/admin/cursos", labelKey: "adminCourses", icon: "catalog" },
   { href: "/admin/usuarios", labelKey: "adminUsers", icon: "users" },
   { href: "/admin/certificacoes", labelKey: "adminCertifications", icon: "certificates" },
-  { href: "/admin/relatorios", labelKey: "adminReports", icon: "report" }
+  { href: "/admin/relatorios", labelKey: "adminReports", icon: "report" },
+  { href: "/admin/identidade", labelKey: "adminSettings", icon: "settings" },
+  { href: "/admin/historico", labelKey: "adminAudit", icon: "report" }
 ];
 
 function isActive(pathname: string, href: string) {
@@ -103,17 +105,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     : studentNav;
 
   return (
-    <div className="appShell">
+    <div className="appShell" style={{ "--tenant-primary": user.primaryColor ?? undefined, "--tenant-secondary": user.secondaryColor ?? undefined } as React.CSSProperties}>
       <aside className="sidebar" aria-label={dict.nav.primaryNavigation}>
         <Link href="/" className="sidebarBrand" aria-label="SACF Academy">
-          <Image
+          {user.logoUrl ? (
+            // Tenant logos may come from each company's approved storage URL.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className="tenantBrandLogo" src={user.logoUrl} alt={user.organization} />
+          ) : <Image
             className="brandMark"
             src={appPath("/brand/sacf-academy-symbol.png")}
             alt="SACF Academy"
             width={38}
             height={38}
             priority
-          />
+          />}
           <span>
             <strong>SACF</strong>
             <small>Academy</small>

@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useLocale } from "@/components/locale-provider";
 import { appPath } from "@/lib/app-path";
 
-export function FileUpload({ courseId, inputName, kind, existingUrl }: { courseId: string; inputName: string; kind: "document" | "video"; existingUrl?: string | null }) {
+export function FileUpload({ courseId, inputName, kind, existingUrl }: { courseId: string; inputName: string; kind: "document" | "video" | "image"; existingUrl?: string | null }) {
   const { dict } = useLocale();
   const t = dict.upload;
   const input = useRef<HTMLInputElement>(null);
@@ -21,5 +21,7 @@ export function FileUpload({ courseId, inputName, kind, existingUrl }: { courseI
     if (!sent.ok) { setUploading(false); return setMessage(t.failed); }
     setUrl(data.storagePath); setMessage(t.completed); setUploading(false);
   }
-  return <div className="uploadDropzone"><input name={inputName} type="hidden" value={url} /><input accept={kind === "video" ? "video/*" : ".pdf,.doc,.docx"} className="srOnly" onChange={(event) => event.target.files?.[0] && upload(event.target.files[0])} ref={input} type="file" /><button className="buttonGhost" disabled={uploading} onClick={() => input.current?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); const file = event.dataTransfer.files[0]; if (file) upload(file); }} type="button">{uploading ? t.sending : t.choose}</button><p aria-live="polite" className="formHint">{kind === "video" ? t.videoLimit : t.documentLimit} {message || (url ? t.linked : "")}</p></div>;
+  const accept = kind === "video" ? "video/*" : kind === "image" ? "image/jpeg,image/png,image/webp" : ".pdf,.doc,.docx";
+  const limit = kind === "video" ? t.videoLimit : kind === "image" ? "PNG, JPG ou WebP · até 8 MB." : t.documentLimit;
+  return <div className="uploadDropzone"><input name={inputName} type="hidden" value={url} /><input accept={accept} className="srOnly" onChange={(event) => event.target.files?.[0] && upload(event.target.files[0])} ref={input} type="file" /><button className="buttonGhost" disabled={uploading} onClick={() => input.current?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); const file = event.dataTransfer.files[0]; if (file) upload(file); }} type="button">{uploading ? t.sending : t.choose}</button><p aria-live="polite" className="formHint">{limit} {message || (url ? t.linked : "")}</p></div>;
 }

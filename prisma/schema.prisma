@@ -107,6 +107,7 @@ model Organization {
   certificationRequirements CertificationRequirement[]
   supportMessages           SupportMessage[]
   domains                   OrganizationDomain[]
+  auditEvents               AuditEvent[]
 
   @@map("organizations")
 }
@@ -132,6 +133,7 @@ model User {
   quizAttempts      QuizAttempt[]
   certificates      Certificate[]
   supportMessages   SupportMessage[]
+  auditEvents       AuditEvent[]
 
   @@map("users")
 }
@@ -503,6 +505,24 @@ model SupportMessage {
 
   @@index([organizationId, status])
   @@map("support_messages")
+}
+
+model AuditEvent {
+  id             String   @id @default(uuid()) @db.Uuid
+  organizationId String   @map("organization_id") @db.Uuid
+  actorUserId    String?  @map("actor_user_id") @db.Uuid
+  action         String
+  entityType     String   @map("entity_type")
+  entityId       String?  @map("entity_id")
+  metadata       Json?    @map("metadata_json")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  actorUser    User?        @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt])
+  @@index([entityType, entityId])
+  @@map("audit_events")
 }
 
 model OrganizationDomain {

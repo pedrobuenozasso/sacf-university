@@ -4,6 +4,7 @@ import { supportedLocales } from "@/lib/i18n";
 import { requireAdminScope } from "@/lib/admin-scope";
 import { getAdminCourseEditor, getAdminGroups, getCourseAssignmentOptions } from "@/lib/data";
 import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
+import { FileUpload } from "@/components/file-upload";
 import { addLesson, addModule, assignCourse, deleteLesson, deleteModule, updateCourse } from "../actions";
 
 export const dynamic = "force-dynamic";
@@ -67,6 +68,7 @@ export default async function CourseEditorPage({ params }: { params: Promise<{ c
             {supportedLocales.map((locale) => <option key={locale.code} value={locale.code}>{locale.label}</option>)}
           </select></label>
           <label>Resumo do curso<textarea className="field" name="summary" defaultValue={course.shortDescription ?? ""} placeholder="Explique o objetivo e o resultado esperado deste treinamento." /></label>
+          <label>Imagem de capa<small>Opcional. Ajuda a diferenciar o curso no catálogo.</small><FileUpload courseId={course.id} inputName="coverUrl" kind="image" existingUrl={course.coverUrl} /></label>
           <div className="settingsChecks"><label className="checkItem"><input name="certificateEnabled" type="checkbox" defaultChecked={course.certificateEnabled} /> Emitir certificado ao concluir</label><label className="checkItem"><input name="mandatory" type="checkbox" defaultChecked={course.mandatory} /> Curso obrigatório</label></div>
           <p className="formHint">A validade é aplicada aos certificados emitidos depois da alteração. A nota mínima será usada nas provas do curso.</p>
           <div className="editorFormFooter"><button className="button" type="submit">Salvar alterações</button></div>

@@ -1927,6 +1927,27 @@ h3 {
 
 .uploadDropzone { border: 1px dashed rgba(0, 209, 255, 0.42); border-radius: var(--radius); padding: 14px; background: rgba(0, 209, 255, 0.045); }
 .uploadDropzone .buttonGhost { width: 100%; min-height: 48px; }
+.panelDivider { height: 1px; margin: 24px 0; background: var(--line); }
+.csvImport { display: grid; gap: 12px; }
+.csvImport > div:first-child { display: grid; gap: 4px; }
+.csvImport p { margin: 0; }
+.csvImport code { font-size: .84em; padding: 2px 5px; border-radius: 5px; background: rgba(255,255,255,.08); }
+.tenantBrandLogo { width: 38px; height: 38px; border-radius: 10px; object-fit: contain; background: #fff; padding: 3px; }
+.appShell .sidebarNav a[data-active="true"] { border-color: color-mix(in srgb, var(--tenant-primary, var(--cyan)) 45%, transparent); background: color-mix(in srgb, var(--tenant-primary, var(--cyan)) 14%, transparent); }
+.brandingLayout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr); gap: 22px; align-items: start; }
+.brandingForm { display: grid; gap: 16px; }
+.colorField { min-height: 46px; padding: 5px; cursor: pointer; }
+.localeChecklist { display: grid; gap: 10px; margin: 0; padding: 14px; border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.localeChecklist legend { padding: 0 5px; font-weight: 700; }
+.brandingPreview { position: sticky; top: 24px; display: grid; gap: 14px; }
+.brandPreviewMark { display: grid; place-items: center; width: 82px; height: 82px; border-radius: 22px; color: #07101d; font-size: 2rem; font-weight: 800; overflow: hidden; }
+.brandPreviewMark img { width: 100%; height: 100%; object-fit: contain; padding: 8px; background: #fff; }
+@media (max-width: 900px) { .brandingLayout { grid-template-columns: 1fr; } .brandingPreview { position: static; } }
+.auditTable .tableHead, .auditTable .tableRow { grid-template-columns: minmax(150px, 1.1fr) minmax(130px, .9fr) minmax(180px, 1.5fr) minmax(130px, .8fr); }
+.auditMeta { color: var(--muted); overflow-wrap: anywhere; }
+.emptyAudit { padding: 32px; text-align: center; }
+.emptyAudit p { margin: 6px 0 0; color: var(--muted); }
+@media (max-width: 720px) { .auditTable .tableHead { display: none; } .auditTable .tableRow { grid-template-columns: 1fr; gap: 7px; padding: 16px; } }
 
 .adminPage {
   max-width: 1180px;

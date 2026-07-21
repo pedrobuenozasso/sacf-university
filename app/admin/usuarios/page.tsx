@@ -2,6 +2,7 @@ import { getAdminGroups, getAdminUsers, getOrganizations } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { requireAdminScope } from "@/lib/admin-scope";
 import { InviteUserForm } from "@/components/invite-user-form";
+import { UserCsvImport } from "@/components/user-csv-import";
 import { createGroup, updateUser, updateUserGroups } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -54,7 +55,7 @@ export default async function AdminUsersPage() {
           ))}
         </div>
 
-        <div className="detailPanel">
+        <div className="detailPanel inviteUsersPanel">
           <div className="formStatus">
             <span className="statusDot" />
             <div>
@@ -64,6 +65,7 @@ export default async function AdminUsersPage() {
           </div>
           <h2>{t.inviteUser}</h2>
           <InviteUserForm organizations={organizations} showOrgSelect={scope.isSacfAdmin} />
+          {!scope.isSacfAdmin ? <><div className="panelDivider" /><UserCsvImport /></> : null}
         </div>
       </section>
 

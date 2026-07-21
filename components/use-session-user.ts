@@ -13,6 +13,9 @@ export function useSessionUser(): SessionUser | null {
     email: data.user.email ?? "",
     avatarUrl: data.user.image ?? null,
     organization: data.user.organizationName ?? "Sem empresa",
+    logoUrl: data.user.organizationLogoUrl ?? null,
+    primaryColor: data.user.organizationPrimaryColor ?? null,
+    secondaryColor: data.user.organizationSecondaryColor ?? null,
     organizationSlug: data.user.organizationSlug ?? "",
     role: (data.user.role ?? "student") as SessionUser["role"],
     groups: data.user.groups

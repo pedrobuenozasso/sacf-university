@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { recordAuditEvent } from "@/lib/audit";
 
 function slugify(input: string) {
   return input
@@ -130,6 +131,7 @@ export async function createCourse(formData: FormData) {
       publishedAt: published ? new Date() : null
     }
   });
+  await recordAuditEvent({ organizationId: organization.id, actorUserId: session.user.id, action: "course.created", entityType: "course", entityId: course.id, metadata: { title, published } });
 
   await prisma.courseVisibilityRule.create({ data: { courseId: course.id, organizationId: organization.id, groupId: verticalGroup.id, ruleType: "group" } });
   await setCourseAudience(course.id, organization.id, formData);
@@ -214,9 +216,12 @@ export async function updateCourse(formData: FormData) {
       certificateEnabled: formData.get("certificateEnabled") === "on",
       certificateValidityDays: Number.isFinite(validityMonths) && validityMonths > 0 ? validityMonths * 30 : null,
       passingScore: Number.isFinite(passingScore) && passingScore >= 0 && passingScore <= 100 ? passingScore : null,
-      mandatory: formData.get("mandatory") === "on"
+      mandatory: formData.get("mandatory") === "on",
+      coverUrl: String(formData.get("coverUrl") ?? "").trim() || null
     }
   });
+  const session = await auth();
+  await recordAuditEvent({ organizationId: course.organizationId, actorUserId: session?.user?.id, action: "course.updated", entityType: "course", entityId: course.id, metadata: { title } });
   if (currentCourse?.vertical !== verticalGroup.name) {
     const previousGroup = await prisma.group.findFirst({ where: { organizationId: course.organizationId, name: currentCourse?.vertical }, select: { id: true } });
     if (previousGroup) await prisma.courseVisibilityRule.deleteMany({ where: { courseId: course.id, groupId: previousGroup.id, ruleType: "group" } });
@@ -239,6 +244,7 @@ export async function addModule(formData: FormData) {
     select: { position: true }
   });
   await prisma.courseModule.create({ data: { courseId: course.id, title, position: (lastModule?.position ?? -1) + 1 } });
+  await recordAuditEvent({ organizationId: course.organizationId, actorUserId: (await auth())?.user?.id, action: "course.module_created", entityType: "course", entityId: course.id, metadata: { title } });
   revalidateCourseEditor(course.id);
 }
 
@@ -273,6 +279,7 @@ export async function addLesson(formData: FormData) {
       durationMinutes: Number.parseInt(String(formData.get("durationMinutes") ?? ""), 10) || null
     }
   });
+  await recordAuditEvent({ organizationId: course.organizationId, actorUserId: (await auth())?.user?.id, action: "course.lesson_created", entityType: "course", entityId: course.id, metadata: { title, lessonType } });
   revalidateCourseEditor(course.id);
 }
 

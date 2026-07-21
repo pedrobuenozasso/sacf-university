@@ -31,6 +31,9 @@ export type SessionUser = {
   email: string;
   avatarUrl?: string | null;
   organization: string;
+  logoUrl?: string | null;
+  primaryColor?: string | null;
+  secondaryColor?: string | null;
   organizationSlug: string;
   role: "sacf_admin" | "org_admin" | "instructor" | "manager" | "student" | "external_partner";
   groups: string[];

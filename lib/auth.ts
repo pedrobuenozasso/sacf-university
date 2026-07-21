@@ -73,6 +73,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.organizationId = membership?.organizationId ?? null;
         token.organizationSlug = membership?.organization.slug ?? null;
         token.organizationName = membership?.organization.name ?? null;
+        token.organizationLogoUrl = membership?.organization.logoUrl ?? null;
+        token.organizationPrimaryColor = membership?.organization.primaryColor ?? null;
+        token.organizationSecondaryColor = membership?.organization.secondaryColor ?? null;
         token.groups = groupMemberships.map((membershipRow) => membershipRow.group.slug);
       }
 
@@ -94,6 +97,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         (token.organizationSlug as string | null | undefined) ?? null;
       session.user.organizationName =
         (token.organizationName as string | null | undefined) ?? null;
+      session.user.organizationLogoUrl = (token.organizationLogoUrl as string | null | undefined) ?? null;
+      session.user.organizationPrimaryColor = (token.organizationPrimaryColor as string | null | undefined) ?? null;
+      session.user.organizationSecondaryColor = (token.organizationSecondaryColor as string | null | undefined) ?? null;
       session.user.groups = (token.groups as string[] | undefined) ?? [];
       session.user.image = null;
       return session;

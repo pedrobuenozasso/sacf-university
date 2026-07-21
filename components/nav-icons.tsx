@@ -8,7 +8,8 @@ export type IconKey =
   | "admin"
   | "building"
   | "users"
-  | "report";
+  | "report"
+  | "settings";
 
 export function navIcon(key: IconKey, className = "sidebarNavIcon"): ReactElement {
   const common = {
@@ -83,6 +84,13 @@ export function navIcon(key: IconKey, className = "sidebarNavIcon"): ReactElemen
           <path d="M5 20V6.5A2.5 2.5 0 0 1 7.5 4H15l4 4v12a0 0 0 0 1 0 0H5" />
           <path d="M15 4v4h4" />
           <path d="M8.5 13v4M12 10.5v6.5M15.5 15v2.5" />
+        </svg>
+      );
+    case "settings":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.3 2.3-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1 1.55V20.5h-3.2v-.1a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.88.34l-.06.06-2.3-2.3.06-.06A1.7 1.7 0 0 0 6.5 15a1.7 1.7 0 0 0-1.55-1H4.8v-3.2h.15A1.7 1.7 0 0 0 6.5 9.8a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.3-2.3.06.06a1.7 1.7 0 0 0 1.88.34 1.7 1.7 0 0 0 1-1.55V4.3h3.2v.1a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06 2.3 2.3-.06.06a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 1.55 1h.1V14h-.1a1.7 1.7 0 0 0-1.55 1Z" />
         </svg>
       );
   }
