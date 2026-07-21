@@ -18,15 +18,15 @@ export default async function VerifyPage({
   // Keep the invitation password flow on the same stable URL.
   if (token && email) {
     return (
-      <section className="loginShell">
-        <div className="loginHero">
-          <div>
+      <section className="loginShell activationShell">
+        <div className="loginHero activationHero">
+          <div className="activationIntro">
             <p className="eyebrow">SACF Academy</p>
             <h1>{t.title}</h1>
             <p className="lead">{t.lead}</p>
           </div>
 
-          <div className="loginForm">
+          <div className="loginForm activationForm">
             <div className="formStatus">
               <span className="statusDot" />
               <div>
