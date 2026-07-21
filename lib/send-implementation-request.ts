@@ -1,4 +1,5 @@
 import type { ImplementationRequestInput } from "@/app/cadastro/actions";
+import { enqueueMail } from "@/lib/mail-service";
 
 function escapeHtml(value: string) {
   return value
@@ -10,8 +11,6 @@ function escapeHtml(value: string) {
 }
 
 export async function sendImplementationRequest(request: ImplementationRequestInput) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM || "SACF Academy <no-reply@sacf.io>";
   const to = process.env.IMPLEMENTATION_INBOX_EMAIL || "contato@sacf.io";
   const safe = {
     name: escapeHtml(request.name),
@@ -22,21 +21,8 @@ export async function sendImplementationRequest(request: ImplementationRequestIn
     message: escapeHtml(request.message || "Sem mensagem adicional.").replace(/\n/g, "<br />")
   };
 
-  if (!apiKey) {
-    if (process.env.NODE_ENV !== "production") {
-      console.log("[implementation-request]", JSON.stringify({ to, ...request }, null, 2));
-      return;
-    }
-    throw new Error("Implementation inbox is not configured.");
-  }
-
-  const { Resend } = await import("resend");
-  const resend = new Resend(apiKey);
-
-  const { error } = await resend.emails.send({
-    from,
+  await enqueueMail({
     to,
-    replyTo: request.email,
     subject: `Nova solicitação de implantação: ${request.company}`,
     html: `
       <h2>Nova solicitação de implantação</h2>
@@ -47,8 +33,7 @@ export async function sendImplementationRequest(request: ImplementationRequestIn
       <p><strong>Funcionários:</strong> ${safe.employees}</p>
       <p><strong>Mensagem:</strong></p>
       <p>${safe.message}</p>
-    `
+    `,
+    text: `Nova solicitação de implantação\n\nNome: ${request.name}\nEmail: ${request.email}\nTelefone: ${request.phone}\nEmpresa: ${request.company}\nFuncionários: ${request.employees}\nMensagem: ${request.message || "Sem mensagem adicional."}`
   });
-
-  if (error) throw new Error(`Implementation email delivery failed: ${error.message}`);
 }
