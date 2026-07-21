@@ -2,9 +2,15 @@ import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db";
+import { appPath } from "@/lib/app-path";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
+  // The Academy is hosted below sacf.io/academy. Auth.js otherwise infers
+  // `/academy` from AUTH_URL and cannot parse `/academy/api/auth/*` requests,
+  // which makes the session endpoint return 400 and leaves users "logged out"
+  // immediately after a successful sign-in.
+  basePath: appPath("/api/auth"),
   pages: { signIn: "/login" },
   trustHost: true,
   providers: [
