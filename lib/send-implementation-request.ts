@@ -11,7 +11,8 @@ function escapeHtml(value: string) {
 
 export async function sendImplementationRequest(request: ImplementationRequestInput) {
   const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.IMPLEMENTATION_INBOX_EMAIL ?? "contato@sacf.io";
+  const from = process.env.EMAIL_FROM || "SACF Academy <no-reply@sacf.io>";
+  const to = process.env.IMPLEMENTATION_INBOX_EMAIL || "contato@sacf.io";
   const safe = {
     name: escapeHtml(request.name),
     email: escapeHtml(request.email),
@@ -32,8 +33,8 @@ export async function sendImplementationRequest(request: ImplementationRequestIn
   const { Resend } = await import("resend");
   const resend = new Resend(apiKey);
 
-  await resend.emails.send({
-    from: "SACF Academy <onboarding@resend.dev>",
+  const { error } = await resend.emails.send({
+    from,
     to,
     replyTo: request.email,
     subject: `Nova solicitação de implantação: ${request.company}`,
@@ -48,4 +49,6 @@ export async function sendImplementationRequest(request: ImplementationRequestIn
       <p>${safe.message}</p>
     `
   });
+
+  if (error) throw new Error(`Implementation email delivery failed: ${error.message}`);
 }
