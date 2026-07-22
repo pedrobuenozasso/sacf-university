@@ -5,6 +5,18 @@ import { useMemo, useState, useTransition } from "react";
 import { completeLesson, submitQuiz, type LearningCourse } from "@/lib/learning";
 import { interpolate, useLocale } from "@/components/locale-provider";
 
+function youtubeEmbedUrl(rawUrl: string | null) {
+  if (!rawUrl) return null;
+  try {
+    const url = new URL(rawUrl);
+    const host = url.hostname.replace(/^www\./, "").toLowerCase();
+    const id = host === "youtu.be" ? url.pathname.slice(1) : host.endsWith("youtube.com") ? (url.searchParams.get("v") ?? url.pathname.split("/").filter(Boolean).at(-1)) : null;
+    return id && /^[A-Za-z0-9_-]{11}$/.test(id) ? `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1` : null;
+  } catch {
+    return null;
+  }
+}
+
 export function LearningPlayer({ course }: { course: LearningCourse }) {
   const { dict } = useLocale();
   const t = dict.learn;
@@ -19,6 +31,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
   const currentLesson = lessons.find((lesson) => lesson.id === currentLessonId) ?? lessons[0];
   const currentLessonIndex = lessons.findIndex((lesson) => lesson.id === currentLesson.id);
   const nextLesson = lessons[currentLessonIndex + 1];
+  const embeddedVideoUrl = youtubeEmbedUrl(currentLesson.videoUrl);
   const completedLessons = lessons.filter((lesson) => lesson.status === "completed").length;
   const progress = lessons.length ? Math.round((completedLessons / lessons.length) * 100) : 0;
   const groupedLessons = useMemo(
@@ -95,7 +108,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
         ))}
       </aside>
       <div className="playerMain">
-        {currentLesson.lessonType === "video" ? <div className="videoSurface">{currentLesson.videoUrl ? <a className="buttonGhost" href={currentLesson.videoUrl} rel="noreferrer" target="_blank">{t.watchVideo}</a> : <span className="videoPlay" aria-hidden="true" />}</div> : null}
+        {currentLesson.lessonType === "video" ? <div className="videoSurface">{embeddedVideoUrl ? <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className="embeddedVideo" referrerPolicy="strict-origin-when-cross-origin" src={embeddedVideoUrl} title={t.watchVideo} /> : currentLesson.videoUrl ? <div className="externalVideoCard"><span className="videoPlay" aria-hidden="true" /><div><p className="eyebrow">{t.lessonMaterial}</p><h2>{t.watchVideo}</h2><p>{t.lessonFallback}</p><a className="button" href={currentLesson.videoUrl} rel="noreferrer" target="_blank">{t.watchVideo} <span aria-hidden="true">↗</span></a></div></div> : <div className="externalVideoCard"><span className="videoPlay" aria-hidden="true" /><div><p className="eyebrow">{t.lessonMaterial}</p><h2>{t.watchVideo}</h2><p>{t.lessonFallback}</p></div></div>}</div> : null}
         <div className="sectionHead">
           <div>
             <p className="eyebrow">{course.instructor}</p>
@@ -110,7 +123,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
           <div><strong>{t.certification}</strong><span>{course.certificate}</span></div>
         </div>
         {currentLesson.content ? <article className="lessonContent"><p className="eyebrow">{t.lessonMaterial}</p><h2>{t.content}</h2><div>{currentLesson.content}</div></article> : null}
-        {currentLesson.attachmentUrl ? <div className="actions"><a className="buttonGhost" href={currentLesson.attachmentUrl} rel="noreferrer" target="_blank">{t.openAttachment}</a></div> : null}
+        {currentLesson.attachmentUrl ? <section className="lessonAttachment"><div><p className="eyebrow">{t.lessonMaterial}</p><h2>{t.openAttachment}</h2><p>{t.lessonFallback}</p></div><a className="buttonGhost" href={currentLesson.attachmentUrl} rel="noreferrer" target="_blank">{t.openAttachment} <span aria-hidden="true">↗</span></a></section> : null}
         {currentLesson.lessonType === "quiz" ? <section className="quizPanel">
           <h2>{t.exam}</h2>
           <p className="formHint">{interpolate(t.passingScore, { score: course.passingScore ?? 0 })}</p>
