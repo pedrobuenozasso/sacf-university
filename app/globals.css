@@ -2992,7 +2992,7 @@ h3 {
   color: #fff;
 }
 
-.courseStatusControl .tableAction:only-child {
+.courseStatusControl .tableAction:only-of-type {
   grid-column: 1 / -1;
 }
 
