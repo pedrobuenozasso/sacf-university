@@ -327,6 +327,8 @@ const dictionary = {
     submitExam: "Enviar prova",
     lessonCompleted: "Aula concluída",
     saving: "Salvando...",
+    progressSaved: "Aula concluída. Seu progresso foi salvo.",
+    progressError: "Não foi possível salvar seu progresso. Atualize a página e tente novamente.",
     lessonPosition: "Aula {current} de {total}",
     nextLesson: "Próxima aula",
     courseCompletedEyebrow: "Curso concluído",

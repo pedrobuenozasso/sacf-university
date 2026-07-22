@@ -27,6 +27,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
   const [isPending, startTransition] = useTransition();
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [quizFeedback, setQuizFeedback] = useState<string | null>(null);
+  const [progressFeedback, setProgressFeedback] = useState<string | null>(null);
   const [courseCompletion, setCourseCompletion] = useState<{ certificateIssued: boolean } | null>(null);
   const currentLesson = lessons.find((lesson) => lesson.id === currentLessonId) ?? lessons[0];
   const currentLessonIndex = lessons.findIndex((lesson) => lesson.id === currentLesson.id);
@@ -45,19 +46,32 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
   if (!currentLesson) return null;
 
   function markCurrentLessonComplete() {
+    setProgressFeedback(null);
     startTransition(async () => {
-      const result = await completeLesson(course.slug, currentLesson.id);
-      if (!result.ok) return;
-      setLessons((current) =>
-        current.map((lesson) =>
-          lesson.id === currentLesson.id
-            ? { ...lesson, status: "completed", progressPercent: 100 }
-            : lesson
-        )
-      );
-      if (result.completed) setCourseCompletion({ certificateIssued: result.certificateIssued });
-      const nextLesson = lessons.find((lesson) => lesson.id !== currentLesson.id && lesson.status !== "completed");
-      if (nextLesson) setCurrentLessonId(nextLesson.id);
+      try {
+        const result = await completeLesson(course.slug, currentLesson.id);
+        if (!result.ok) {
+          setProgressFeedback(t.progressError);
+          return;
+        }
+        setLessons((current) =>
+          current.map((lesson) =>
+            lesson.id === currentLesson.id
+              ? { ...lesson, status: "completed", progressPercent: 100 }
+              : lesson
+          )
+        );
+        if (result.completed) setCourseCompletion({ certificateIssued: result.certificateIssued });
+        const nextLesson = lessons.find((lesson) => lesson.id !== currentLesson.id && lesson.status !== "completed");
+        if (nextLesson) {
+          setCurrentLessonId(nextLesson.id);
+          setQuizAnswers({});
+          setQuizFeedback(null);
+        }
+        if (!result.completed) setProgressFeedback(t.progressSaved);
+      } catch {
+        setProgressFeedback(t.progressError);
+      }
     });
   }
 
@@ -137,6 +151,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
           </button> : null}
           {currentLesson.status === "completed" && nextLesson ? <button className="buttonGhost" onClick={() => { setCurrentLessonId(nextLesson.id); setQuizAnswers({}); setQuizFeedback(null); }} type="button">{t.nextLesson} →</button> : null}
         </div>
+        {progressFeedback ? <p className="formHint" role="status">{progressFeedback}</p> : null}
       </div>
       {courseCompletion ? <div className="courseCompletionOverlay" role="dialog" aria-modal="true" aria-labelledby="course-completion-title">
         <section className="courseCompletionCard">
