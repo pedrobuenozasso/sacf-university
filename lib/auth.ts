@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db";
+import { clearRateLimit, clientAddress, consumeRateLimit } from "@/lib/rate-limit";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
@@ -17,18 +18,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Senha", type: "password" }
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         const email = String(credentials?.email ?? "")
           .trim()
           .toLowerCase();
         const password = String(credentials?.password ?? "");
         if (!email || !password) return null;
 
+        const ip = clientAddress(request.headers);
+        const [emailAllowed, ipAllowed] = await Promise.all([
+          consumeRateLimit({ namespace: "login-email", identifier: email, max: 8, windowMs: 15 * 60_000 }),
+          consumeRateLimit({ namespace: "login-ip", identifier: ip, max: 30, windowMs: 15 * 60_000 })
+        ]);
+        if (!emailAllowed || !ipAllowed) return null;
+
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user || !user.passwordHash || !user.emailVerified) return null;
 
         const valid = await bcrypt.compare(password, user.passwordHash);
         if (!valid) return null;
+
+        await Promise.all([
+          clearRateLimit("login-email", email),
+          clearRateLimit("login-ip", ip)
+        ]);
 
         return { id: user.id, email: user.email, name: user.name, image: user.avatarUrl };
       }

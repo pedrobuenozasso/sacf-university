@@ -547,3 +547,14 @@ model VerificationToken {
   @@index([email])
   @@map("verification_tokens")
 }
+
+// Persistent counters keep authentication throttling effective across
+// container restarts and future horizontal replicas.
+model RateLimit {
+  key             String   @id
+  count           Int
+  windowStartedAt DateTime @map("window_started_at")
+  updatedAt       DateTime @map("updated_at")
+
+  @@map("rate_limits")
+}
