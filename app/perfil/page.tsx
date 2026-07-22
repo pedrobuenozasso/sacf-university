@@ -30,7 +30,7 @@ export default function ProfilePage() {
 
     const formData = new FormData(event.currentTarget);
     const removeAvatar = formData.get("removeAvatar") === "on";
-    const avatarUrl = removeAvatar ? null : String(formData.get("avatarUrl") ?? "") || user.avatarUrl;
+    const avatarUrl = removeAvatar ? null : String(formData.get("avatarUrl") ?? "") || user?.avatarUrl || null;
     const result = await updateProfile({ name, avatarUrl });
 
     setSubmitting(false);
