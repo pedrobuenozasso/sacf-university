@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { recordAuditEvent } from "@/lib/audit";
+import { isScopedStoragePath } from "@/lib/storage";
 
 function slugify(input: string) {
   return input
@@ -75,6 +76,12 @@ function revalidateCourseEditor(courseId: string) {
 
 const lessonTypes = ["video", "text", "file", "quiz"] as const;
 const videoProviders = ["unlisted_youtube", "vimeo", "mux", "cloud_storage", "external_url"] as const;
+
+function safeCourseAssetUrl(value: string, organizationId: string, courseId: string) {
+  if (!value) return null;
+  if (value.startsWith("https://")) return value.slice(0, 1000);
+  return isScopedStoragePath(value, organizationId, "course", courseId) ? value : null;
+}
 
 // Course creation is tenant-scoped on the server. A company admin/instructor
 // can only create content for their own company; SACF admins choose a tenant.
@@ -218,7 +225,7 @@ export async function updateCourse(formData: FormData) {
       certificateValidityDays: Number.isFinite(validityMonths) && validityMonths > 0 ? validityMonths * 30 : null,
       passingScore: Number.isFinite(passingScore) && passingScore >= 0 && passingScore <= 100 ? passingScore : null,
       mandatory: formData.get("mandatory") === "on",
-      coverUrl: String(formData.get("coverUrl") ?? "").trim() || null
+      coverUrl: safeCourseAssetUrl(String(formData.get("coverUrl") ?? "").trim(), course.organizationId, course.id)
     }
   });
   const session = await auth();
@@ -304,6 +311,8 @@ export async function updateLesson(formData: FormData) {
   if (!title || !lessonTypes.includes(lessonType as (typeof lessonTypes)[number])) return;
   const videoProviderValue = String(formData.get("videoProvider") ?? "");
   const durationMinutes = Number.parseInt(String(formData.get("durationMinutes") ?? ""), 10);
+  const videoUrl = String(formData.get("videoUploadUrl") ?? "").trim() || String(formData.get("videoUrl") ?? "").trim();
+  const attachmentUrl = String(formData.get("attachmentUploadUrl") ?? "").trim() || String(formData.get("attachmentUrl") ?? "").trim();
   await prisma.lesson.update({
     where: { id: managed.lesson.id },
     data: {
@@ -313,9 +322,9 @@ export async function updateLesson(formData: FormData) {
       videoProvider: videoProviders.includes(videoProviderValue as (typeof videoProviders)[number])
         ? videoProviderValue as (typeof videoProviders)[number]
         : null,
-      videoUrl: String(formData.get("videoUploadUrl") ?? "").trim() || String(formData.get("videoUrl") ?? "").trim() || null,
+      videoUrl: safeCourseAssetUrl(videoUrl, managed.course.organizationId, managed.course.id),
       content: String(formData.get("content") ?? "").trim() || null,
-      attachmentUrl: String(formData.get("attachmentUploadUrl") ?? "").trim() || String(formData.get("attachmentUrl") ?? "").trim() || null,
+      attachmentUrl: safeCourseAssetUrl(attachmentUrl, managed.course.organizationId, managed.course.id),
       language: String(formData.get("language") ?? "pt-BR"),
       durationMinutes: Number.isFinite(durationMinutes) && durationMinutes > 0 ? durationMinutes : null,
       previewEnabled: formData.get("previewEnabled") === "on",

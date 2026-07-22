@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { recordAuditEvent } from "@/lib/audit";
+import { isScopedStoragePath } from "@/lib/storage";
 
 const colorPattern = /^#[0-9a-fA-F]{6}$/;
 
@@ -24,7 +25,7 @@ export async function updateOrganizationBranding(formData: FormData) {
     data: {
       primaryColor: colorPattern.test(primaryColor) ? primaryColor : null,
       secondaryColor: colorPattern.test(secondaryColor) ? secondaryColor : null,
-      logoUrl: logoUrl && /^(https:\/\/|gs:\/\/)/.test(logoUrl) ? logoUrl.slice(0, 1000) : null,
+      logoUrl: logoUrl && (logoUrl.startsWith("https://") || isScopedStoragePath(logoUrl, organization.id, "branding")) ? logoUrl.slice(0, 1000) : null,
       defaultLocale: ["pt-BR", "en", "es", "de", "fr"].includes(defaultLocale) ? defaultLocale : "pt-BR",
       allowedLocales: allowedLocales.length ? allowedLocales : ["pt-BR"]
     }

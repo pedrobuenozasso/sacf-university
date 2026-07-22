@@ -20,6 +20,8 @@ export function FileUpload({ courseId, inputName, kind, existingUrl, target = "c
       if (!response.ok || !data?.url || !data?.storagePath) return setMessage(t.rejected);
       const sent = await fetch(data.url, { method: "PUT", headers: { "content-type": file.type }, body: file });
       if (!sent.ok) return setMessage(t.failed);
+      const verification = await fetch(appPath("/api/admin/uploads/verify"), { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ courseId, kind, target, storagePath: data.storagePath }) });
+      if (!verification.ok) return setMessage(t.rejected);
       setUrl(data.storagePath);
       setMessage(t.completed);
     } catch {

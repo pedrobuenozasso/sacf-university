@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { isScopedStoragePath } from "@/lib/storage";
 
 export async function updateProfile({
   name,
@@ -21,7 +22,7 @@ export async function updateProfile({
     return { ok: false, error: "Informe um nome." };
   }
 
-  const validAvatarUrl = avatarUrl === null || avatarUrl === undefined || /^(https:\/\/|gs:\/\/)/.test(avatarUrl);
+  const validAvatarUrl = avatarUrl === null || avatarUrl === undefined || avatarUrl.startsWith("https://") || Boolean(session.user.organizationId && isScopedStoragePath(avatarUrl, session.user.organizationId, "avatar", undefined, session.user.id));
   if (!validAvatarUrl || (avatarUrl?.length ?? 0) > 1000) return { ok: false, error: "A foto de perfil não é válida." };
 
   await prisma.user.update({
