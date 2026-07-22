@@ -1878,6 +1878,14 @@ h3 {
   gap: 24px;
 }
 
+/* The authenticated sidebar consumes 284px of the viewport.  Keep the lesson
+   editor in one column before its two working panels become cramped or extend
+   past the right edge on standard laptop screens. */
+@media (max-width: 1460px) {
+  .lessonEditorLayout { grid-template-columns: minmax(0, 1fr); }
+  .lessonAssessmentPanel { position: static; }
+}
+
 .courseSettingsPanel,
 .lessonContentPanel,
 .courseStructurePanel,
