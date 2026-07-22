@@ -1937,8 +1937,13 @@ h3 {
 .lessonSourceGroup p { margin: 3px 0 0; color: var(--muted); font-size: .8rem; }
 .lessonAssessmentPanel { display: grid; gap: 14px; position: sticky; top: 96px; }
 .quizQuestionCard { display: grid; gap: 8px; }
+.quizQuestionCard p { margin: 0; color: var(--text); font-weight: 700; line-height: 1.45; }
 .quizQuestionCard ul { margin: 0; }
 .quizBuilderForm { display: grid; gap: 12px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.1); }
+.quizBuilderForm h3 { margin: 0; font-size: 1rem; }
+.quizSetupCard { display: grid; gap: 14px; padding: 18px; border: 1px solid rgba(0,209,255,.28); border-radius: 14px; background: rgba(0,209,255,.055); }
+.quizSetupCard p { margin: 0; color: var(--text); font-weight: 700; line-height: 1.45; }
+.quizSetupCard small { color: var(--muted); line-height: 1.5; }
 
 @media (max-width: 980px) {
   .courseEditorLayout, .lessonEditorLayout, .courseAssignments { grid-template-columns: 1fr; }

@@ -298,7 +298,9 @@ export async function updateLesson(formData: FormData) {
 
   const title = String(formData.get("title") ?? "").trim();
   const lessonTypeValue = String(formData.get("lessonType") ?? "text");
-  if (!title || !lessonTypes.includes(lessonTypeValue as (typeof lessonTypes)[number])) return;
+  const configureQuiz = String(formData.get("intent") ?? "") === "configure_quiz";
+  const lessonType = configureQuiz ? "quiz" : lessonTypeValue;
+  if (!title || !lessonTypes.includes(lessonType as (typeof lessonTypes)[number])) return;
   const videoProviderValue = String(formData.get("videoProvider") ?? "");
   const durationMinutes = Number.parseInt(String(formData.get("durationMinutes") ?? ""), 10);
   await prisma.lesson.update({
@@ -306,7 +308,7 @@ export async function updateLesson(formData: FormData) {
     data: {
       title,
       description: String(formData.get("description") ?? "").trim() || null,
-      lessonType: lessonTypeValue as (typeof lessonTypes)[number],
+      lessonType: lessonType as (typeof lessonTypes)[number],
       videoProvider: videoProviders.includes(videoProviderValue as (typeof videoProviders)[number])
         ? videoProviderValue as (typeof videoProviders)[number]
         : null,
