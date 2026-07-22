@@ -274,14 +274,16 @@ export async function submitQuiz(courseSlug: string, lessonId: string, answers: 
   });
   if (!lesson || !lesson.questions.length) return { ok: false as const, error: "invalid_quiz" };
 
-  const score = Math.round((lesson.questions.filter((question) => question.options.some((option) => option.isCorrect && answers[question.id] === option.id)).length / lesson.questions.length) * 100);
+  const correctAnswers = lesson.questions.filter((question) => question.options.some((option) => option.isCorrect && answers[question.id] === option.id)).length;
+  const totalQuestions = lesson.questions.length;
+  const score = Math.round((correctAnswers / totalQuestions) * 100);
   const passingScore = enrollment.course.passingScore ?? 0;
   const passed = score >= passingScore;
   await prisma.quizAttempt.create({
     data: { enrollmentId: enrollment.id, lessonId: lesson.id, userId: session.userId, score, passed, answers, submittedAt: new Date() }
   });
-  if (!passed) return { ok: true as const, passed: false as const, score, passingScore };
+  if (!passed) return { ok: true as const, passed: false as const, score, passingScore, correctAnswers, totalQuestions };
 
   const completion = await completeLesson(courseSlug, lessonId);
-  return { ok: completion.ok, passed: true as const, score, passingScore, completed: completion.ok && completion.completed, certificateIssued: completion.ok && completion.certificateIssued };
+  return { ok: completion.ok, passed: true as const, score, passingScore, correctAnswers, totalQuestions, completed: completion.ok && completion.completed, certificateIssued: completion.ok && completion.certificateIssued };
 }

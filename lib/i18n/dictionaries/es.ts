@@ -213,7 +213,9 @@ const dictionary: Dictionary = {
     profileTitle: "Prioridades de este acceso",
     company: "Empresa",
     area: "Área",
-    tracks: "Rutas"
+    tracks: "Rutas",
+    continueCourse: "Continuar curso",
+    startCourse: "Ver e iniciar"
   },
   catalogView: {
     all: "Todos",
@@ -243,7 +245,7 @@ const dictionary: Dictionary = {
     loginTitle: "Entra para ver tus cursos.",
     eyebrow: "Mis cursos",
     title: "Sigue capacitándote desde donde lo dejaste.",
-    body: "Área privada de {organization}. Aquí aparecen los cursos activos, completados y pendientes de este acceso."
+    body: "Área privada de {organization}. Aquí aparecen los cursos activos, completados y pendientes de este acceso.", continueTitle: "Continúa donde lo dejaste", continueBody: "Cursos ya iniciados, organizados para retomar rápidamente.", availableTitle: "Próximos cursos", availableBody: "Cursos habilitados para este acceso y listos para comenzar.", completedTitle: "Cursos completados", completedBody: "Historial de capacitaciones completadas con este acceso.", emptyTitle: "No hay cursos disponibles", emptyBody: "Cuando tu empresa habilite un curso, aparecerá aquí."
   },
   certificatesView: {
     loginTitle: "Entra para acceder a los certificados.",
@@ -264,7 +266,7 @@ const dictionary: Dictionary = {
     lessons: "lecciones",
     safeLesson: "Lección segura",
     protectedContentTitle: "Contenido protegido por empresa",
-    protectedContentBody: "El video, los anexos y el progreso solo están disponibles para usuarios autorizados."
+    protectedContentBody: "El video, los anexos y el progreso solo están disponibles para usuarios autorizados.", continue: "Continuar curso", start: "Ver e iniciar", review: "Revisar curso", dueDate: "Plazo: {date}"
   },
   courseDetail: {
     lessons: "lecciones",
@@ -288,7 +290,7 @@ const dictionary: Dictionary = {
     inProgress: "En curso",
     certification: "Certificación",
     markComplete: "Marcar como completada",
-    viewDetails: "Ver detalles", lessonFallback: "Completa esta lección para registrar tu avance en el curso.", lesson: "Lección", completedLesson: "Completada", lessonMaterial: "Material de la lección", content: "Contenido", watchVideo: "Ver el video", openAttachment: "Abrir material complementario", exam: "Examen", passingScore: "Calificación mínima: {score}%.", answerAll: "Responde todas las preguntas antes de enviar.", examError: "No fue posible calificar el examen. Inténtalo de nuevo.", examFailed: "Obtuviste {score}%. La calificación mínima es {passingScore}%. Revisa el contenido e inténtalo de nuevo.", examPassed: "Examen aprobado: {score}% de aciertos.", examApproved: "Examen aprobado", grading: "Calificando...", submitExam: "Enviar examen", lessonCompleted: "Lección completada", saving: "Guardando...", courseCompletedEyebrow: "Curso completado", courseCompletedTitle: "¡Felicitaciones, completaste este curso!", courseCompletedBody: "Tu progreso se registró y esta ruta de aprendizaje está completa.", certificateIssued: "Tu certificado ya está disponible en el área de certificados.", certificateNotIssued: "Tu finalización se registró correctamente.", backToMyCourses: "Volver a mis cursos", goToHome: "Ir al inicio"
+    viewDetails: "Ver detalles", lessonFallback: "Completa esta lección para registrar tu avance en el curso.", lesson: "Lección", completedLesson: "Completada", lessonMaterial: "Material de la lección", content: "Contenido", watchVideo: "Ver el video", openAttachment: "Abrir material complementario", exam: "Examen", passingScore: "Calificación mínima: {score}%.", answerAll: "Responde todas las preguntas antes de enviar.", examError: "No fue posible calificar el examen. Inténtalo de nuevo.", examFailed: "Acertaste {correctAnswers} de {totalQuestions} preguntas ({score}%). La calificación mínima es {passingScore}%. Revisa el contenido e inténtalo de nuevo.", examPassed: "Examen aprobado: {score}% de aciertos.", examApproved: "Examen aprobado", grading: "Calificando...", submitExam: "Enviar examen", lessonCompleted: "Lección completada", saving: "Guardando...", lessonPosition: "Lección {current} de {total}", nextLesson: "Siguiente lección", courseCompletedEyebrow: "Curso completado", courseCompletedTitle: "¡Felicitaciones, completaste este curso!", courseCompletedBody: "Tu progreso se registró y esta ruta de aprendizaje está completa.", certificateIssued: "Tu certificado ya está disponible en el área de certificados.", certificateNotIssued: "Tu finalización se registró correctamente.", backToMyCourses: "Volver a mis cursos", goToHome: "Ir al inicio"
   },
   admin: {
     overview: {

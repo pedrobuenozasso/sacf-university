@@ -213,7 +213,9 @@ const dictionary: Dictionary = {
     profileTitle: "Priorités de cet accès",
     company: "Entreprise",
     area: "Domaine",
-    tracks: "Parcours"
+    tracks: "Parcours",
+    continueCourse: "Reprendre le cours",
+    startCourse: "Voir et commencer"
   },
   catalogView: {
     all: "Tous",
@@ -243,7 +245,7 @@ const dictionary: Dictionary = {
     loginTitle: "Connectez-vous pour voir vos cours.",
     eyebrow: "Mes cours",
     title: "Reprenez votre formation là où vous l'avez laissée.",
-    body: "Zone privée de {organization}. Les cours actifs, terminés et en attente de cet accès apparaissent ici."
+    body: "Zone privée de {organization}. Les cours actifs, terminés et en attente de cet accès apparaissent ici.", continueTitle: "Reprenez là où vous vous êtes arrêté", continueBody: "Cours déjà commencés, organisés pour une reprise rapide.", availableTitle: "Prochains cours", availableBody: "Cours débloqués pour cet accès et prêts à commencer.", completedTitle: "Cours terminés", completedBody: "Historique des formations terminées avec cet accès.", emptyTitle: "Aucun cours disponible", emptyBody: "Lorsqu'un cours sera débloqué par votre entreprise, il apparaîtra ici."
   },
   certificatesView: {
     loginTitle: "Connectez-vous pour accéder aux certificats.",
@@ -264,7 +266,7 @@ const dictionary: Dictionary = {
     lessons: "leçons",
     safeLesson: "Leçon sécurisée",
     protectedContentTitle: "Contenu protégé par entreprise",
-    protectedContentBody: "Vidéo, pièces jointes et progression ne sont disponibles que pour les utilisateurs autorisés."
+    protectedContentBody: "Vidéo, pièces jointes et progression ne sont disponibles que pour les utilisateurs autorisés.", continue: "Reprendre le cours", start: "Voir et commencer", review: "Revoir le cours", dueDate: "Échéance : {date}"
   },
   courseDetail: {
     lessons: "leçons",
@@ -288,7 +290,7 @@ const dictionary: Dictionary = {
     inProgress: "En cours",
     certification: "Certification",
     markComplete: "Marquer comme terminé",
-    viewDetails: "Voir les détails", lessonFallback: "Terminez cette leçon pour enregistrer votre progression dans le cours.", lesson: "Leçon", completedLesson: "Terminée", lessonMaterial: "Support de cours", content: "Contenu", watchVideo: "Regarder la vidéo", openAttachment: "Ouvrir le document complémentaire", exam: "Évaluation", passingScore: "Note minimale : {score}%.", answerAll: "Répondez à toutes les questions avant d'envoyer.", examError: "Impossible de corriger l'évaluation. Réessayez.", examFailed: "Vous avez obtenu {score}%. La note minimale est de {passingScore}%. Révisez le contenu et réessayez.", examPassed: "Évaluation réussie : {score}% de bonnes réponses.", examApproved: "Évaluation réussie", grading: "Correction...", submitExam: "Envoyer l'évaluation", lessonCompleted: "Leçon terminée", saving: "Enregistrement...", courseCompletedEyebrow: "Cours terminé", courseCompletedTitle: "Félicitations, vous avez terminé ce cours !", courseCompletedBody: "Votre progression a été enregistrée et ce parcours est terminé.", certificateIssued: "Votre certificat est maintenant disponible dans l'espace certificats.", certificateNotIssued: "Votre achèvement a bien été enregistré.", backToMyCourses: "Retour à mes cours", goToHome: "Aller à l'accueil"
+    viewDetails: "Voir les détails", lessonFallback: "Terminez cette leçon pour enregistrer votre progression dans le cours.", lesson: "Leçon", completedLesson: "Terminée", lessonMaterial: "Support de cours", content: "Contenu", watchVideo: "Regarder la vidéo", openAttachment: "Ouvrir le document complémentaire", exam: "Évaluation", passingScore: "Note minimale : {score}%.", answerAll: "Répondez à toutes les questions avant d'envoyer.", examError: "Impossible de corriger l'évaluation. Réessayez.", examFailed: "Vous avez répondu correctement à {correctAnswers} questions sur {totalQuestions} ({score}%). La note minimale est de {passingScore}%. Révisez le contenu et réessayez.", examPassed: "Évaluation réussie : {score}% de bonnes réponses.", examApproved: "Évaluation réussie", grading: "Correction...", submitExam: "Envoyer l'évaluation", lessonCompleted: "Leçon terminée", saving: "Enregistrement...", lessonPosition: "Leçon {current} sur {total}", nextLesson: "Leçon suivante", courseCompletedEyebrow: "Cours terminé", courseCompletedTitle: "Félicitations, vous avez terminé ce cours !", courseCompletedBody: "Votre progression a été enregistrée et ce parcours est terminé.", certificateIssued: "Votre certificat est maintenant disponible dans l'espace certificats.", certificateNotIssued: "Votre achèvement a bien été enregistré.", backToMyCourses: "Retour à mes cours", goToHome: "Aller à l'accueil"
   },
   admin: {
     overview: {

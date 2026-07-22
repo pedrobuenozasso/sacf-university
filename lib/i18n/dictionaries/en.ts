@@ -213,7 +213,9 @@ const dictionary: Dictionary = {
     profileTitle: "Priorities for this access",
     company: "Company",
     area: "Area",
-    tracks: "Tracks"
+    tracks: "Tracks",
+    continueCourse: "Continue course",
+    startCourse: "View and start"
   },
   catalogView: {
     all: "All",
@@ -243,7 +245,7 @@ const dictionary: Dictionary = {
     loginTitle: "Log in to see your courses.",
     eyebrow: "My courses",
     title: "Keep training from where you left off.",
-    body: "{organization}'s private area. Active, completed and pending courses for this access appear here."
+    body: "{organization}'s private area. Active, completed and pending courses for this access appear here.", continueTitle: "Pick up where you left off", continueBody: "Courses already started, organized for a quick return.", availableTitle: "Next courses", availableBody: "Courses released for this access and ready to begin.", completedTitle: "Completed courses", completedBody: "Training history completed through this access.", emptyTitle: "No courses available", emptyBody: "When your company releases a course, it will appear here."
   },
   certificatesView: {
     loginTitle: "Log in to access certificates.",
@@ -264,7 +266,7 @@ const dictionary: Dictionary = {
     lessons: "lessons",
     safeLesson: "Secure lesson",
     protectedContentTitle: "Content protected by company",
-    protectedContentBody: "Video, attachments and progress are only available to authorized users."
+    protectedContentBody: "Video, attachments and progress are only available to authorized users.", continue: "Continue course", start: "View and start", review: "Review course", dueDate: "Due: {date}"
   },
   courseDetail: {
     lessons: "lessons",
@@ -288,7 +290,7 @@ const dictionary: Dictionary = {
     inProgress: "In progress",
     certification: "Certification",
     markComplete: "Mark as complete",
-    viewDetails: "View details", lessonFallback: "Complete this lesson to record your progress in the course.", lesson: "Lesson", completedLesson: "Completed", lessonMaterial: "Lesson material", content: "Content", watchVideo: "Watch video", openAttachment: "Open supplementary material", exam: "Exam", passingScore: "Minimum score: {score}%.", answerAll: "Answer all questions before submitting.", examError: "We couldn't grade the exam. Try again.", examFailed: "You scored {score}%. The minimum score is {passingScore}%. Review the content and try again.", examPassed: "Exam passed: {score}% correct.", examApproved: "Exam passed", grading: "Grading...", submitExam: "Submit exam", lessonCompleted: "Lesson completed", saving: "Saving...", courseCompletedEyebrow: "Course completed", courseCompletedTitle: "Congratulations, you completed this course!", courseCompletedBody: "Your progress has been recorded and this learning path is complete.", certificateIssued: "Your certificate is now available in the certificates area.", certificateNotIssued: "Your completion has been recorded successfully.", backToMyCourses: "Back to my courses", goToHome: "Go to home"
+    viewDetails: "View details", lessonFallback: "Complete this lesson to record your progress in the course.", lesson: "Lesson", completedLesson: "Completed", lessonMaterial: "Lesson material", content: "Content", watchVideo: "Watch video", openAttachment: "Open supplementary material", exam: "Exam", passingScore: "Minimum score: {score}%.", answerAll: "Answer all questions before submitting.", examError: "We couldn't grade the exam. Try again.", examFailed: "You got {correctAnswers} of {totalQuestions} questions right ({score}%). The minimum score is {passingScore}%. Review the content and try again.", examPassed: "Exam passed: {score}% correct.", examApproved: "Exam passed", grading: "Grading...", submitExam: "Submit exam", lessonCompleted: "Lesson completed", saving: "Saving...", lessonPosition: "Lesson {current} of {total}", nextLesson: "Next lesson", courseCompletedEyebrow: "Course completed", courseCompletedTitle: "Congratulations, you completed this course!", courseCompletedBody: "Your progress has been recorded and this learning path is complete.", certificateIssued: "Your certificate is now available in the certificates area.", certificateNotIssued: "Your completion has been recorded successfully.", backToMyCourses: "Back to my courses", goToHome: "Go to home"
   },
   admin: {
     overview: {

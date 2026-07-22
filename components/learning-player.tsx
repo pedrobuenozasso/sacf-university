@@ -17,6 +17,8 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
   const [quizFeedback, setQuizFeedback] = useState<string | null>(null);
   const [courseCompletion, setCourseCompletion] = useState<{ certificateIssued: boolean } | null>(null);
   const currentLesson = lessons.find((lesson) => lesson.id === currentLessonId) ?? lessons[0];
+  const currentLessonIndex = lessons.findIndex((lesson) => lesson.id === currentLesson.id);
+  const nextLesson = lessons[currentLessonIndex + 1];
   const completedLessons = lessons.filter((lesson) => lesson.status === "completed").length;
   const progress = lessons.length ? Math.round((completedLessons / lessons.length) * 100) : 0;
   const groupedLessons = useMemo(
@@ -60,7 +62,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
         return;
       }
       if (!result.passed) {
-        setQuizFeedback(interpolate(t.examFailed, { score: result.score, passingScore: result.passingScore }));
+        setQuizFeedback(interpolate(t.examFailed, { score: result.score, passingScore: result.passingScore, correctAnswers: result.correctAnswers, totalQuestions: result.totalQuestions }));
         return;
       }
       setQuizFeedback(interpolate(t.examPassed, { score: result.score }));
@@ -97,6 +99,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
         <div className="sectionHead">
           <div>
             <p className="eyebrow">{course.instructor}</p>
+            <p className="lessonPosition">{interpolate(t.lessonPosition, { current: currentLessonIndex + 1, total: lessons.length })}</p>
             <h1>{currentLesson.title}</h1>
             <p>{currentLesson.description ?? t.lessonFallback}</p>
           </div>
@@ -119,6 +122,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
           {currentLesson.lessonType !== "quiz" ? <button className="button" disabled={isPending || currentLesson.status === "completed"} onClick={markCurrentLessonComplete} type="button">
             {currentLesson.status === "completed" ? t.lessonCompleted : isPending ? t.saving : t.markComplete}
           </button> : null}
+          {currentLesson.status === "completed" && nextLesson ? <button className="buttonGhost" onClick={() => { setCurrentLessonId(nextLesson.id); setQuizAnswers({}); setQuizFeedback(null); }} type="button">{t.nextLesson} →</button> : null}
         </div>
       </div>
       {courseCompletion ? <div className="courseCompletionOverlay" role="dialog" aria-modal="true" aria-labelledby="course-completion-title">

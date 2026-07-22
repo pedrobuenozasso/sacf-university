@@ -211,7 +211,9 @@ const dictionary = {
     profileTitle: "Prioridades deste acesso",
     company: "Empresa",
     area: "Área",
-    tracks: "Trilhas"
+    tracks: "Trilhas",
+    continueCourse: "Continuar curso",
+    startCourse: "Ver e iniciar"
   },
   catalogView: {
     all: "Todos",
@@ -241,7 +243,15 @@ const dictionary = {
     loginTitle: "Entre para ver seus cursos.",
     eyebrow: "Meus cursos",
     title: "Continue treinando de onde parou.",
-    body: "Área privada de {organization}. Aqui aparecem os cursos ativos, concluídos e pendentes deste acesso."
+    body: "Área privada de {organization}. Aqui aparecem os cursos ativos, concluídos e pendentes deste acesso.",
+    continueTitle: "Continue de onde parou",
+    continueBody: "Cursos já iniciados, organizados para você retomar rapidamente.",
+    availableTitle: "Próximos cursos",
+    availableBody: "Cursos liberados para este acesso e prontos para começar.",
+    completedTitle: "Cursos concluídos",
+    completedBody: "Histórico de treinamentos concluídos neste acesso.",
+    emptyTitle: "Nenhum curso disponível",
+    emptyBody: "Quando sua empresa liberar um curso, ele aparecerá aqui."
   },
   certificatesView: {
     loginTitle: "Entre para acessar certificados.",
@@ -270,7 +280,11 @@ const dictionary = {
     lessons: "aulas",
     safeLesson: "Aula segura",
     protectedContentTitle: "Conteúdo protegido por empresa",
-    protectedContentBody: "Vídeo, anexos e progresso ficam disponíveis somente para usuários autorizados."
+    protectedContentBody: "Vídeo, anexos e progresso ficam disponíveis somente para usuários autorizados.",
+    continue: "Continuar curso",
+    start: "Ver e iniciar",
+    review: "Revisar curso",
+    dueDate: "Prazo: {date}"
   },
   courseDetail: {
     lessons: "aulas",
@@ -306,13 +320,15 @@ const dictionary = {
     passingScore: "Nota mínima: {score}%.",
     answerAll: "Responda todas as questões antes de enviar.",
     examError: "Não foi possível corrigir a prova. Tente novamente.",
-    examFailed: "Você acertou {score}%. A nota mínima é {passingScore}%. Revise o conteúdo e tente novamente.",
+    examFailed: "Você acertou {correctAnswers} de {totalQuestions} questões ({score}%). A nota mínima é {passingScore}%. Revise o conteúdo e tente novamente.",
     examPassed: "Prova aprovada: {score}% de acerto.",
     examApproved: "Prova aprovada",
     grading: "Corrigindo...",
     submitExam: "Enviar prova",
     lessonCompleted: "Aula concluída",
     saving: "Salvando...",
+    lessonPosition: "Aula {current} de {total}",
+    nextLesson: "Próxima aula",
     courseCompletedEyebrow: "Curso concluído",
     courseCompletedTitle: "Parabéns, você concluiu este curso!",
     courseCompletedBody: "Seu progresso foi registrado e esta trilha está concluída.",

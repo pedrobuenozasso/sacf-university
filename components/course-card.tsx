@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CourseCover } from "@/components/course-cover";
-import { useLocale } from "@/components/locale-provider";
+import { interpolate, useLocale } from "@/components/locale-provider";
 import { appPath } from "@/lib/app-path";
 import type { Course } from "@/lib/courses";
 
@@ -16,7 +16,9 @@ export function CourseCard({
   href: string;
   showTenantBrand?: boolean;
 }) {
-  const { dict } = useLocale();
+  const { dict, locale } = useLocale();
+  const dueDate = course.dueDate ? new Intl.DateTimeFormat(locale === "pt-BR" ? "pt-BR" : locale, { day: "2-digit", month: "short", year: "numeric" }).format(new Date(course.dueDate)) : null;
+  const action = course.status === "Em andamento" ? dict.courseCard.continue : course.status === "Concluído" ? dict.courseCard.review : dict.courseCard.start;
   return (
     <Link className="courseCard" data-accent={course.accent} href={href}>
       <CourseCover course={course} showTenantBrand={showTenantBrand} />
@@ -42,12 +44,15 @@ export function CourseCard({
           </div>
         ) : null}
 
+        {dueDate && course.status !== "Concluído" ? <p className="courseDeadline">{interpolate(dict.courseCard.dueDate, { date: dueDate })}</p> : null}
+
         <div className="courseFoot">
           <span className="courseCert">{course.certificate}</span>
           <span className="courseStatus" data-status={course.status}>
             {course.status}
           </span>
         </div>
+        <span className="courseAction">{action} <span aria-hidden="true">→</span></span>
       </div>
     </Link>
   );

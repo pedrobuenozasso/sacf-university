@@ -13,6 +13,7 @@ export type Course = {
   duration: string;
   lessons: number;
   progress: number;
+  dueDate?: string | null;
   certificate: string;
   status: "Em andamento" | "Disponível" | "Concluído";
   publicationStatus?: "draft" | "published" | "archived";

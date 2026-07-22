@@ -1667,6 +1667,13 @@ h3 {
   text-align: right;
 }
 
+.courseDeadline {
+  margin: 11px 0 -2px;
+  color: #ffd486;
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+
 .courseFoot {
   display: flex;
   align-items: center;
@@ -1725,6 +1732,33 @@ h3 {
   color: var(--green);
   background: rgba(0, 255, 156, 0.12);
   border-color: rgba(0, 255, 156, 0.3);
+}
+
+.courseAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  color: var(--cyan);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.courseAction span { transition: transform 180ms var(--ease); }
+.courseCard:hover .courseAction span { transform: translateX(3px); }
+
+.courseShelf { display: grid; gap: 16px; margin-top: 36px; }
+.courseShelfHead { display: flex; align-items: end; justify-content: space-between; gap: 18px; }
+.courseShelfHead h2 { margin: 0; font-size: clamp(1.25rem, 2.2vw, 1.65rem); }
+.courseShelfHead p { margin: 5px 0 0; color: var(--muted); }
+.courseShelfHead > strong { display: grid; width: 34px; height: 34px; flex: none; place-items: center; border: 1px solid rgba(0, 209, 255, 0.24); border-radius: 999px; color: var(--cyan); background: rgba(0, 209, 255, 0.08); }
+
+.nextCourseAction { display: inline-flex; margin-top: 12px; color: var(--cyan); font-size: .8rem; font-weight: 800; }
+
+@media (max-width: 560px) {
+  .courseShelf { margin-top: 28px; }
+  .courseShelfHead { align-items: flex-start; }
+  .courseShelfHead > strong { margin-top: 3px; }
 }
 
 .lessonPreview {
@@ -2046,6 +2080,8 @@ h3 {
 .playerMain {
   padding: 20px;
 }
+
+.lessonPosition { margin: 0 0 7px; color: var(--cyan); font-size: .78rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
 
 .courseCompletionOverlay {
   position: fixed;

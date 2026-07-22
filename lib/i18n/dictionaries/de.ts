@@ -213,7 +213,9 @@ const dictionary: Dictionary = {
     profileTitle: "Prioritäten dieses Zugangs",
     company: "Unternehmen",
     area: "Bereich",
-    tracks: "Lernpfade"
+    tracks: "Lernpfade",
+    continueCourse: "Kurs fortsetzen",
+    startCourse: "Ansehen und starten"
   },
   catalogView: {
     all: "Alle",
@@ -243,7 +245,7 @@ const dictionary: Dictionary = {
     loginTitle: "Melden Sie sich an, um Ihre Kurse zu sehen.",
     eyebrow: "Meine Kurse",
     title: "Setzen Sie die Schulung dort fort, wo Sie aufgehört haben.",
-    body: "Privater Bereich von {organization}. Hier erscheinen die aktiven, abgeschlossenen und ausstehenden Kurse dieses Zugangs."
+    body: "Privater Bereich von {organization}. Hier erscheinen die aktiven, abgeschlossenen und ausstehenden Kurse dieses Zugangs.", continueTitle: "Setzen Sie dort fort, wo Sie aufgehört haben", continueBody: "Bereits begonnene Kurse für eine schnelle Rückkehr.", availableTitle: "Nächste Kurse", availableBody: "Für diesen Zugang freigegebene Kurse, die Sie starten können.", completedTitle: "Abgeschlossene Kurse", completedBody: "Verlauf der über diesen Zugang abgeschlossenen Schulungen.", emptyTitle: "Keine Kurse verfügbar", emptyBody: "Wenn Ihr Unternehmen einen Kurs freigibt, erscheint er hier."
   },
   certificatesView: {
     loginTitle: "Melden Sie sich an, um auf Zertifikate zuzugreifen.",
@@ -264,7 +266,7 @@ const dictionary: Dictionary = {
     lessons: "Lektionen",
     safeLesson: "Geschützte Lektion",
     protectedContentTitle: "Durch Unternehmen geschützter Inhalt",
-    protectedContentBody: "Video, Anhänge und Fortschritt stehen nur autorisierten Benutzern zur Verfügung."
+    protectedContentBody: "Video, Anhänge und Fortschritt stehen nur autorisierten Benutzern zur Verfügung.", continue: "Kurs fortsetzen", start: "Ansehen und starten", review: "Kurs wiederholen", dueDate: "Frist: {date}"
   },
   courseDetail: {
     lessons: "Lektionen",
@@ -288,7 +290,7 @@ const dictionary: Dictionary = {
     inProgress: "In Bearbeitung",
     certification: "Zertifizierung",
     markComplete: "Als abgeschlossen markieren",
-    viewDetails: "Details ansehen", lessonFallback: "Schließen Sie diese Lektion ab, um Ihren Fortschritt im Kurs zu speichern.", lesson: "Lektion", completedLesson: "Abgeschlossen", lessonMaterial: "Lektionsmaterial", content: "Inhalt", watchVideo: "Video ansehen", openAttachment: "Ergänzendes Material öffnen", exam: "Prüfung", passingScore: "Mindestpunktzahl: {score}%.", answerAll: "Beantworten Sie vor dem Absenden alle Fragen.", examError: "Die Prüfung konnte nicht bewertet werden. Versuchen Sie es erneut.", examFailed: "Sie haben {score}% erreicht. Die Mindestpunktzahl beträgt {passingScore}%. Prüfen Sie den Inhalt und versuchen Sie es erneut.", examPassed: "Prüfung bestanden: {score}% richtig.", examApproved: "Prüfung bestanden", grading: "Wird bewertet...", submitExam: "Prüfung absenden", lessonCompleted: "Lektion abgeschlossen", saving: "Wird gespeichert...", courseCompletedEyebrow: "Kurs abgeschlossen", courseCompletedTitle: "Glückwunsch, Sie haben diesen Kurs abgeschlossen!", courseCompletedBody: "Ihr Fortschritt wurde gespeichert und dieser Lernpfad ist abgeschlossen.", certificateIssued: "Ihr Zertifikat ist jetzt im Zertifikatsbereich verfügbar.", certificateNotIssued: "Ihr Abschluss wurde erfolgreich registriert.", backToMyCourses: "Zu meinen Kursen", goToHome: "Zur Startseite"
+    viewDetails: "Details ansehen", lessonFallback: "Schließen Sie diese Lektion ab, um Ihren Fortschritt im Kurs zu speichern.", lesson: "Lektion", completedLesson: "Abgeschlossen", lessonMaterial: "Lektionsmaterial", content: "Inhalt", watchVideo: "Video ansehen", openAttachment: "Ergänzendes Material öffnen", exam: "Prüfung", passingScore: "Mindestpunktzahl: {score}%.", answerAll: "Beantworten Sie vor dem Absenden alle Fragen.", examError: "Die Prüfung konnte nicht bewertet werden. Versuchen Sie es erneut.", examFailed: "Sie haben {correctAnswers} von {totalQuestions} Fragen richtig beantwortet ({score}%). Die Mindestpunktzahl beträgt {passingScore}%. Prüfen Sie den Inhalt und versuchen Sie es erneut.", examPassed: "Prüfung bestanden: {score}% richtig.", examApproved: "Prüfung bestanden", grading: "Wird bewertet...", submitExam: "Prüfung absenden", lessonCompleted: "Lektion abgeschlossen", saving: "Wird gespeichert...", lessonPosition: "Lektion {current} von {total}", nextLesson: "Nächste Lektion", courseCompletedEyebrow: "Kurs abgeschlossen", courseCompletedTitle: "Glückwunsch, Sie haben diesen Kurs abgeschlossen!", courseCompletedBody: "Ihr Fortschritt wurde gespeichert und dieser Lernpfad ist abgeschlossen.", certificateIssued: "Ihr Zertifikat ist jetzt im Zertifikatsbereich verfügbar.", certificateNotIssued: "Ihr Abschluss wurde erfolgreich registriert.", backToMyCourses: "Zu meinen Kursen", goToHome: "Zur Startseite"
   },
   admin: {
     overview: {

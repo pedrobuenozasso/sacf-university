@@ -43,6 +43,7 @@ type CourseRow = {
   modules: { title: string; lessons: { title: string }[] }[];
   enrollments: {
     status: string;
+    dueDate: Date | null;
     lessonProgress: { status: string; progressPercent: number }[];
   }[];
   visibilityRules: {
@@ -113,10 +114,10 @@ function accentFor(vertical: string): string {
   return "blue";
 }
 
-function enrollmentProgress(course: CourseRow): { progress: number; status: Course["status"] } {
+function enrollmentProgress(course: CourseRow): { progress: number; status: Course["status"]; dueDate: string | null } {
   const totalLessons = Math.max(course._count.lessons, 1);
   const enrollmentScores = course.enrollments.map((enrollment) => {
-    if (enrollment.status === "completed") return { progress: 100, status: "Concluído" as const };
+    if (enrollment.status === "completed") return { progress: 100, status: "Concluído" as const, dueDate: enrollment.dueDate?.toISOString() ?? null };
 
     const completed = enrollment.lessonProgress.filter((lesson) => lesson.status === "completed").length;
     const inProgress = enrollment.lessonProgress.filter((lesson) => lesson.status === "in_progress");
@@ -125,13 +126,14 @@ function enrollmentProgress(course: CourseRow): { progress: number; status: Cour
 
     return {
       progress,
-      status: progress > 0 ? ("Em andamento" as const) : ("Disponível" as const)
+      status: progress > 0 ? ("Em andamento" as const) : ("Disponível" as const),
+      dueDate: enrollment.dueDate?.toISOString() ?? null
     };
   });
 
   return enrollmentScores.reduce(
     (best, current) => (current.progress > best.progress ? current : best),
-    { progress: 0, status: "Disponível" as const }
+    { progress: 0, status: "Disponível" as const, dueDate: null }
   );
 }
 
@@ -181,6 +183,7 @@ function mapCourse(course: CourseRow): Course {
     duration: formatDuration(course.workloadMinutes),
     lessons: course._count.lessons,
     progress: enrollment.progress,
+    dueDate: enrollment.dueDate,
     certificate: certificateLabel(course),
     status: enrollment.status,
     publicationStatus: course.status,
@@ -427,13 +430,27 @@ async function getCurrentViewer() {
 export async function getCoursesForCurrentUser(): Promise<Course[]> {
   const viewer = await getCurrentViewer();
   if (!viewer) return [];
-  return (await getCourses()).filter((course) => canAccessCourse(course, viewer));
+  const prisma = await getPrisma();
+  if (!prisma) return fallbackCourses.filter((course) => canAccessCourse(course, viewer));
+
+  // A learner must only ever receive the progress and deadline from their own
+  // enrollment. The course itself can be shared by many people in a tenant.
+  const rows = await prisma.course.findMany({
+    where: { status: "published" },
+    include: {
+      ...courseInclude,
+      enrollments: {
+        where: { userId: viewer.id, organization: { slug: viewer.organizationSlug } },
+        include: { lessonProgress: true }
+      }
+    },
+    orderBy: { createdAt: "asc" }
+  });
+  return rows.map(mapCourse).filter((course) => canAccessCourse(course, viewer));
 }
 
 export async function getCourseForCurrentUser(slug: string): Promise<Course | null> {
-  const viewer = await getCurrentViewer();
-  if (!viewer) return null;
-  return (await getCourses()).find((course) => course.slug === slug && canAccessCourse(course, viewer)) ?? null;
+  return (await getCoursesForCurrentUser()).find((course) => course.slug === slug) ?? null;
 }
 
 const ORG_ACCENT: Record<string, string> = {

@@ -1,5 +1,5 @@
 import { HomeView } from "@/components/home-view";
-import { getCourses, getOrganizations } from "@/lib/data";
+import { getCoursesForCurrentUser, getOrganizations } from "@/lib/data";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
@@ -10,6 +10,6 @@ export default async function HomePage() {
   if (["sacf_admin", "org_admin", "instructor"].includes(session?.user?.role ?? "")) {
     redirect("/admin");
   }
-  const [courses, organizations] = await Promise.all([getCourses(), getOrganizations()]);
+  const [courses, organizations] = await Promise.all([getCoursesForCurrentUser(), getOrganizations()]);
   return <HomeView courses={courses} organizations={organizations} />;
 }

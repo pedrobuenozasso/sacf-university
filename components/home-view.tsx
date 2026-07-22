@@ -19,6 +19,10 @@ export function HomeView({
   const currentOrg = user
     ? organizations.find((organization) => organization.slug === user.organizationSlug)
     : null;
+  const prioritizedCourses = [...visibleCourses].sort((a, b) => {
+    const rank = (course: Course) => course.status === "Em andamento" ? 0 : course.status === "Disponível" ? 1 : 2;
+    return rank(a) - rank(b) || (b.progress - a.progress);
+  }).slice(0, 3);
 
   if (!user) {
     return (
@@ -100,8 +104,8 @@ export function HomeView({
             </Link>
           </div>
           <div className="moduleList">
-            {visibleCourses.slice(0, 3).map((course) => (
-              <Link className="moduleItem linkedModule" href={`/aprender/${course.slug}`} key={course.slug}>
+            {prioritizedCourses.map((course) => (
+              <Link className="moduleItem linkedModule" href={course.status === "Em andamento" ? `/aprender/${course.slug}` : `/catalogo/${course.slug}`} key={course.slug}>
                 <h3>{course.title}</h3>
                 <p>
                   {course.vertical} · {course.duration} · {course.certificate}
@@ -109,6 +113,7 @@ export function HomeView({
                 <div className="progressTrack">
                   <div className="progressFill" style={{ width: `${course.progress}%` }} />
                 </div>
+                <span className="nextCourseAction">{course.status === "Em andamento" ? t.continueCourse : t.startCourse} →</span>
               </Link>
             ))}
           </div>
