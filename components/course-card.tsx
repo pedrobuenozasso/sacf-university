@@ -17,7 +17,7 @@ export function CourseCard({
   showTenantBrand?: boolean;
 }) {
   const { dict, locale } = useLocale();
-  const dueDate = course.dueDate ? new Intl.DateTimeFormat(locale === "pt-BR" ? "pt-BR" : locale, { day: "2-digit", month: "short", year: "numeric" }).format(new Date(course.dueDate)) : null;
+  const dueDate = course.dueDate ? new Intl.DateTimeFormat(locale === "pt" ? "pt-BR" : locale, { day: "2-digit", month: "short", year: "numeric" }).format(new Date(course.dueDate)) : null;
   const action = course.status === "Em andamento" ? dict.courseCard.continue : course.status === "Concluído" ? dict.courseCard.review : dict.courseCard.start;
   return (
     <Link className="courseCard" data-accent={course.accent} href={href}>
