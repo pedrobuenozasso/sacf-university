@@ -558,3 +558,14 @@ model RateLimit {
 
   @@map("rate_limits")
 }
+
+model NotificationLog {
+  id              String   @id @default(uuid()) @db.Uuid
+  notificationKey String   @unique @map("notification_key")
+  recipient       String
+  kind            String
+  sentAt          DateTime @default(now()) @map("sent_at")
+
+  @@index([sentAt])
+  @@map("notification_logs")
+}
