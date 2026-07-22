@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { ReactElement } from "react";
 import { getOrganization, type Course } from "@/lib/courses";
 import { appPath } from "@/lib/app-path";
+import { mediaUrl } from "@/lib/media-url";
 
 function verticalIcon(vertical: string, className: string): ReactElement {
   const key = vertical.toLowerCase();
@@ -67,6 +68,11 @@ export function CourseCover({ course, showTenantBrand = false }: { course: Cours
 
   return (
     <div className="cover" data-accent={course.accent}>
+      {course.coverUrl ? (
+        // Course covers are fetched through the authenticated media endpoint.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img className="coverImage" src={mediaUrl(course.coverUrl) ?? ""} alt="" />
+      ) : null}
       <span className="coverGrid" aria-hidden="true" />
       {verticalIcon(course.vertical, "coverMotif")}
 

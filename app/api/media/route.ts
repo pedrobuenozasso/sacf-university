@@ -8,7 +8,8 @@ export async function GET(request: Request) {
   const organizationId = session?.user?.organizationId;
 
   // URLs cannot be reused to access another company's private storage area.
-  if (!organizationId || !isStoragePath(path) || !path.includes(`/organizations/${organizationId}/`)) {
+  const canAccessAllOrganizations = session?.user?.role === "sacf_admin";
+  if (!organizationId || !isStoragePath(path) || (!canAccessAllOrganizations && !path.includes(`/organizations/${organizationId}/`))) {
     return NextResponse.json({ error: "not_found" }, { status: 404 });
   }
 

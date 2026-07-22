@@ -30,7 +30,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const valid = await bcrypt.compare(password, user.passwordHash);
         if (!valid) return null;
 
-        return { id: user.id, email: user.email, name: user.name };
+        return { id: user.id, email: user.email, name: user.name, image: user.avatarUrl };
       }
     }),
     // Temporary demo shortcut so we can click through role screens during
@@ -85,10 +85,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       if (trigger === "update" && session) {
         if (typeof session.name === "string") token.name = session.name;
-        // Profile images must never be stored in the JWT. A base64 image would
-        // inflate the session cookie past proxy header limits and make the app
-        // unreachable before a request even reaches Next.js.
-        delete token.picture;
+        // Only short storage/HTTPS references may live in the session. Base64
+        // image data would inflate the cookie past proxy header limits.
+        if (typeof session.image === "string" && /^(https:\/\/|gs:\/\/)/.test(session.image) && session.image.length <= 1000) token.picture = session.image;
+        else delete token.picture;
       }
 
       return token;
@@ -105,7 +105,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.organizationPrimaryColor = (token.organizationPrimaryColor as string | null | undefined) ?? null;
       session.user.organizationSecondaryColor = (token.organizationSecondaryColor as string | null | undefined) ?? null;
       session.user.groups = (token.groups as string[] | undefined) ?? [];
-      session.user.image = null;
+      session.user.image = (token.picture as string | null | undefined) ?? null;
       return session;
     }
   }

@@ -28,6 +28,7 @@ type CourseRow = {
   status: "draft" | "published" | "archived";
   slug: string;
   title: string;
+  coverUrl: string | null;
   description: string | null;
   shortDescription: string | null;
   vertical: string;
@@ -167,6 +168,7 @@ function mapCourse(course: CourseRow): Course {
 
   return {
     id: course.id,
+    coverUrl: course.coverUrl,
     slug: course.slug,
     title: course.title,
     organizationSlugs,

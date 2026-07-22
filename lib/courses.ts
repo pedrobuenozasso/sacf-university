@@ -1,5 +1,6 @@
 export type Course = {
   id?: string;
+  coverUrl?: string | null;
   slug: string;
   title: string;
   organizationSlugs: string[];

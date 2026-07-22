@@ -10,8 +10,8 @@ const maxImageBytes = 8 * 1024 * 1024;
 export async function POST(request: Request) {
   const session = await auth();
   const role = session?.user?.role;
-  if (!session?.user?.id || !session.user.organizationSlug || !["sacf_admin", "org_admin", "instructor"].includes(role ?? "")) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const body = await request.json() as { courseId?: string; name?: string; type?: string; size?: number; kind?: "document" | "video" | "image"; target?: "course" | "organization_logo" };
+  if (!session?.user?.id || !session.user.organizationId) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const body = await request.json() as { courseId?: string; name?: string; type?: string; size?: number; kind?: "document" | "video" | "image"; target?: "course" | "organization_logo" | "profile_avatar" };
   const size = body.size;
   if (!body.name || !body.type || !body.kind || typeof size !== "number" || !Number.isFinite(size) || size <= 0 || body.name.length > 255 || body.type.length > 120) return NextResponse.json({ error: "invalid_request" }, { status: 400 });
   const isVideo = body.kind === "video";
@@ -22,10 +22,15 @@ export async function POST(request: Request) {
   if (size > (isVideo ? maxVideoBytes : isImage ? maxImageBytes : maxDocumentBytes)) return NextResponse.json({ error: "file_too_large" }, { status: 400 });
   const safeName = body.name.replace(/[^a-zA-Z0-9._-]/g, "-").slice(-120) || "upload";
   let objectName: string;
-  if (body.target === "organization_logo") {
+  if (body.target === "profile_avatar") {
+    if (!isImage) return NextResponse.json({ error: "invalid_request" }, { status: 400 });
+    objectName = `organizations/${session.user.organizationId}/users/${session.user.id}/avatar/${crypto.randomUUID()}-${safeName}`;
+  } else if (body.target === "organization_logo") {
+    if (!["sacf_admin", "org_admin"].includes(role ?? "")) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
     if (!isImage || !session.user.organizationId) return NextResponse.json({ error: "invalid_request" }, { status: 400 });
     objectName = `organizations/${session.user.organizationId}/branding/${crypto.randomUUID()}-${safeName}`;
   } else {
+    if (!["sacf_admin", "org_admin", "instructor"].includes(role ?? "")) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
     if (!body.courseId) return NextResponse.json({ error: "invalid_request" }, { status: 400 });
     const course = await prisma.course.findFirst({ where: { id: body.courseId, ...(role === "sacf_admin" ? {} : { organization: { slug: session.user.organizationSlug } }) }, select: { id: true, organizationId: true } });
     if (!course) return NextResponse.json({ error: "not_found" }, { status: 404 });

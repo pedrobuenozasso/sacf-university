@@ -21,14 +21,14 @@ export async function updateProfile({
     return { ok: false, error: "Informe um nome." };
   }
 
-  if (avatarUrl !== undefined) {
-    return { ok: false, error: "Foto de perfil será liberada após a configuração do armazenamento seguro." };
-  }
+  const validAvatarUrl = avatarUrl === null || avatarUrl === undefined || /^(https:\/\/|gs:\/\/)/.test(avatarUrl);
+  if (!validAvatarUrl || (avatarUrl?.length ?? 0) > 1000) return { ok: false, error: "A foto de perfil não é válida." };
 
   await prisma.user.update({
     where: { id: session.user.id },
     data: {
-      name: trimmedName
+      name: trimmedName,
+      ...(avatarUrl !== undefined ? { avatarUrl } : {})
     }
   });
 

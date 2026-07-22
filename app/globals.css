@@ -1449,6 +1449,24 @@ h3 {
     linear-gradient(158deg, #103a2e, #06150f 72%);
 }
 
+.coverImage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.62;
+}
+
+.cover:has(.coverImage)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(135deg, rgba(2, 6, 14, 0.62), rgba(4, 13, 28, 0.16));
+}
+
 .coverGrid {
   position: absolute;
   inset: 0;
@@ -1458,6 +1476,7 @@ h3 {
   background-size: 16px 16px;
   mask-image: linear-gradient(125deg, black, transparent 72%);
   -webkit-mask-image: linear-gradient(125deg, black, transparent 72%);
+  z-index: 1;
 }
 
 .coverMotif {
@@ -1470,6 +1489,7 @@ h3 {
   color: #fff;
   opacity: 0.16;
   pointer-events: none;
+  z-index: 1;
 }
 
 .cover::after {

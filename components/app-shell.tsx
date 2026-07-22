@@ -144,7 +144,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span className="userAvatar">
               {user.avatarUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={user.avatarUrl} alt="" />
+                <img src={mediaUrl(user.avatarUrl) ?? ""} alt="" />
               ) : (
                 user.name.slice(0, 1)
               )}

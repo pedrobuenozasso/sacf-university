@@ -6,6 +6,7 @@ import { LoginRequiredPanel } from "@/components/access-panels";
 import { useLocale } from "@/components/locale-provider";
 import { useSessionUser } from "@/components/use-session-user";
 import { updateProfile } from "@/lib/profile-actions";
+import { FileUpload } from "@/components/file-upload";
 
 export default function ProfilePage() {
   const user = useSessionUser();
@@ -27,9 +28,10 @@ export default function ProfilePage() {
     setSuccess(false);
     setSubmitting(true);
 
-    const result = await updateProfile({
-      name
-    });
+    const formData = new FormData(event.currentTarget);
+    const removeAvatar = formData.get("removeAvatar") === "on";
+    const avatarUrl = removeAvatar ? null : String(formData.get("avatarUrl") ?? "") || user.avatarUrl;
+    const result = await updateProfile({ name, avatarUrl });
 
     setSubmitting(false);
 
@@ -38,7 +40,7 @@ export default function ProfilePage() {
       return;
     }
 
-    await update({ name });
+    await update({ name, image: avatarUrl });
     setSuccess(true);
   }
 
@@ -55,6 +57,11 @@ export default function ProfilePage() {
       <section className="detailPanel profilePanel">
         <form onSubmit={handleSubmit}>
           <div className="profileFields">
+            <label>
+              {t.photoLabel}
+              <FileUpload inputName="avatarUrl" kind="image" target="profile_avatar" existingUrl={user.avatarUrl} />
+              {user.avatarUrl ? <span className="checkItem"><input name="removeAvatar" type="checkbox" /> {t.removePhoto}</span> : null}
+            </label>
             <label>
               {t.nameLabel}
               <input

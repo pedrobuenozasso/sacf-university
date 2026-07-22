@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useLocale } from "@/components/locale-provider";
 import { appPath } from "@/lib/app-path";
 
-export function FileUpload({ courseId, inputName, kind, existingUrl, target = "course" }: { courseId?: string; inputName: string; kind: "document" | "video" | "image"; existingUrl?: string | null; target?: "course" | "organization_logo" }) {
+export function FileUpload({ courseId, inputName, kind, existingUrl, target = "course" }: { courseId?: string; inputName: string; kind: "document" | "video" | "image"; existingUrl?: string | null; target?: "course" | "organization_logo" | "profile_avatar" }) {
   const { dict } = useLocale();
   const t = dict.upload;
   const input = useRef<HTMLInputElement>(null);
