@@ -32,7 +32,9 @@ export async function POST(request: Request) {
   } else {
     if (!["sacf_admin", "org_admin", "instructor"].includes(role ?? "")) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
     if (!body.courseId) return NextResponse.json({ error: "invalid_request" }, { status: 400 });
-    const course = await prisma.course.findFirst({ where: { id: body.courseId, ...(role === "sacf_admin" ? {} : { organization: { slug: session.user.organizationSlug } }) }, select: { id: true, organizationId: true } });
+    const organizationSlug = session.user.organizationSlug;
+    if (role !== "sacf_admin" && !organizationSlug) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    const course = await prisma.course.findFirst({ where: { id: body.courseId, ...(role === "sacf_admin" ? {} : { organization: { slug: organizationSlug! } }) }, select: { id: true, organizationId: true } });
     if (!course) return NextResponse.json({ error: "not_found" }, { status: 404 });
     objectName = `organizations/${course.organizationId}/courses/${course.id}/${crypto.randomUUID()}-${safeName}`;
   }
