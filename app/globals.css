@@ -2959,6 +2959,7 @@ h3 {
   margin: 0;
   max-width: 100%;
   white-space: nowrap;
+  justify-self: center;
 }
 
 .courseStatusControl .courseRowActions {
