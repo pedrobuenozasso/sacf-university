@@ -1899,8 +1899,9 @@ h3 {
 .settingsChecks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .settingsChecks .checkItem { min-height: 54px; align-content: center; padding: 10px 12px; border: 1px solid rgba(255,255,255,.11); border-radius: 12px; background: rgba(255,255,255,.025); }
 
-.editorFormFooter { display: flex; justify-content: flex-end; padding-top: 4px; border-top: 1px solid rgba(255,255,255,.1); }
+.editorFormFooter { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 4px; border-top: 1px solid rgba(255,255,255,.1); }
 .editorFormFooter .button { min-width: 176px; }
+.editorFormFooter .formSuccess { margin: 0; }
 
 .courseStructurePanel { display: grid; gap: 16px; }
 .courseStructurePanel > h2 { margin-bottom: -10px; }

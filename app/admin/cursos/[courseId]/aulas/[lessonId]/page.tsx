@@ -7,8 +7,9 @@ import { addQuizQuestion, deleteQuizQuestion, updateLesson } from "../../../acti
 
 export const dynamic = "force-dynamic";
 
-export default async function LessonEditorPage({ params }: { params: Promise<{ courseId: string; lessonId: string }> }) {
+export default async function LessonEditorPage({ params, searchParams }: { params: Promise<{ courseId: string; lessonId: string }>; searchParams: Promise<{ saved?: string }> }) {
   const { courseId, lessonId } = await params;
+  const { saved } = await searchParams;
   const scope = await requireAdminScope();
   const lesson = await getAdminLessonEditor(courseId, lessonId, scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined);
   if (!lesson) notFound();
@@ -39,7 +40,7 @@ export default async function LessonEditorPage({ params }: { params: Promise<{ c
           <div className="lessonSourceGroup"><div><h3>Material complementar</h3><p>Inclua um PDF ou documento quando houver leitura de apoio.</p></div><label>URL do PDF ou documento<input className="field" name="attachmentUrl" type="url" defaultValue={lesson.attachmentUrl ?? ""} placeholder="https://..." /></label><FileUpload courseId={courseId} existingUrl={lesson.attachmentUrl} inputName="attachmentUploadUrl" kind="document" /></div>
           <div className="settingsChecks"><label className="checkItem"><input name="required" type="checkbox" defaultChecked={lesson.required} /> Exigir esta aula para conclusão</label><label className="checkItem"><input name="previewEnabled" type="checkbox" defaultChecked={lesson.previewEnabled} /> Liberar prévia no catálogo</label></div>
           <p className="formHint">Os documentos e vídeos são vinculados por URL. Assim, o administrador pode usar o provedor de armazenamento que preferir.</p>
-          <div className="editorFormFooter"><button className="button" type="submit">Salvar aula</button></div>
+          <div className="editorFormFooter">{saved === "1" ? <p className="formSuccess" role="status">✓ Aula salva com sucesso.</p> : null}<button className="button" type="submit">Salvar aula</button></div>
         </form>
 
         <aside className="detailPanel lessonAssessmentPanel">

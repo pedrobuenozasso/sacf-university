@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { recordAuditEvent } from "@/lib/audit";
@@ -323,6 +324,7 @@ export async function updateLesson(formData: FormData) {
   });
   revalidatePath(`/admin/cursos/${managed.course.id}/aulas/${managed.lesson.id}`);
   revalidateCourseEditor(managed.course.id);
+  redirect(`/admin/cursos/${managed.course.id}/aulas/${managed.lesson.id}?saved=1`);
 }
 
 export async function addQuizQuestion(formData: FormData) {
