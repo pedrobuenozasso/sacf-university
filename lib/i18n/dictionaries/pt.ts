@@ -312,7 +312,14 @@ const dictionary = {
     grading: "Corrigindo...",
     submitExam: "Enviar prova",
     lessonCompleted: "Aula concluída",
-    saving: "Salvando..."
+    saving: "Salvando...",
+    courseCompletedEyebrow: "Curso concluído",
+    courseCompletedTitle: "Parabéns, você concluiu este curso!",
+    courseCompletedBody: "Seu progresso foi registrado e esta trilha está concluída.",
+    certificateIssued: "Seu certificado já está disponível na área de certificados.",
+    certificateNotIssued: "A conclusão foi registrada com sucesso.",
+    backToMyCourses: "Voltar aos meus cursos",
+    goToHome: "Ir para o início"
   },
   admin: {
     overview: {

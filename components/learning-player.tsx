@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState, useTransition } from "react";
 import { completeLesson, submitQuiz, type LearningCourse } from "@/lib/learning";
 import { interpolate, useLocale } from "@/components/locale-provider";
@@ -14,6 +15,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
   const [isPending, startTransition] = useTransition();
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [quizFeedback, setQuizFeedback] = useState<string | null>(null);
+  const [courseCompletion, setCourseCompletion] = useState<{ certificateIssued: boolean } | null>(null);
   const currentLesson = lessons.find((lesson) => lesson.id === currentLessonId) ?? lessons[0];
   const completedLessons = lessons.filter((lesson) => lesson.status === "completed").length;
   const progress = lessons.length ? Math.round((completedLessons / lessons.length) * 100) : 0;
@@ -38,6 +40,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
             : lesson
         )
       );
+      if (result.completed) setCourseCompletion({ certificateIssued: result.certificateIssued });
       const nextLesson = lessons.find((lesson) => lesson.id !== currentLesson.id && lesson.status !== "completed");
       if (nextLesson) setCurrentLessonId(nextLesson.id);
     });
@@ -62,6 +65,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
       }
       setQuizFeedback(interpolate(t.examPassed, { score: result.score }));
       setLessons((current) => current.map((lesson) => lesson.id === currentLesson.id ? { ...lesson, status: "completed", progressPercent: 100 } : lesson));
+      if (result.completed) setCourseCompletion({ certificateIssued: result.certificateIssued });
     });
   }
 
@@ -117,6 +121,16 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
           </button> : null}
         </div>
       </div>
+      {courseCompletion ? <div className="courseCompletionOverlay" role="dialog" aria-modal="true" aria-labelledby="course-completion-title">
+        <section className="courseCompletionCard">
+          <div className="completionSeal" aria-hidden="true">✓</div>
+          <p className="eyebrow">{t.courseCompletedEyebrow}</p>
+          <h2 id="course-completion-title">{t.courseCompletedTitle}</h2>
+          <p>{t.courseCompletedBody}</p>
+          <p className="completionCertificate">{courseCompletion.certificateIssued ? t.certificateIssued : t.certificateNotIssued}</p>
+          <div className="completionActions"><Link className="button" href="/meus-cursos">{t.backToMyCourses}</Link><Link className="buttonGhost" href="/home">{t.goToHome}</Link></div>
+        </section>
+      </div> : null}
     </section>
   );
 }
