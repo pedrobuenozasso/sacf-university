@@ -9,6 +9,7 @@ export type ImplementationRequestInput = {
   company: string;
   employees: string;
   message?: string;
+  acceptedLegal: boolean;
 };
 
 export type ImplementationRequestResult = { ok: true } | { ok: false; error: string };
@@ -28,11 +29,16 @@ export async function requestImplementation(
     phone: clean(input.phone),
     company: clean(input.company),
     employees: clean(input.employees),
-    message: input.message?.trim() ?? ""
+    message: input.message?.trim() ?? "",
+    acceptedLegal: input.acceptedLegal
   };
 
   if (!request.name || !request.company || !request.phone || !request.employees) {
     return { ok: false, error: "Preencha os campos obrigatórios." };
+  }
+
+  if (input.acceptedLegal !== true) {
+    return { ok: false, error: "Aceite os Termos de Uso e a Política de Privacidade para continuar." };
   }
 
   if (!request.email.includes("@") || request.email.length > 254) {

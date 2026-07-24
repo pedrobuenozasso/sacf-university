@@ -17,6 +17,7 @@ export default function SignupPage() {
     message: ""
   });
   const [step, setStep] = useState<"form" | "sent">("form");
+  const [acceptedLegal, setAcceptedLegal] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -29,7 +30,7 @@ export default function SignupPage() {
     setError(null);
     setSubmitting(true);
 
-    const result = await requestImplementation(form);
+    const result = await requestImplementation({ ...form, acceptedLegal });
 
     setSubmitting(false);
 
@@ -150,6 +151,15 @@ export default function SignupPage() {
                     placeholder={t.messagePlaceholder}
                     value={form.message}
                   />
+                </label>
+                <label className="legalConsent">
+                  <input checked={acceptedLegal} onChange={(event) => setAcceptedLegal(event.target.checked)} required type="checkbox" />
+                  <span>
+                    {dict.legal.consentPrefix}{" "}
+                    <Link href="/termos">{dict.footer.terms}</Link>
+                    {" "}{dict.legal.consentConnector}{" "}
+                    <Link href="/privacidade">{dict.footer.privacy}</Link>.
+                  </span>
                 </label>
                 {error ? <p className="formError" role="alert" aria-live="polite">{error}</p> : null}
                 <button className="button fullButton" type="submit" disabled={submitting}>

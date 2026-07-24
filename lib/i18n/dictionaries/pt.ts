@@ -26,7 +26,14 @@ const dictionary = {
     primaryNavigation: "Navegação principal"
   },
   footer: {
-    rights: "© {year} SACF. Todos os direitos reservados."
+    rights: "© {year} SACF. Todos os direitos reservados.",
+    terms: "Termos de Uso", privacy: "Política de Privacidade", lgpd: "LGPD"
+  },
+  legal: {
+    legalDocuments: "Documentos legais", updated: "Vigência: 24 de julho de 2026", officialVersion: "Versão oficial em português",
+    terms: "Termos de Uso", privacy: "Privacidade", lgpd: "Portal LGPD", privacyChannel: "Canal de privacidade",
+    contactBody: "Para exercer direitos ou esclarecer dúvidas sobre dados pessoais.", contactAction: "Enviar email",
+    consent: "Li e concordo com os documentos legais.", consentPrefix: "Li e concordo com os", consentConnector: "e a", consentRequired: "Você precisa aceitar os documentos legais para continuar."
   },
   home: {
     eyebrow: "Educação corporativa privada",
@@ -401,7 +408,7 @@ const dictionary = {
       eyebrow: "Configuração da empresa", title: "Identidade do ambiente", body: "Defina a marca e os idiomas disponíveis para as pessoas da {company}.", brandTitle: "Marca da empresa", brandSub: "Aplicada no menu após o próximo login.", customization: "Personalização", logoLabel: "Logo da empresa", logoHint: "Envie PNG, JPG ou WebP. Se preferir, também pode informar uma URL HTTPS.", logoUrlLabel: "URL da logo (opcional)", logoUrlHint: "Use somente se a imagem estiver hospedada em outro endereço HTTPS.", primaryColor: "Cor principal", secondaryColor: "Cor de apoio", defaultLanguage: "Idioma padrão", allowedLanguages: "Idiomas liberados para a empresa", save: "Salvar identidade", preview: "Prévia", logoAlt: "Logo da empresa", previewHint: "A logo, cores e idiomas ficam restritos ao ambiente da empresa. A marca SACF continua presente na plataforma."
     },
     historico: {
-      eyebrow: "Governança do ambiente", title: "Histórico de alterações", body: "Acompanhe os últimos eventos administrativos desta empresa. Os dados de outras empresas não aparecem aqui.", event: "Evento", actor: "Responsável", details: "Detalhes", date: "Data", system: "Sistema", userInvited: "Convite enviado", userImported: "Usuário importado", userUpdated: "Usuário atualizado", userGroupsUpdated: "Grupos do usuário atualizados", groupCreated: "Grupo criado", courseCreated: "Curso criado", courseUpdated: "Curso atualizado", moduleCreated: "Módulo criado", lessonCreated: "Aula criada", brandingUpdated: "Identidade atualizada", emptyTitle: "Nenhum evento registrado ainda.", emptyBody: "As próximas alterações em pessoas, cursos, grupos e identidade aparecerão aqui."
+      eyebrow: "Governança do ambiente", title: "Histórico de alterações", body: "Acompanhe os últimos eventos administrativos desta empresa. Os dados de outras empresas não aparecem aqui.", event: "Evento", actor: "Responsável", details: "Detalhes", date: "Data", system: "Sistema", userInvited: "Convite enviado", userImported: "Usuário importado", userUpdated: "Usuário atualizado", userGroupsUpdated: "Grupos do usuário atualizados", groupCreated: "Grupo criado", courseCreated: "Curso criado", courseUpdated: "Curso atualizado", moduleCreated: "Módulo criado", lessonCreated: "Aula criada", brandingUpdated: "Identidade atualizada", legalAccepted: "Documentos legais aceitos", emptyTitle: "Nenhum evento registrado ainda.", emptyBody: "As próximas alterações em pessoas, cursos, grupos e identidade aparecerão aqui."
     },
     cursos: {
       eyebrow: "Cursos",

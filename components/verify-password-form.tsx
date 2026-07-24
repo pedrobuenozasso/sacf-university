@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { appPath } from "@/lib/app-path";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { verifyAndSetPassword } from "@/app/verificar/actions";
 import { useLocale } from "@/components/locale-provider";
 
@@ -15,6 +16,7 @@ export function VerifyPasswordForm({ token, email }: { token: string; email: str
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [acceptedLegal, setAcceptedLegal] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -26,7 +28,12 @@ export function VerifyPasswordForm({ token, email }: { token: string; email: str
     }
 
     setSubmitting(true);
-    const result = await verifyAndSetPassword(email, token, password);
+    if (!acceptedLegal) {
+      setError(dict.legal.consentRequired);
+      return;
+    }
+
+    const result = await verifyAndSetPassword(email, token, password, acceptedLegal);
 
     if (!result.ok) {
       setSubmitting(false);
@@ -78,6 +85,15 @@ export function VerifyPasswordForm({ token, email }: { token: string; email: str
           required
           minLength={8}
         />
+      </label>
+      <label className="legalConsent">
+        <input checked={acceptedLegal} onChange={(event) => setAcceptedLegal(event.target.checked)} required type="checkbox" />
+        <span>
+          {dict.legal.consentPrefix}{" "}
+          <Link href="/termos">{dict.footer.terms}</Link>
+          {" "}{dict.legal.consentConnector}{" "}
+          <Link href="/privacidade">{dict.footer.privacy}</Link>
+        </span>
       </label>
       {error ? <p className="formError">{error}</p> : null}
       <button className="button fullButton" type="submit" disabled={submitting}>

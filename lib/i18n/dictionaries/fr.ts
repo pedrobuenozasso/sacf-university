@@ -28,7 +28,14 @@ const dictionary: Dictionary = {
     primaryNavigation: "Navigation principale"
   },
   footer: {
-    rights: "© {year} SACF. Tous droits réservés."
+    rights: "© {year} SACF. Tous droits réservés.",
+    terms: "Conditions d’utilisation", privacy: "Politique de confidentialité", lgpd: "LGPD"
+  },
+  legal: {
+    legalDocuments: "Documents juridiques", updated: "En vigueur : 24 juillet 2026", officialVersion: "Version officielle en portugais",
+    terms: "Conditions d’utilisation", privacy: "Confidentialité", lgpd: "Portail LGPD", privacyChannel: "Canal de confidentialité",
+    contactBody: "Pour exercer vos droits ou poser des questions sur vos données personnelles.", contactAction: "Envoyer un e-mail",
+    consent: "J’ai lu et j’accepte les documents juridiques.", consentPrefix: "J’ai lu et j’accepte les", consentConnector: "et la", consentRequired: "Vous devez accepter les documents juridiques pour continuer."
   },
   home: {
     eyebrow: "Formation professionnelle privée",
@@ -352,7 +359,7 @@ const dictionary: Dictionary = {
       eyebrow: "Configuration de l’entreprise", title: "Identité de l’environnement", body: "Définissez la marque et les langues disponibles pour les membres de {company}.", brandTitle: "Marque de l’entreprise", brandSub: "Appliquée au menu après la prochaine connexion.", customization: "Personnalisation", logoLabel: "Logo de l’entreprise", logoHint: "Importez un PNG, JPG ou WebP. Vous pouvez aussi indiquer une URL HTTPS.", logoUrlLabel: "URL du logo (facultatif)", logoUrlHint: "Utilisez-la uniquement si l’image est hébergée à une autre adresse HTTPS.", primaryColor: "Couleur principale", secondaryColor: "Couleur d’accent", defaultLanguage: "Langue par défaut", allowedLanguages: "Langues disponibles pour l’entreprise", save: "Enregistrer l’identité", preview: "Aperçu", logoAlt: "Logo de l’entreprise", previewHint: "Le logo, les couleurs et les langues sont limités à l’environnement de l’entreprise. La marque SACF reste visible."
     },
     historico: {
-      eyebrow: "Gouvernance de l’environnement", title: "Historique des modifications", body: "Consultez les derniers événements administratifs de cette entreprise. Les données des autres entreprises ne sont jamais affichées.", event: "Événement", actor: "Responsable", details: "Détails", date: "Date", system: "Système", userInvited: "Invitation envoyée", userImported: "Utilisateur importé", userUpdated: "Utilisateur mis à jour", userGroupsUpdated: "Groupes de l’utilisateur mis à jour", groupCreated: "Groupe créé", courseCreated: "Cours créé", courseUpdated: "Cours mis à jour", moduleCreated: "Module créé", lessonCreated: "Leçon créée", brandingUpdated: "Identité mise à jour", emptyTitle: "Aucun événement enregistré.", emptyBody: "Les prochains changements concernant les personnes, cours, groupes et l’identité apparaîtront ici."
+      eyebrow: "Gouvernance de l’environnement", title: "Historique des modifications", body: "Consultez les derniers événements administratifs de cette entreprise. Les données des autres entreprises ne sont jamais affichées.", event: "Événement", actor: "Responsable", details: "Détails", date: "Date", system: "Système", userInvited: "Invitation envoyée", userImported: "Utilisateur importé", userUpdated: "Utilisateur mis à jour", userGroupsUpdated: "Groupes de l’utilisateur mis à jour", groupCreated: "Groupe créé", courseCreated: "Cours créé", courseUpdated: "Cours mis à jour", moduleCreated: "Module créé", lessonCreated: "Leçon créée", brandingUpdated: "Identité mise à jour", legalAccepted: "Documents juridiques acceptés", emptyTitle: "Aucun événement enregistré.", emptyBody: "Les prochains changements concernant les personnes, cours, groupes et l’identité apparaîtront ici."
     },
     cursos: {
       eyebrow: "Cours",

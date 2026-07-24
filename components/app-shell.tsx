@@ -81,6 +81,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <Link href="/">{dict.nav.product}</Link>
                 <Link href="/login">{dict.nav.login}</Link>
                 <Link href="/cadastro">{dict.nav.requestImplementation}</Link>
+                <Link href="/termos">{dict.footer.terms}</Link>
+                <Link href="/privacidade">{dict.footer.privacy}</Link>
+                <Link href="/lgpd">{dict.footer.lgpd}</Link>
               </nav>
               <LanguageSwitcher variant="links" />
             </div>
@@ -89,7 +92,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <span>SACF Academy</span>
             </div>
           </footer>
-        ) : null}
+        ) : (
+          <nav className="publicLegalBar" aria-label={dict.legal.legalDocuments}>
+            <Link href="/termos">{dict.footer.terms}</Link>
+            <Link href="/privacidade">{dict.footer.privacy}</Link>
+            <Link href="/lgpd">{dict.footer.lgpd}</Link>
+          </nav>
+        )}
       </>
     );
   }
@@ -169,6 +178,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {dict.nav.logout}
           </button>
         </div>
+        <nav className="sidebarLegal" aria-label={dict.legal.legalDocuments}>
+          <Link href="/termos">{dict.footer.terms}</Link>
+          <Link href="/privacidade">{dict.footer.privacy}</Link>
+          <Link href="/lgpd">{dict.footer.lgpd}</Link>
+        </nav>
       </aside>
 
       <main className="sidebarMain" id="main-content" tabIndex={-1}>{children}</main>

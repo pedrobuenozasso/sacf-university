@@ -33,7 +33,8 @@ export async function sendImplementationRequest(request: ImplementationRequestIn
       <p><strong>Funcionários:</strong> ${safe.employees}</p>
       <p><strong>Mensagem:</strong></p>
       <p>${safe.message}</p>
+      <p><strong>Aceite jurídico:</strong> Termos de Uso e Política de Privacidade, versão 2026-07-24.</p>
     `,
-    text: `Nova solicitação de implantação\n\nNome: ${request.name}\nEmail: ${request.email}\nTelefone: ${request.phone}\nEmpresa: ${request.company}\nFuncionários: ${request.employees}\nMensagem: ${request.message || "Sem mensagem adicional."}`
+    text: `Nova solicitação de implantação\n\nNome: ${request.name}\nEmail: ${request.email}\nTelefone: ${request.phone}\nEmpresa: ${request.company}\nFuncionários: ${request.employees}\nMensagem: ${request.message || "Sem mensagem adicional."}\nAceite jurídico: Termos de Uso e Política de Privacidade, versão 2026-07-24.`
   });
 }

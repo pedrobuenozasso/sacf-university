@@ -9,12 +9,17 @@ export type SetPasswordResult = { ok: true } | { ok: false; error: string };
 export async function verifyAndSetPassword(
   email: string,
   token: string,
-  password: string
+  password: string,
+  acceptedLegal: boolean
 ): Promise<SetPasswordResult> {
   const normalized = email.trim().toLowerCase();
 
   if (password.length < 8) {
     return { ok: false, error: "A senha precisa ter pelo menos 8 caracteres." };
+  }
+
+  if (acceptedLegal !== true) {
+    return { ok: false, error: "Aceite os Termos de Uso e a Política de Privacidade para continuar." };
   }
 
   const valid = await consumeVerificationToken(normalized, token, "email_verify");
@@ -56,6 +61,28 @@ export async function verifyAndSetPassword(
         }
       });
     }
+  }
+
+  const memberships = await prisma.organizationMember.findMany({
+    where: { userId: user.id },
+    select: { organizationId: true }
+  });
+  if (memberships.length) {
+    const acceptedAt = new Date().toISOString();
+    await prisma.auditEvent.createMany({
+      data: memberships.map(({ organizationId }) => ({
+        organizationId,
+        actorUserId: user.id,
+        action: "legal.accepted",
+        entityType: "user",
+        entityId: user.id,
+        metadata: {
+          termsVersion: "2026-07-24",
+          privacyVersion: "2026-07-24",
+          acceptedAt
+        }
+      }))
+    });
   }
 
   return { ok: true };

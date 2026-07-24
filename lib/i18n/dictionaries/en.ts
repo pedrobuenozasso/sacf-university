@@ -28,7 +28,14 @@ const dictionary: Dictionary = {
     primaryNavigation: "Main navigation"
   },
   footer: {
-    rights: "© {year} SACF. All rights reserved."
+    rights: "© {year} SACF. All rights reserved.",
+    terms: "Terms of Use", privacy: "Privacy Policy", lgpd: "LGPD"
+  },
+  legal: {
+    legalDocuments: "Legal documents", updated: "Effective: July 24, 2026", officialVersion: "Official version in Portuguese",
+    terms: "Terms of Use", privacy: "Privacy", lgpd: "LGPD Portal", privacyChannel: "Privacy channel",
+    contactBody: "To exercise your rights or ask questions about personal data.", contactAction: "Send email",
+    consent: "I have read and agree to the legal documents.", consentPrefix: "I have read and agree to the", consentConnector: "and the", consentRequired: "You must accept the legal documents to continue."
   },
   home: {
     eyebrow: "Private corporate education",
@@ -352,7 +359,7 @@ const dictionary: Dictionary = {
       eyebrow: "Company settings", title: "Environment identity", body: "Set the brand and languages available to people at {company}.", brandTitle: "Company brand", brandSub: "Applied to the menu after the next login.", customization: "Customization", logoLabel: "Company logo", logoHint: "Upload PNG, JPG or WebP. You can also provide an HTTPS URL.", logoUrlLabel: "Logo URL (optional)", logoUrlHint: "Use only when the image is hosted at another HTTPS address.", primaryColor: "Primary color", secondaryColor: "Accent color", defaultLanguage: "Default language", allowedLanguages: "Languages available to the company", save: "Save identity", preview: "Preview", logoAlt: "Company logo", previewHint: "The logo, colors and languages are limited to the company environment. The SACF brand remains visible."
     },
     historico: {
-      eyebrow: "Environment governance", title: "Change history", body: "Review the latest administrative events for this company. Data from other companies is never shown here.", event: "Event", actor: "Performed by", details: "Details", date: "Date", system: "System", userInvited: "Invitation sent", userImported: "User imported", userUpdated: "User updated", userGroupsUpdated: "User groups updated", groupCreated: "Group created", courseCreated: "Course created", courseUpdated: "Course updated", moduleCreated: "Module created", lessonCreated: "Lesson created", brandingUpdated: "Identity updated", emptyTitle: "No events recorded yet.", emptyBody: "Future changes to people, courses, groups and identity will appear here."
+      eyebrow: "Environment governance", title: "Change history", body: "Review the latest administrative events for this company. Data from other companies is never shown here.", event: "Event", actor: "Performed by", details: "Details", date: "Date", system: "System", userInvited: "Invitation sent", userImported: "User imported", userUpdated: "User updated", userGroupsUpdated: "User groups updated", groupCreated: "Group created", courseCreated: "Course created", courseUpdated: "Course updated", moduleCreated: "Module created", lessonCreated: "Lesson created", brandingUpdated: "Identity updated", legalAccepted: "Legal documents accepted", emptyTitle: "No events recorded yet.", emptyBody: "Future changes to people, courses, groups and identity will appear here."
     },
     cursos: {
       eyebrow: "Courses",

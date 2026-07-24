@@ -19,7 +19,7 @@ export default async function AdminAuditPage() {
     "user.groups_updated": t.userGroupsUpdated, "group.created": t.groupCreated,
     "course.created": t.courseCreated, "course.updated": t.courseUpdated,
     "course.module_created": t.moduleCreated, "course.lesson_created": t.lessonCreated,
-    "organization.branding_updated": t.brandingUpdated
+    "organization.branding_updated": t.brandingUpdated, "legal.accepted": t.legalAccepted
   };
   return <>
     <div className="sectionHead"><div><p className="eyebrow">{t.eyebrow}</p><h1>{t.title}</h1><p>{t.body}</p></div></div>

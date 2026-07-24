@@ -28,7 +28,14 @@ const dictionary: Dictionary = {
     primaryNavigation: "Hauptnavigation"
   },
   footer: {
-    rights: "© {year} SACF. Alle Rechte vorbehalten."
+    rights: "© {year} SACF. Alle Rechte vorbehalten.",
+    terms: "Nutzungsbedingungen", privacy: "Datenschutzrichtlinie", lgpd: "LGPD"
+  },
+  legal: {
+    legalDocuments: "Rechtliche Dokumente", updated: "Gültig ab: 24. Juli 2026", officialVersion: "Offizielle Fassung auf Portugiesisch",
+    terms: "Nutzungsbedingungen", privacy: "Datenschutz", lgpd: "LGPD-Portal", privacyChannel: "Datenschutzkontakt",
+    contactBody: "Zur Ausübung Ihrer Rechte oder bei Fragen zu personenbezogenen Daten.", contactAction: "E-Mail senden",
+    consent: "Ich habe die rechtlichen Dokumente gelesen und stimme ihnen zu.", consentPrefix: "Ich akzeptiere die", consentConnector: "und die", consentRequired: "Sie müssen den rechtlichen Dokumenten zustimmen, um fortzufahren."
   },
   home: {
     eyebrow: "Private betriebliche Weiterbildung",
@@ -352,7 +359,7 @@ const dictionary: Dictionary = {
       eyebrow: "Unternehmenseinstellungen", title: "Identität der Umgebung", body: "Legen Sie Marke und verfügbare Sprachen für die Mitarbeitenden von {company} fest.", brandTitle: "Unternehmensmarke", brandSub: "Wird nach der nächsten Anmeldung im Menü angezeigt.", customization: "Personalisierung", logoLabel: "Unternehmenslogo", logoHint: "PNG, JPG oder WebP hochladen. Alternativ ist eine HTTPS-URL möglich.", logoUrlLabel: "Logo-URL (optional)", logoUrlHint: "Nur verwenden, wenn das Bild unter einer anderen HTTPS-Adresse gehostet wird.", primaryColor: "Primärfarbe", secondaryColor: "Akzentfarbe", defaultLanguage: "Standardsprache", allowedLanguages: "Für das Unternehmen verfügbare Sprachen", save: "Identität speichern", preview: "Vorschau", logoAlt: "Unternehmenslogo", previewHint: "Logo, Farben und Sprachen gelten nur für die Unternehmensumgebung. Die SACF-Marke bleibt sichtbar."
     },
     historico: {
-      eyebrow: "Umgebungsverwaltung", title: "Änderungsverlauf", body: "Prüfen Sie die letzten administrativen Ereignisse dieses Unternehmens. Daten anderer Unternehmen werden hier nicht angezeigt.", event: "Ereignis", actor: "Verantwortlich", details: "Details", date: "Datum", system: "System", userInvited: "Einladung gesendet", userImported: "Benutzer importiert", userUpdated: "Benutzer aktualisiert", userGroupsUpdated: "Benutzergruppen aktualisiert", groupCreated: "Gruppe erstellt", courseCreated: "Kurs erstellt", courseUpdated: "Kurs aktualisiert", moduleCreated: "Modul erstellt", lessonCreated: "Lektion erstellt", brandingUpdated: "Identität aktualisiert", emptyTitle: "Noch keine Ereignisse erfasst.", emptyBody: "Künftige Änderungen an Personen, Kursen, Gruppen und der Identität erscheinen hier."
+      eyebrow: "Umgebungsverwaltung", title: "Änderungsverlauf", body: "Prüfen Sie die letzten administrativen Ereignisse dieses Unternehmens. Daten anderer Unternehmen werden hier nicht angezeigt.", event: "Ereignis", actor: "Verantwortlich", details: "Details", date: "Datum", system: "System", userInvited: "Einladung gesendet", userImported: "Benutzer importiert", userUpdated: "Benutzer aktualisiert", userGroupsUpdated: "Benutzergruppen aktualisiert", groupCreated: "Gruppe erstellt", courseCreated: "Kurs erstellt", courseUpdated: "Kurs aktualisiert", moduleCreated: "Modul erstellt", lessonCreated: "Lektion erstellt", brandingUpdated: "Identität aktualisiert", legalAccepted: "Rechtliche Dokumente akzeptiert", emptyTitle: "Noch keine Ereignisse erfasst.", emptyBody: "Künftige Änderungen an Personen, Kursen, Gruppen und der Identität erscheinen hier."
     },
     cursos: {
       eyebrow: "Kurse",
