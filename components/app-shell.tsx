@@ -65,7 +65,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <LanguageSwitcher />
           </div>
         </header>
-        <main>{children}</main>
+        <main id="main-content" tabIndex={-1}>{children}</main>
         {pathname === "/" ? (
           <footer className="siteFooter">
             <div className="siteFooterMain">
@@ -131,7 +131,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         <nav className="sidebarNav">
           {items.map((item) => (
-            <Link key={item.href} href={item.href} data-active={isActive(pathname, item.href)}>
+            <Link
+              key={item.href}
+              href={item.href}
+              data-active={isActive(pathname, item.href)}
+              aria-current={isActive(pathname, item.href) ? "page" : undefined}
+            >
               {item.icon ? navIcon(item.icon) : null}
               {dict.nav[item.labelKey]}
             </Link>
@@ -166,7 +171,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      <div className="sidebarMain">{children}</div>
+      <main className="sidebarMain" id="main-content" tabIndex={-1}>{children}</main>
     </div>
   );
 }

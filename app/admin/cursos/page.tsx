@@ -44,14 +44,14 @@ export default async function AdminCoursesPage() {
           </div>
           {courses.map((course) => (
             <div className="tableRow" key={course.slug}>
-              <div className="courseIdentity">
+              <div className="courseIdentity" data-label={t.course}>
                 {course.id ? <Link href={`/admin/cursos/${course.id}`}>{course.title}</Link> : <strong>{course.title}</strong>}
                 <p>{course.duration} · {course.certificate}</p>
               </div>
-              <span className="courseMetaCell">{course.vertical}</span>
-              <span className="courseMetaCell">{course.level}</span>
-              <span className="courseMetaCell courseLessonCount">{course.lessons}</span>
-              <div className="courseStatusControl">
+              <span className="courseMetaCell" data-label={t.vertical}>{course.vertical}</span>
+              <span className="courseMetaCell" data-label={t.level}>{course.level}</span>
+              <span className="courseMetaCell courseLessonCount" data-label={t.lessons}>{course.lessons}</span>
+              <div className="courseStatusControl" data-label={t.status}>
                 <span className="statusTag">{course.publicationStatus === "draft" ? t.draft : course.publicationStatus === "archived" ? t.archived : t.published}</span>
                 <form className="courseRowActions" action={setCourseStatus}>
                   <input name="courseId" type="hidden" value={course.id} />
@@ -61,6 +61,7 @@ export default async function AdminCoursesPage() {
               </div>
             </div>
           ))}
+          {courses.length === 0 ? <div className="tableEmpty"><strong>{t.emptyTitle}</strong><span>{t.emptyBody}</span></div> : null}
         </div>
 
         <form className="detailPanel" action={createCourse}>
@@ -72,50 +73,50 @@ export default async function AdminCoursesPage() {
             </div>
           </div>
           <h2>{t.newCourse}</h2>
-          <label>Nome do curso<input className="field" name="title" placeholder={t.titlePlaceholder} required /></label>
+          <label>{t.nameLabel}<input className="field" name="title" placeholder={t.titlePlaceholder} required /></label>
           {scope.isSacfAdmin ? (
-            <label>Empresa proprietária<select className="field" name="organizationSlug" defaultValue="" required>
-              <option value="" disabled>Empresa proprietária</option>
+            <label>{t.ownerLabel}<select className="field" name="organizationSlug" defaultValue="" required>
+              <option value="" disabled>{t.ownerLabel}</option>
               {organizations.map((organization) => <option key={organization.slug} value={organization.slug}>{organization.name}</option>)}
             </select></label>
           ) : null}
-          <label>Vertical e grupo de acesso<select className="field" name="verticalGroupId" defaultValue="">
-            <option value="">Selecione uma vertical</option>
+          <label>{t.verticalGroupLabel}<select className="field" name="verticalGroupId" defaultValue="">
+            <option value="">{t.selectVertical}</option>
             {groups.map((group) => <option key={group.id} value={group.id}>{group.name}{scope.isSacfAdmin ? ` · ${group.organizationSlug}` : ""}</option>)}
-          </select><small>O curso será liberado automaticamente para os membros deste grupo.</small></label>
-          <label>Nova vertical <small>Opcional: use para criar uma nova vertical e o grupo correspondente.</small><input className="field" name="newVertical" placeholder="Ex.: Desenvolvedor" /></label>
-          <label>Público do curso<select className="field" name="audienceScope" defaultValue="group"><option value="group">Somente a vertical selecionada</option><option value="all_verticals">Todas as verticais da empresa</option></select><small>Em “Todas as verticais”, qualquer pessoa ativa da empresa poderá acessar o curso.</small></label>
-          <label>Responsável pelo conteúdo<input className="field" name="instructor" placeholder={t.instructorPlaceholder} /></label>
-          <label>Nível<select className="field" name="level" defaultValue="Essencial">
-            <option value="Essencial">Essencial</option>
-            <option value="Intermediário">Intermediário</option>
-            <option value="Avançado">Avançado</option>
+          </select><small>{t.groupAccessHint}</small></label>
+          <label>{t.newVerticalLabel} <small>{t.newVerticalHint}</small><input className="field" name="newVertical" placeholder={t.newVerticalPlaceholder} /></label>
+          <label>{t.audienceLabel}<select className="field" name="audienceScope" defaultValue="group"><option value="group">{t.audienceGroup}</option><option value="all_verticals">{t.audienceAll}</option></select><small>{t.audienceHint}</small></label>
+          <label>{t.instructorLabel}<input className="field" name="instructor" placeholder={t.instructorPlaceholder} /></label>
+          <label>{t.levelLabel}<select className="field" name="level" defaultValue="Essencial">
+            <option value="Essencial">{t.levelEssential}</option>
+            <option value="Intermediário">{t.levelIntermediate}</option>
+            <option value="Avançado">{t.levelAdvanced}</option>
           </select></label>
           <div className="formGrid">
             <label>
-              Carga horária (horas)
+              {t.workloadLabel}
               <input className="field" name="workloadHours" type="number" min="0" step="0.5" placeholder={t.hoursPlaceholder} />
             </label>
             <label>
-              Validade do certificado (meses)
+              {t.validityLabel}
               <input className="field" name="validityMonths" type="number" min="1" step="1" placeholder="Ex.: 12" />
             </label>
             <label>
-              Nota mínima da prova (%)
+              {t.passingScoreLabel}
               <input className="field" name="passingScore" type="number" min="0" max="100" step="1" placeholder="Ex.: 70" />
             </label>
           </div>
-          <label>Idioma principal<select className="field" name="language" defaultValue="pt-BR">
+          <label>{t.languageLabel}<select className="field" name="language" defaultValue="pt-BR">
             {supportedLocales.map((locale) => (
               <option key={locale.code} value={locale.code}>
                 {locale.label}
               </option>
             ))}
           </select></label>
-          <label>Resumo do curso<textarea className="field" name="summary" placeholder={t.summaryPlaceholder} /></label>
-          <label>Conteúdo inicial<small>Inclua uma aula por linha. Você poderá estruturar módulos depois.</small><textarea className="field" name="lessons" placeholder={`${t.contentPlaceholder} (uma aula por linha)`} /></label>
-          <label className="checkItem"><input name="certificateEnabled" type="checkbox" defaultChecked /> Emitir certificado ao concluir</label>
-          <label className="checkItem"><input name="mandatory" type="checkbox" /> Curso obrigatório</label>
+          <label>{t.summaryLabel}<textarea className="field" name="summary" placeholder={t.summaryPlaceholder} /></label>
+          <label>{t.initialContentLabel}<small>{t.initialContentHint}</small><textarea className="field" name="lessons" placeholder={t.contentPlaceholder} /></label>
+          <label className="checkItem"><input name="certificateEnabled" type="checkbox" defaultChecked /> {t.certificateEnabled}</label>
+          <label className="checkItem"><input name="mandatory" type="checkbox" /> {t.mandatory}</label>
           <div className="actions noTopMargin">
             <button className="button" name="intent" type="submit" value="draft">
               {t.saveDraft}
@@ -125,7 +126,7 @@ export default async function AdminCoursesPage() {
             </button>
           </div>
           <p className="formHint">{t.hint}</p>
-          <p className="formHint">Deixe a validade em branco para um certificado sem vencimento.</p>
+          <p className="formHint">{t.noExpiryHint}</p>
         </form>
       </section>
 

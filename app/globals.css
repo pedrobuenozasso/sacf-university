@@ -23,6 +23,166 @@
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ===== Accessibility and resilient application states ===== */
+.skipLink {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  transform: translateY(-160%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 999px;
+  padding: 11px 16px;
+  background: #fff;
+  color: #05070a;
+  font-weight: 800;
+  transition: transform 160ms var(--ease);
+}
+
+.skipLink:focus {
+  transform: translateY(0);
+}
+
+.appStatePage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: start;
+  align-content: center;
+  width: min(760px, 100%);
+  min-height: min(620px, calc(100vh - 180px));
+  margin: 0 auto;
+  padding: clamp(28px, 7vw, 72px);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 90% 8%, rgba(0, 209, 255, 0.13), transparent 32%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.018)),
+    rgba(10, 12, 18, 0.9);
+  box-shadow: var(--shadow-lift);
+}
+
+.appStatePage h1 {
+  max-width: 680px;
+  margin: 4px 0 14px;
+  overflow-wrap: anywhere;
+  font-size: clamp(2rem, 6vw, 4.6rem);
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.appStatePage > p:not(.eyebrow) {
+  max-width: 58ch;
+  margin: 0 0 24px;
+  color: var(--soft);
+  line-height: 1.65;
+}
+
+.appStateIcon,
+.appStateCode {
+  display: grid;
+  min-width: 58px;
+  min-height: 58px;
+  margin-bottom: 24px;
+  place-items: center;
+  border: 1px solid rgba(0, 209, 255, 0.32);
+  border-radius: 18px;
+  background: rgba(0, 209, 255, 0.08);
+  color: var(--cyan);
+  font-family: var(--font-mono), monospace;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.appStateCode {
+  width: fit-content;
+  padding-inline: 16px;
+  letter-spacing: 0.08em;
+}
+
+.tableEmpty {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  padding: 34px 22px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.tableEmpty strong {
+  color: var(--text);
+  font-size: 1rem;
+}
+
+@media (max-width: 720px) {
+  /* These rules intentionally live last: public visual overrides above must
+     never enlarge translated login content beyond a phone viewport. */
+  .topbar {
+    width: calc(100% - 24px);
+    padding: 10px 12px;
+  }
+
+  .nav a {
+    min-height: 44px;
+    padding-inline: 14px;
+  }
+
+  .loginShell {
+    width: 100%;
+    padding: 18px 0 28px;
+  }
+
+  .loginHero {
+    width: 100%;
+    min-height: 0;
+    padding: 24px 18px;
+  }
+
+  .loginHero h1 {
+    max-width: 100%;
+    margin-top: 8px;
+    overflow-wrap: anywhere;
+    font-size: clamp(2rem, 10.5vw, 2.65rem);
+    letter-spacing: -0.055em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  .loginHero .lead {
+    font-size: 0.98rem;
+    line-height: 1.6;
+  }
+
+  .loginForm {
+    padding: 18px 16px;
+  }
+
+  .loginForgotPassword,
+  .siteFooterNav a,
+  .languageLinks button {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .appStatePage {
+    min-height: calc(100vh - 190px);
+    border-radius: 24px;
+    padding: 28px 20px;
+  }
+
+  .appStatePage .actions {
+    width: 100%;
+  }
+
+  .appStatePage .button,
+  .appStatePage .buttonGhost {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -5432,5 +5592,86 @@ textarea.field {
     gap: 6px;
     padding: 16px 0 4px;
     text-align: center;
+  }
+
+  /* Final responsive guard for translated authentication content. */
+  .nav a {
+    min-height: 44px;
+    padding-inline: 14px;
+  }
+
+  .loginShell {
+    width: 100%;
+    padding: 18px 0 28px;
+  }
+
+  .loginHero {
+    width: 100%;
+    min-height: 0;
+  }
+
+  .loginHero h1 {
+    max-width: 100%;
+    margin-top: 8px;
+    overflow-wrap: anywhere;
+    font-size: clamp(2rem, 10.5vw, 2.65rem);
+    letter-spacing: -0.055em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  .loginHero .lead {
+    font-size: 0.98rem;
+    line-height: 1.6;
+  }
+
+  .loginForgotPassword,
+  .siteFooterNav a,
+  .languageLinks button {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+  }
+}
+
+@media (max-width: 980px) {
+  .tableRow > [data-label] {
+    display: grid;
+    grid-template-columns: minmax(92px, 0.42fr) minmax(0, 1fr);
+    align-items: start;
+    justify-items: start;
+    gap: 12px;
+    width: 100%;
+    min-height: 0;
+    padding: 9px 0;
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 0;
+    background: transparent;
+    text-align: left;
+  }
+
+  .tableRow > [data-label]::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .tableRow > [data-label]:last-child {
+    border-bottom: 0;
+  }
+
+  .coursesTable .courseLessonCount,
+  .coursesTable .courseStatusControl,
+  .usersTable .statusTag {
+    justify-self: stretch;
+  }
+
+  .courseStatusControl .statusTag,
+  .courseStatusControl .courseRowActions {
+    justify-self: start;
   }
 }

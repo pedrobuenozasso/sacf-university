@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { completeLesson, submitQuiz, type LearningCourse } from "@/lib/learning";
 import { interpolate, useLocale } from "@/components/locale-provider";
 
@@ -29,10 +29,11 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
   const [quizFeedback, setQuizFeedback] = useState<string | null>(null);
   const [progressFeedback, setProgressFeedback] = useState<string | null>(null);
   const [courseCompletion, setCourseCompletion] = useState<{ certificateIssued: boolean } | null>(null);
+  const completionHeadingRef = useRef<HTMLHeadingElement>(null);
   const currentLesson = lessons.find((lesson) => lesson.id === currentLessonId) ?? lessons[0];
-  const currentLessonIndex = lessons.findIndex((lesson) => lesson.id === currentLesson.id);
-  const nextLesson = lessons[currentLessonIndex + 1];
-  const embeddedVideoUrl = youtubeEmbedUrl(currentLesson.videoUrl);
+  const currentLessonIndex = currentLesson ? lessons.findIndex((lesson) => lesson.id === currentLesson.id) : -1;
+  const nextLesson = currentLessonIndex >= 0 ? lessons[currentLessonIndex + 1] : undefined;
+  const embeddedVideoUrl = youtubeEmbedUrl(currentLesson?.videoUrl ?? null);
   const completedLessons = lessons.filter((lesson) => lesson.status === "completed").length;
   const progress = lessons.length ? Math.round((completedLessons / lessons.length) * 100) : 0;
   const groupedLessons = useMemo(
@@ -43,7 +44,11 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
     [lessons]
   );
 
-  if (!currentLesson) return null;
+  useEffect(() => {
+    if (courseCompletion) completionHeadingRef.current?.focus();
+  }, [courseCompletion]);
+
+  if (!currentLesson) return <section className="appStatePage"><p className="eyebrow">{course.title}</p><h1>{t.emptyCourseTitle}</h1><p>{t.emptyCourseBody}</p><Link className="button" href="/meus-cursos">{t.backToMyCourses}</Link></section>;
 
   function markCurrentLessonComplete() {
     setProgressFeedback(null);
@@ -142,7 +147,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
           <h2>{t.exam}</h2>
           <p className="formHint">{interpolate(t.passingScore, { score: course.passingScore ?? 0 })}</p>
           {currentLesson.questions.map((question, index) => <fieldset key={question.id}><legend>{index + 1}. {question.question}</legend>{question.options.map((option) => <label className="quizOption" key={option.id}><input checked={quizAnswers[question.id] === option.id} name={question.id} onChange={() => setQuizAnswers((current) => ({ ...current, [question.id]: option.id }))} type="radio" /> <span>{option.optionText}</span></label>)}</fieldset>)}
-          {quizFeedback ? <p className="formHint">{quizFeedback}</p> : null}
+          {quizFeedback ? <p className="formHint" role="status" aria-live="polite">{quizFeedback}</p> : null}
           <button className="button" disabled={isPending || currentLesson.status === "completed" || !currentLesson.questions.length} onClick={submitCurrentQuiz} type="button">{currentLesson.status === "completed" ? t.examApproved : isPending ? t.grading : t.submitExam}</button>
         </section> : null}
         <div className="actions">
@@ -157,7 +162,7 @@ export function LearningPlayer({ course }: { course: LearningCourse }) {
         <section className="courseCompletionCard">
           <div className="completionSeal" aria-hidden="true">✓</div>
           <p className="eyebrow">{t.courseCompletedEyebrow}</p>
-          <h2 id="course-completion-title">{t.courseCompletedTitle}</h2>
+          <h2 id="course-completion-title" ref={completionHeadingRef} tabIndex={-1}>{t.courseCompletedTitle}</h2>
           <p>{t.courseCompletedBody}</p>
           <p className="completionCertificate">{courseCompletion.certificateIssued ? t.certificateIssued : t.certificateNotIssued}</p>
           <div className="completionActions"><Link className="button" href="/meus-cursos">{t.backToMyCourses}</Link><Link className="buttonGhost" href="/home">{t.goToHome}</Link></div>

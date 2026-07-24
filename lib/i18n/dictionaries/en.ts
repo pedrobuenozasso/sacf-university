@@ -290,7 +290,7 @@ const dictionary: Dictionary = {
     inProgress: "In progress",
     certification: "Certification",
     markComplete: "Mark as complete",
-    viewDetails: "View details", lessonFallback: "Complete this lesson to record your progress in the course.", lesson: "Lesson", completedLesson: "Completed", lessonMaterial: "Lesson material", content: "Content", watchVideo: "Watch video", openAttachment: "Open supplementary material", exam: "Exam", passingScore: "Minimum score: {score}%.", answerAll: "Answer all questions before submitting.", examError: "We couldn't grade the exam. Try again.", examFailed: "You got {correctAnswers} of {totalQuestions} questions right ({score}%). The minimum score is {passingScore}%. Review the content and try again.", examPassed: "Exam passed: {score}% correct.", examApproved: "Exam passed", grading: "Grading...", submitExam: "Submit exam", lessonCompleted: "Lesson completed", saving: "Saving...", progressSaved: "Lesson completed. Your progress was saved.", progressError: "We couldn't save your progress. Refresh the page and try again.", lessonPosition: "Lesson {current} of {total}", nextLesson: "Next lesson", courseCompletedEyebrow: "Course completed", courseCompletedTitle: "Congratulations, you completed this course!", courseCompletedBody: "Your progress has been recorded and this learning path is complete.", certificateIssued: "Your certificate is now available in the certificates area.", certificateNotIssued: "Your completion has been recorded successfully.", backToMyCourses: "Back to my courses", goToHome: "Go to home"
+    viewDetails: "View details", lessonFallback: "Complete this lesson to record your progress in the course.", lesson: "Lesson", completedLesson: "Completed", lessonMaterial: "Lesson material", content: "Content", watchVideo: "Watch video", openAttachment: "Open supplementary material", exam: "Exam", passingScore: "Minimum score: {score}%.", answerAll: "Answer all questions before submitting.", examError: "We couldn't grade the exam. Try again.", examFailed: "You got {correctAnswers} of {totalQuestions} questions right ({score}%). The minimum score is {passingScore}%. Review the content and try again.", examPassed: "Exam passed: {score}% correct.", examApproved: "Exam passed", grading: "Grading...", submitExam: "Submit exam", lessonCompleted: "Lesson completed", saving: "Saving...", progressSaved: "Lesson completed. Your progress was saved.", progressError: "We couldn't save your progress. Refresh the page and try again.", lessonPosition: "Lesson {current} of {total}", nextLesson: "Next lesson", courseCompletedEyebrow: "Course completed", courseCompletedTitle: "Congratulations, you completed this course!", courseCompletedBody: "Your progress has been recorded and this learning path is complete.", certificateIssued: "Your certificate is now available in the certificates area.", certificateNotIssued: "Your completion has been recorded successfully.", backToMyCourses: "Back to my courses", goToHome: "Go to home", emptyCourseTitle: "This course has no lessons yet.", emptyCourseBody: "The content is being prepared. Return to your courses to continue another learning path."
   },
   admin: {
     overview: {
@@ -394,7 +394,8 @@ const dictionary: Dictionary = {
       libraryTitle: "SACF library",
       libraryBody: "Use official courses as a base for training, certification and recertification.",
       governanceTitle: "Governance",
-      governanceBody: "Save draft, publish, archive, delete and track changes."
+      governanceBody: "Save draft, publish, archive, delete and track changes.",
+      nameLabel: "Course name", ownerLabel: "Owning company", verticalGroupLabel: "Vertical and access group", selectVertical: "Select a vertical", groupAccessHint: "The course will automatically be available to members of this group.", newVerticalLabel: "New vertical", newVerticalHint: "Optional: create a new vertical and its matching group.", newVerticalPlaceholder: "E.g. Developer", audienceLabel: "Course audience", audienceGroup: "Selected vertical only", audienceAll: "All company verticals", audienceHint: "With “All company verticals”, every active person in the company can access the course.", instructorLabel: "Content owner", levelLabel: "Level", levelEssential: "Essential", levelIntermediate: "Intermediate", levelAdvanced: "Advanced", workloadLabel: "Workload (hours)", validityLabel: "Certificate validity (months)", passingScoreLabel: "Minimum exam score (%)", languageLabel: "Primary language", summaryLabel: "Course summary", initialContentLabel: "Initial content", initialContentHint: "Add one lesson per line. You can organize modules later.", certificateEnabled: "Issue a certificate on completion", mandatory: "Mandatory course", noExpiryHint: "Leave validity blank for a certificate with no expiration.", emptyTitle: "No courses in this environment", emptyBody: "Create the first course using the form beside this list."
     },
     usuarios: {
       eyebrow: "Users",
@@ -431,7 +432,8 @@ const dictionary: Dictionary = {
       errorMissingOrg: "Select a company.",
       errorOrgNotFound: "Company not found.",
       errorSeatLimit: "Limit of {count} employees reached for this company.",
-      errorAlreadyMember: "This user is already part of this company."
+      errorAlreadyMember: "This user is already part of this company.",
+      groups: "Groups", noGroup: "No group", editGroups: "Edit groups", noGroups: "There are no groups in this company yet.", saveGroups: "Save groups", editUser: "Edit user", name: "Name", roleOrgAdmin: "Company admin", roleInstructor: "Instructor", roleStudent: "Student", rolePartner: "External partner", statusActive: "Active", statusBlocked: "Blocked", statusInvited: "Invitation pending", saveUser: "Save user", emptyTitle: "No users in this environment", emptyBody: "Invite the first person using the form beside this list.", groupsEyebrow: "Access groups", groupsTitle: "Organize people by team, role, or operation.", groupsBody: "Groups let you release courses to several people at once.", member: "member", members: "members", firstGroup: "Create the first group to start organizing the team.", groupName: "Group name", groupNamePlaceholder: "E.g. Field technicians", selectCompany: "Select a company", description: "Description", optional: "optional", descriptionPlaceholder: "E.g. team responsible for technical visits", createGroup: "Create group"
     },
     certificacoes: {
       eyebrow: "Certifications",
@@ -497,6 +499,17 @@ const dictionary: Dictionary = {
     serviceEyebrow: "Support",
     serviceUnavailable: "Sending requests through the portal is being prepared. In the meantime, use your company's designated support channel.",
     serviceStatus: "Portal channel being implemented"
+  },
+  system: {
+    skipToContent: "Skip to main content",
+    errorEyebrow: "Something did not go as expected",
+    errorTitle: "We could not load this area.",
+    errorBody: "Your data remains safe. Try again or return to the platform home.",
+    retry: "Try again",
+    backHome: "Back to home",
+    notFoundEyebrow: "Page not found",
+    notFoundTitle: "This address does not exist or has moved.",
+    notFoundBody: "Use the menu to continue or return to the SACF Academy home."
   },
   upload: {
     preparing: "Preparing upload...", rejected: "File not accepted. Check its type and size limit.", failed: "We couldn't upload the file. Try again.", completed: "File uploaded securely.", sending: "Uploading file...", choose: "Drag a file here or choose it from your computer", videoLimit: "Video up to 500 MB.", documentLimit: "PDF, DOC or DOCX up to 25 MB.", linked: "Material attached to this lesson."

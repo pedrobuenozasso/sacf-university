@@ -37,6 +37,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang={locale} className={`${spaceGrotesk.variable} ${inter.variable} ${ibmPlexMono.variable}`}>
       <body>
+        <a className="skipLink" href="#main-content">{dict.system.skipToContent}</a>
         <div className="shell">
           <LocaleProvider locale={locale} dict={dict}>
             <SessionProvider basePath={appPath("/api/auth")} session={session}>
