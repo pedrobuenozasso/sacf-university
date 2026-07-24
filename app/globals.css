@@ -5296,9 +5296,11 @@ textarea.field {
 
 .loginHero h1 {
   max-width: 620px;
-  font-size: clamp(3rem, 6vw, 5.7rem);
+  overflow-wrap: anywhere;
+  font-size: clamp(3rem, 5.2vw, 5rem);
   letter-spacing: -0.07em;
   line-height: 0.94;
+  text-wrap: balance;
 }
 
 /* Invitation / first-password is a focused one-step flow. Keep it compact so
