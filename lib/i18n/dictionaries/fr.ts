@@ -345,7 +345,14 @@ const dictionary: Dictionary = {
       createCompany: "Créer l'entreprise",
       hint: "Chaque entreprise conserve son catalogue, ses membres et ses certificats isolés.",
       seatLimitPlaceholder: "Limite d'employés (facultatif)",
-      seatLimitHint: "Définit combien d'utilisateurs cette entreprise peut inscrire. Laissez vide pour ne pas limiter."
+      seatLimitHint: "Définit combien d'utilisateurs cette entreprise peut inscrire. Laissez vide pour ne pas limiter.",
+      nameLabel: "Nom de l’entreprise", slugLabel: "Identifiant de l’entreprise", slugHint: "Utilisé en interne dans les URL et les autorisations.", adminEmailLabel: "E-mail de l’administrateur initial", seatLimitLabel: "Limite d’utilisateurs", seatLimitInputHint: "Facultatif. Laissez vide pour ne pas limiter."
+    },
+    identidade: {
+      eyebrow: "Configuration de l’entreprise", title: "Identité de l’environnement", body: "Définissez la marque et les langues disponibles pour les membres de {company}.", brandTitle: "Marque de l’entreprise", brandSub: "Appliquée au menu après la prochaine connexion.", customization: "Personnalisation", logoLabel: "Logo de l’entreprise", logoHint: "Importez un PNG, JPG ou WebP. Vous pouvez aussi indiquer une URL HTTPS.", logoUrlLabel: "URL du logo (facultatif)", logoUrlHint: "Utilisez-la uniquement si l’image est hébergée à une autre adresse HTTPS.", primaryColor: "Couleur principale", secondaryColor: "Couleur d’accent", defaultLanguage: "Langue par défaut", allowedLanguages: "Langues disponibles pour l’entreprise", save: "Enregistrer l’identité", preview: "Aperçu", logoAlt: "Logo de l’entreprise", previewHint: "Le logo, les couleurs et les langues sont limités à l’environnement de l’entreprise. La marque SACF reste visible."
+    },
+    historico: {
+      eyebrow: "Gouvernance de l’environnement", title: "Historique des modifications", body: "Consultez les derniers événements administratifs de cette entreprise. Les données des autres entreprises ne sont jamais affichées.", event: "Événement", actor: "Responsable", details: "Détails", date: "Date", system: "Système", userInvited: "Invitation envoyée", userImported: "Utilisateur importé", userUpdated: "Utilisateur mis à jour", userGroupsUpdated: "Groupes de l’utilisateur mis à jour", groupCreated: "Groupe créé", courseCreated: "Cours créé", courseUpdated: "Cours mis à jour", moduleCreated: "Module créé", lessonCreated: "Leçon créée", brandingUpdated: "Identité mise à jour", emptyTitle: "Aucun événement enregistré.", emptyBody: "Les prochains changements concernant les personnes, cours, groupes et l’identité apparaîtront ici."
     },
     cursos: {
       eyebrow: "Cours",
@@ -476,7 +483,7 @@ const dictionary: Dictionary = {
       status: "Statut",
       users: "Utilisateurs",
       certificates: "Certificats",
-      expiring: "Expirant"
+      expiring: "Expirant", dataAvailable: "Données à jour dans cette vue", executiveView: "Vue consolidée pour la direction", overdueTrainings: "Formations en retard", dueInSevenDays: "Échéance sous 7 jours", withDeadline: "Avec une échéance", student: "Apprenant", course: "Cours", deadline: "Échéance", overdue: "En retard", dueSoon: "Bientôt dû", onTime: "Dans les délais", noDeadlines: "Aucune échéance en attente", noDeadlinesBody: "Les attributions avec échéance apparaîtront ici."
     }
   },
   help: {

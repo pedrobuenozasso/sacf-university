@@ -345,7 +345,14 @@ const dictionary: Dictionary = {
       createCompany: "Create company",
       hint: "Each company keeps its catalog, members and certificates isolated.",
       seatLimitPlaceholder: "Employee limit (optional)",
-      seatLimitHint: "Sets how many users this company can register. Leave blank for no limit."
+      seatLimitHint: "Sets how many users this company can register. Leave blank for no limit.",
+      nameLabel: "Company name", slugLabel: "Company identifier", slugHint: "Used internally in URLs and permissions.", adminEmailLabel: "Initial administrator email", seatLimitLabel: "User limit", seatLimitInputHint: "Optional. Leave blank for no limit."
+    },
+    identidade: {
+      eyebrow: "Company settings", title: "Environment identity", body: "Set the brand and languages available to people at {company}.", brandTitle: "Company brand", brandSub: "Applied to the menu after the next login.", customization: "Customization", logoLabel: "Company logo", logoHint: "Upload PNG, JPG or WebP. You can also provide an HTTPS URL.", logoUrlLabel: "Logo URL (optional)", logoUrlHint: "Use only when the image is hosted at another HTTPS address.", primaryColor: "Primary color", secondaryColor: "Accent color", defaultLanguage: "Default language", allowedLanguages: "Languages available to the company", save: "Save identity", preview: "Preview", logoAlt: "Company logo", previewHint: "The logo, colors and languages are limited to the company environment. The SACF brand remains visible."
+    },
+    historico: {
+      eyebrow: "Environment governance", title: "Change history", body: "Review the latest administrative events for this company. Data from other companies is never shown here.", event: "Event", actor: "Performed by", details: "Details", date: "Date", system: "System", userInvited: "Invitation sent", userImported: "User imported", userUpdated: "User updated", userGroupsUpdated: "User groups updated", groupCreated: "Group created", courseCreated: "Course created", courseUpdated: "Course updated", moduleCreated: "Module created", lessonCreated: "Lesson created", brandingUpdated: "Identity updated", emptyTitle: "No events recorded yet.", emptyBody: "Future changes to people, courses, groups and identity will appear here."
     },
     cursos: {
       eyebrow: "Courses",
@@ -476,7 +483,7 @@ const dictionary: Dictionary = {
       status: "Status",
       users: "Users",
       certificates: "Certificates",
-      expiring: "Expiring"
+      expiring: "Expiring", dataAvailable: "Up-to-date data in this view", executiveView: "Consolidated leadership view", overdueTrainings: "Overdue training", dueInSevenDays: "Due within 7 days", withDeadline: "With a deadline", student: "Student", course: "Course", deadline: "Deadline", overdue: "Overdue", dueSoon: "Due soon", onTime: "On time", noDeadlines: "No pending deadlines", noDeadlinesBody: "Assignments with a deadline will appear here."
     }
   },
   help: {

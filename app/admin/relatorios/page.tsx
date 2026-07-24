@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminReportsPage() {
   const scope = await requireAdminScope();
   const organizationSlug = scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined;
-  const [organizations, deadlines, { dict }] = await Promise.all([
+  const [organizations, deadlines, { dict, locale }] = await Promise.all([
     getOrganizations(organizationSlug),
     getTrainingDeadlineOverview(organizationSlug),
     getDictionary()
@@ -28,44 +28,44 @@ export default async function AdminReportsPage() {
           <span className="reportStatus">{t.weekly}</span>
           <h2>{t.progressTitle}</h2>
           <p>{t.progressBody}</p>
-          <span className="actionHint">Exportação CSV em implantação</span>
+          <span className="actionHint">{t.dataAvailable}</span>
         </div>
         <div className="detailPanel reportCard">
           <span className="reportStatus">{t.critical}</span>
           <h2>{t.certificatesTitle}</h2>
           <p>{t.certificatesBody}</p>
-          <span className="actionHint">Exportação CSV em implantação</span>
+          <span className="actionHint">{t.dataAvailable}</span>
         </div>
         <div className="detailPanel reportCard">
           <span className="reportStatus">{t.operation}</span>
           <h2>{t.usageTitle}</h2>
           <p>{t.usageBody}</p>
-          <span className="actionHint">Exportação CSV em implantação</span>
+          <span className="actionHint">{t.dataAvailable}</span>
         </div>
         <div className="detailPanel reportCard">
           <span className="reportStatus">{t.executive}</span>
           <h2>{t.execSummaryTitle}</h2>
           <p>{t.execSummaryBody}</p>
-          <span className="actionHint">Resumo automatizado em implantação</span>
+          <span className="actionHint">{t.executiveView}</span>
         </div>
       </section>
 
       <section className="metrics">
-        <div className="metric"><strong>{deadlines.overdue}</strong><span>Treinamentos atrasados</span></div>
-        <div className="metric"><strong>{deadlines.dueSoon}</strong><span>Vencem em 7 dias</span></div>
-        <div className="metric"><strong>{deadlines.records.length}</strong><span>Com prazo definido</span></div>
+        <div className="metric"><strong>{deadlines.overdue}</strong><span>{t.overdueTrainings}</span></div>
+        <div className="metric"><strong>{deadlines.dueSoon}</strong><span>{t.dueInSevenDays}</span></div>
+        <div className="metric"><strong>{deadlines.records.length}</strong><span>{t.withDeadline}</span></div>
       </section>
 
       <div className="tablePanel deadlinesTable">
-        <div className="tableHead"><span>Aluno</span><span>Curso</span><span>Empresa</span><span>Prazo</span><span>Status</span></div>
+        <div className="tableHead"><span>{t.student}</span><span>{t.course}</span><span>{t.company}</span><span>{t.deadline}</span><span>{t.status}</span></div>
         {deadlines.records.map((record) => (
           <div className="tableRow" key={record.id}>
             <div><strong>{record.userName}</strong></div><span>{record.courseTitle}</span><span>{record.organizationName}</span>
-            <span>{new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(new Date(record.dueDate))}</span>
-            <span className="statusTag">{record.status === "overdue" ? "Atrasado" : record.status === "due_soon" ? "Vence em breve" : "No prazo"}</span>
+            <span>{new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(record.dueDate))}</span>
+            <span className="statusTag">{record.status === "overdue" ? t.overdue : record.status === "due_soon" ? t.dueSoon : t.onTime}</span>
           </div>
         ))}
-        {deadlines.records.length === 0 ? <div className="tableRow"><div><strong>Nenhum prazo pendente</strong><p>As atribuições com prazo aparecerão aqui.</p></div></div> : null}
+        {deadlines.records.length === 0 ? <div className="tableRow tableEmpty"><div><strong>{t.noDeadlines}</strong><p>{t.noDeadlinesBody}</p></div></div> : null}
       </div>
 
       <div className="sectionHead">
