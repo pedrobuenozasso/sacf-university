@@ -125,7 +125,14 @@ const dictionary: Dictionary = {
     demoStudent: "Log in as Student",
     showPassword: "Show password",
     hidePassword: "Hide password",
-    forgotPassword: "Forgot your password?"
+    forgotPassword: "Forgot your password?",
+    mfaHeading: "Confirm your access",
+    mfaLead: "We sent a six-digit code to your administrator email.",
+    mfaCodeLabel: "Confirmation code",
+    mfaCodePlaceholder: "000000",
+    mfaSubmit: "Confirm and sign in",
+    mfaBack: "Use another account",
+    mfaError: "Invalid or expired code. Request a new code."
   },
   signup: {
     eyebrow: "SACF Academy rollout",
@@ -177,7 +184,7 @@ const dictionary: Dictionary = {
     passwordMismatch: "Passwords don't match.",
     emailLabel: "Email",
     passwordLabel: "Create password",
-    passwordPlaceholder: "8 characters minimum",
+    passwordPlaceholder: "12 characters minimum",
     confirmLabel: "Confirm password",
     confirmPlaceholder: "Repeat the password",
     submitting: "Confirming...",

@@ -3,12 +3,14 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { consumeVerificationToken } from "@/lib/verification-tokens";
+import { passwordPolicyError } from "@/lib/password-policy";
 
 export type ResetPasswordResult = { ok: true } | { ok: false; error: string };
 
 export async function resetPassword(email: string, token: string, password: string): Promise<ResetPasswordResult> {
   const normalized = email.trim().toLowerCase();
-  if (password.length < 8) return { ok: false, error: "A senha precisa ter pelo menos 8 caracteres." };
+  const passwordError = passwordPolicyError(password);
+  if (passwordError) return { ok: false, error: passwordError };
 
   const valid = await consumeVerificationToken(normalized, token, "password_reset");
   if (!valid) return { ok: false, error: "Link inválido ou expirado. Solicite uma nova redefinição de senha." };

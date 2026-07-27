@@ -123,7 +123,14 @@ const dictionary = {
     demoStudent: "Entrar como Aluno",
     showPassword: "Mostrar senha",
     hidePassword: "Esconder senha",
-    forgotPassword: "Esqueceu sua senha?"
+    forgotPassword: "Esqueceu sua senha?",
+    mfaHeading: "Confirme seu acesso",
+    mfaLead: "Enviamos um código de seis dígitos para seu email administrativo.",
+    mfaCodeLabel: "Código de confirmação",
+    mfaCodePlaceholder: "000000",
+    mfaSubmit: "Confirmar e entrar",
+    mfaBack: "Usar outro acesso",
+    mfaError: "Código inválido ou expirado. Solicite um novo código."
   },
   signup: {
     eyebrow: "Implantação SACF Academy",
@@ -175,7 +182,7 @@ const dictionary = {
     passwordMismatch: "As senhas não coincidem.",
     emailLabel: "Email",
     passwordLabel: "Criar senha",
-    passwordPlaceholder: "Mínimo 8 caracteres",
+    passwordPlaceholder: "Mínimo 12 caracteres",
     confirmLabel: "Confirmar senha",
     confirmPlaceholder: "Repita a senha",
     submitting: "Confirmando...",

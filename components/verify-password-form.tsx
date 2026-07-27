@@ -71,7 +71,7 @@ export function VerifyPasswordForm({ token, email }: { token: string; email: str
           type="password"
           value={password}
           required
-          minLength={8}
+          minLength={12}
         />
       </label>
       <label>
@@ -83,7 +83,7 @@ export function VerifyPasswordForm({ token, email }: { token: string; email: str
           type="password"
           value={confirmPassword}
           required
-          minLength={8}
+          minLength={12}
         />
       </label>
       <label className="legalConsent">

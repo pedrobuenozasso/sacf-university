@@ -3,6 +3,9 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db";
 import { clearRateLimit, clientAddress, consumeRateLimit } from "@/lib/rate-limit";
+import { consumeVerificationToken } from "@/lib/verification-tokens";
+
+const EMAIL_MFA_ADMIN_ROLES = new Set(["sacf_admin", "org_admin"]);
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
@@ -16,27 +19,46 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Credentials({
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Senha", type: "password" }
+        password: { label: "Senha", type: "password" },
+        code: { label: "Código", type: "text" }
       },
       async authorize(credentials, request) {
         const email = String(credentials?.email ?? "")
           .trim()
           .toLowerCase();
         const password = String(credentials?.password ?? "");
-        if (!email || !password) return null;
+        const code = String(credentials?.code ?? "").trim();
+        if (!email || (!password && !code)) return null;
 
         const ip = clientAddress(request.headers);
-        const [emailAllowed, ipAllowed] = await Promise.all([
-          consumeRateLimit({ namespace: "login-email", identifier: email, max: 8, windowMs: 15 * 60_000 }),
-          consumeRateLimit({ namespace: "login-ip", identifier: ip, max: 30, windowMs: 15 * 60_000 })
-        ]);
-        if (!emailAllowed || !ipAllowed) return null;
+        const user = await prisma.user.findUnique({
+          where: { email },
+          include: { memberships: { where: { status: "active" }, include: { organization: true } } }
+        });
+        if (!user || !user.passwordHash || !user.emailVerified || user.memberships.length === 0) return null;
+        const isAdmin = user.memberships.some((membership) => EMAIL_MFA_ADMIN_ROLES.has(membership.role));
 
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user || !user.passwordHash || !user.emailVerified) return null;
-
-        const valid = await bcrypt.compare(password, user.passwordHash);
-        if (!valid) return null;
+        if (code) {
+          const [emailAllowed, ipAllowed] = await Promise.all([
+            consumeRateLimit({ namespace: "admin-login-verify-email", identifier: email, max: 6, windowMs: 15 * 60_000 }),
+            consumeRateLimit({ namespace: "admin-login-verify-ip", identifier: ip, max: 20, windowMs: 15 * 60_000 })
+          ]);
+          if (!isAdmin || !emailAllowed || !ipAllowed || !/^\d{6}$/.test(code)) return null;
+          if (!(await consumeVerificationToken(email, code, "admin_login_otp"))) return null;
+          await Promise.all([
+            clearRateLimit("admin-login-code-email", email),
+            clearRateLimit("admin-login-code-ip", ip),
+            clearRateLimit("admin-login-verify-email", email),
+            clearRateLimit("admin-login-verify-ip", ip)
+          ]);
+        } else {
+          const [emailAllowed, ipAllowed] = await Promise.all([
+            consumeRateLimit({ namespace: "login-email", identifier: email, max: 8, windowMs: 15 * 60_000 }),
+            consumeRateLimit({ namespace: "login-ip", identifier: ip, max: 30, windowMs: 15 * 60_000 })
+          ]);
+          if (!emailAllowed || !ipAllowed || isAdmin) return null;
+          if (!(await bcrypt.compare(password, user.passwordHash))) return null;
+        }
 
         await Promise.all([
           clearRateLimit("login-email", email),
@@ -77,7 +99,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, trigger, session }) {
       if (user?.id) {
         const membership = await prisma.organizationMember.findFirst({
-          where: { userId: user.id },
+          where: { userId: user.id, status: "active" },
           include: { organization: true }
         });
         const groupMemberships = await prisma.groupMember.findMany({

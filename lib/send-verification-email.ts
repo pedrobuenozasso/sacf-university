@@ -25,3 +25,16 @@ export async function sendPasswordResetEmail(email: string, url: string) {
     text: `Redefina sua senha da SACF Academy: ${url}\n\nSe você não solicitou esta alteração, ignore este email. O link expira em 30 minutos.`
   });
 }
+
+export async function sendAdminLoginCodeEmail(email: string, code: string) {
+  await enqueueMail({
+    to: email,
+    subject: "Código de acesso administrativo — SACF Academy",
+    html: `
+      <p>Use este código para concluir seu acesso administrativo à SACF Academy:</p>
+      <p style="font-size:28px;font-weight:700;letter-spacing:6px">${code}</p>
+      <p>Ele expira em 10 minutos e só pode ser usado uma vez. Se você não iniciou este acesso, altere sua senha e avise a equipe SACF.</p>
+    `,
+    text: `Seu código de acesso administrativo SACF Academy é: ${code}\n\nEle expira em 10 minutos e só pode ser usado uma vez.`
+  });
+}

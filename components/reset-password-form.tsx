@@ -30,8 +30,8 @@ export function ResetPasswordForm({ email, token }: { email: string; token: stri
 
   return <form onSubmit={submit}>
     <label>{t.emailLabel}<input className="field" type="email" value={email} disabled /></label>
-    <label>{t.newPassword}<input className="field" type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder={t.passwordPlaceholder} autoComplete="new-password" minLength={8} required /></label>
-    <label>{t.confirmPassword}<input className="field" type="password" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} placeholder={t.confirmPlaceholder} autoComplete="new-password" minLength={8} required /></label>
+    <label>{t.newPassword}<input className="field" type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder={t.passwordPlaceholder} autoComplete="new-password" minLength={12} required /></label>
+    <label>{t.confirmPassword}<input className="field" type="password" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} placeholder={t.confirmPlaceholder} autoComplete="new-password" minLength={12} required /></label>
     {error ? <p className="formError" role="alert">{error}</p> : null}
     <button className="button fullButton" type="submit" disabled={submitting}>{submitting ? t.saving : t.save}</button>
   </form>;

@@ -125,7 +125,14 @@ const dictionary: Dictionary = {
     demoStudent: "Als Lernender anmelden",
     showPassword: "Passwort anzeigen",
     hidePassword: "Passwort verbergen",
-    forgotPassword: "Passwort vergessen?"
+    forgotPassword: "Passwort vergessen?",
+    mfaHeading: "Zugang bestätigen",
+    mfaLead: "Wir haben einen sechsstelligen Code an Ihre Administrator-E-Mail gesendet.",
+    mfaCodeLabel: "Bestätigungscode",
+    mfaCodePlaceholder: "000000",
+    mfaSubmit: "Bestätigen und anmelden",
+    mfaBack: "Anderes Konto verwenden",
+    mfaError: "Ungültiger oder abgelaufener Code. Fordern Sie einen neuen Code an."
   },
   signup: {
     eyebrow: "SACF Academy Einführung",
@@ -177,7 +184,7 @@ const dictionary: Dictionary = {
     passwordMismatch: "Die Passwörter stimmen nicht überein.",
     emailLabel: "E-Mail",
     passwordLabel: "Passwort erstellen",
-    passwordPlaceholder: "Mindestens 8 Zeichen",
+    passwordPlaceholder: "Mindestens 12 Zeichen",
     confirmLabel: "Passwort bestätigen",
     confirmPlaceholder: "Passwort wiederholen",
     submitting: "Wird bestätigt...",

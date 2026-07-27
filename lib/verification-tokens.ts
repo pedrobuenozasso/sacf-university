@@ -1,9 +1,9 @@
-import { createHash, randomBytes } from "crypto";
+import { createHash, randomBytes, randomInt } from "crypto";
 import { prisma } from "@/lib/db";
 
 const TOKEN_TTL_MINUTES = 30;
 
-export type VerificationPurpose = "email_verify" | "password_reset";
+export type VerificationPurpose = "email_verify" | "password_reset" | "admin_login_otp";
 
 function hashToken(rawToken: string) {
   return createHash("sha256").update(rawToken).digest("hex");
@@ -19,6 +19,17 @@ export async function createVerificationToken(email: string, purpose: Verificati
   await prisma.verificationToken.create({ data: { email, tokenHash, purpose, expiresAt } });
 
   return rawToken;
+}
+
+export async function createVerificationCode(email: string, purpose: "admin_login_otp") {
+  const rawCode = randomInt(0, 1_000_000).toString().padStart(6, "0");
+  const tokenHash = hashToken(rawCode);
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+  await prisma.verificationToken.deleteMany({ where: { email, purpose } });
+  await prisma.verificationToken.create({ data: { email, tokenHash, purpose, expiresAt } });
+
+  return rawCode;
 }
 
 export async function consumeVerificationToken(

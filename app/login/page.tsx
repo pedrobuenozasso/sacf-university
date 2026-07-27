@@ -6,6 +6,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/components/locale-provider";
 import { appPath } from "@/lib/app-path";
+import { requestAdminLoginCode } from "@/app/login/actions";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,6 +19,8 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const [demoLoading, setDemoLoading] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [verificationStep, setVerificationStep] = useState(false);
+  const [code, setCode] = useState("");
   const demoLoginEnabled = process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_DEMO_LOGIN_ENABLED === "true";
 
   useEffect(() => {
@@ -31,6 +34,20 @@ export default function LoginPage() {
     setError(null);
     setSubmitting(true);
 
+    const verification = await requestAdminLoginCode(email, password);
+    if (!verification.ok) {
+      setSubmitting(false);
+      setError(t.error);
+      return;
+    }
+
+    if (verification.requiresCode) {
+      setPassword("");
+      setVerificationStep(true);
+      setSubmitting(false);
+      return;
+    }
+
     const result = await signIn("credentials", { email, password, redirect: false });
 
     setSubmitting(false);
@@ -40,6 +57,19 @@ export default function LoginPage() {
       return;
     }
 
+    window.location.href = appPath("/home");
+  }
+
+  async function verifyAdminCode(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError(null);
+    setSubmitting(true);
+    const result = await signIn("credentials", { email, code, redirect: false });
+    setSubmitting(false);
+    if (result?.error) {
+      setError(t.mfaError);
+      return;
+    }
     window.location.href = appPath("/home");
   }
 
@@ -64,7 +94,7 @@ export default function LoginPage() {
           <p className="loginTrust">{t.trust}</p>
         </div>
 
-        <form className="loginForm" onSubmit={loginWithEmail}>
+        <form className="loginForm" onSubmit={verificationStep ? verifyAdminCode : loginWithEmail}>
           <div className="formStatus">
             <span className="statusDot" />
             <div>
@@ -72,74 +102,80 @@ export default function LoginPage() {
               <small>{t.statusSub}</small>
             </div>
           </div>
-          <h2>{t.heading}</h2>
-          <label>
-            {t.emailLabel}
-            <input
-              className="field"
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder={t.emailPlaceholder}
-              type="email"
-              autoComplete="email"
-              value={email}
-              required
-            />
-          </label>
-          <label>
-            {t.passwordLabel}
-            <div className="passwordFieldWrap">
-              <input
-                className="field"
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder={t.passwordPlaceholder}
-                type={showPassword ? "text" : "password"}
-                autoComplete="current-password"
-                value={password}
-                required
-              />
-              <button
-                type="button"
-                className="passwordToggle"
-                data-visible={showPassword}
-                onClick={() => setShowPassword((value) => !value)}
-                aria-label={showPassword ? t.hidePassword : t.showPassword}
-                aria-pressed={showPassword}
-              >
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path
-                    className="passwordToggleLid"
-                    d="M2 12C2 12 5.5 5.5 12 5.5C18.5 5.5 22 12 22 12"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M2 12C2 12 5.5 18.5 12 18.5C18.5 18.5 22 12 22 12"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                  />
-                  <circle className="passwordTogglePupil" cx="12" cy="12" r="3.2" fill="currentColor" />
-                  <line
-                    className="passwordToggleSlash"
-                    x1="4"
-                    y1="4"
-                    x2="20"
-                    y2="20"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                  />
-                </svg>
+          <h2>{verificationStep ? t.mfaHeading : t.heading}</h2>
+          {verificationStep ? (
+            <>
+              <p className="formHint">{t.mfaLead}</p>
+              <label>
+                {t.mfaCodeLabel}
+                <input
+                  className="field"
+                  onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
+                  placeholder={t.mfaCodePlaceholder}
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  value={code}
+                  required
+                  minLength={6}
+                  maxLength={6}
+                />
+              </label>
+              <button className="buttonGhost" type="button" onClick={() => { setVerificationStep(false); setCode(""); setError(null); }}>
+                {t.mfaBack}
               </button>
-            </div>
-          </label>
-          <Link className="loginForgotPassword" href="/recuperar-senha">{t.forgotPassword}</Link>
+            </>
+          ) : (
+            <>
+              <label>
+                {t.emailLabel}
+                <input
+                  className="field"
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder={t.emailPlaceholder}
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  required
+                />
+              </label>
+              <label>
+                {t.passwordLabel}
+                <div className="passwordFieldWrap">
+                  <input
+                    className="field"
+                    onChange={(event) => setPassword(event.target.value)}
+                    placeholder={t.passwordPlaceholder}
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    value={password}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="passwordToggle"
+                    data-visible={showPassword}
+                    onClick={() => setShowPassword((value) => !value)}
+                    aria-label={showPassword ? t.hidePassword : t.showPassword}
+                    aria-pressed={showPassword}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path className="passwordToggleLid" d="M2 12C2 12 5.5 5.5 12 5.5C18.5 5.5 22 12 22 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                      <path d="M2 12C2 12 5.5 18.5 12 18.5C18.5 18.5 22 12 22 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                      <circle className="passwordTogglePupil" cx="12" cy="12" r="3.2" fill="currentColor" />
+                      <line className="passwordToggleSlash" x1="4" y1="4" x2="20" y2="20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                    </svg>
+                  </button>
+                </div>
+              </label>
+              <Link className="loginForgotPassword" href="/recuperar-senha">{t.forgotPassword}</Link>
+            </>
+          )}
           {error ? <p className="formError" role="alert" aria-live="polite">{error}</p> : null}
           <button className="button" type="submit" disabled={submitting}>
-            {submitting ? t.submitting : t.submit}
+            {submitting ? t.submitting : verificationStep ? t.mfaSubmit : t.submit}
           </button>
-          <div className="loginContractBox">
+          {!verificationStep ? <div className="loginContractBox">
             <strong>{t.contractTitle}</strong>
             <span>{t.contractBody}</span>
             <Link href="/cadastro" className="loginContractButton">
@@ -148,9 +184,9 @@ export default function LoginPage() {
                 <path d="M4 10h11M11 5.5 15.5 10 11 14.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Link>
-          </div>
+          </div> : null}
 
-          {demoLoginEnabled ? (
+          {demoLoginEnabled && !verificationStep ? (
             <div className="loginDemoBox">
               <small>{t.demoLabel}</small>
               <div className="loginDemoActions">
