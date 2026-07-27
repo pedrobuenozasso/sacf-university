@@ -81,7 +81,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (process.env.NODE_ENV === "production" || process.env.DEMO_LOGIN_ENABLED !== "true") return null;
 
         const demoEmails: Record<string, string> = {
-          sacf_admin: "admin@sacf.io",
+          sacf_admin: "pedro.bueno@sacf.io",
           org_admin: "ana@zasso.com",
           student: "carlos@zasso.com"
         };
