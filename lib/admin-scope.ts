@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import { appPath } from "@/lib/app-path";
 import { redirect } from "next/navigation";
 import type { Session } from "next-auth";
 
@@ -27,7 +28,7 @@ export async function getAdminScope(): Promise<AdminScope> {
 // routes must reject unauthorized requests before their data is rendered.
 export async function requireAdminScope(): Promise<AdminScope> {
   const session = await auth();
-  if (!session?.user?.id) redirect("/login");
-  if (!ADMIN_ROLES.has(session.user.role ?? "")) redirect("/home");
+  if (!session?.user?.id) redirect(appPath("/login"));
+  if (!ADMIN_ROLES.has(session.user.role ?? "")) redirect(appPath("/home"));
   return scopeFromSession(session);
 }
