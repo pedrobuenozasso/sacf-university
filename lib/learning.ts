@@ -7,7 +7,6 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@prisma/client";
 import { createDownloadUrl } from "@/lib/storage";
-import { appPath } from "@/lib/app-path";
 
 type LearningSession = {
   userId: string;
@@ -60,11 +59,11 @@ async function findAccessibleCourse(slug: string, session: LearningSession) {
 export async function startCourse(formData: FormData) {
   const slug = String(formData.get("courseSlug") ?? "").trim();
   const session = await getLearningSession();
-  if (!session) redirect(appPath("/login"));
-  if (!slug) redirect(appPath("/catalogo"));
+  if (!session) redirect("/login");
+  if (!slug) redirect("/catalogo");
 
   const course = await findAccessibleCourse(slug, session);
-  if (!course) redirect(appPath("/catalogo"));
+  if (!course) redirect("/catalogo");
 
   const latestEnrollment = await prisma.enrollment.findFirst({
     where: { courseId: course.id, userId: session.userId },
@@ -80,7 +79,7 @@ export async function startCourse(formData: FormData) {
   }
 
   revalidatePath("/meus-cursos");
-  redirect(appPath(`/aprender/${slug}`));
+  redirect(`/aprender/${slug}`);
 }
 
 export type LearningLesson = {
