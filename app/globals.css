@@ -4827,7 +4827,9 @@ textarea.field {
   max-width: 100%;
   overflow: hidden;
   contain: paint;
-  min-height: 400px;
+  /* The course card has a variable body length. Reserve enough space for
+     the complete active card instead of clipping its metadata/footer. */
+  min-height: 510px;
   padding: 12px 2px 26px;
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
@@ -4835,7 +4837,7 @@ textarea.field {
 
 .homeCourseTrack {
   position: relative;
-  height: 360px;
+  height: 470px;
   width: 100%;
   overflow: hidden;
 }
@@ -4889,12 +4891,12 @@ textarea.field {
 
 @media (max-width: 640px) {
   .homeCourseViewport {
-    min-height: 382px;
+    min-height: 510px;
     mask-image: none;
     -webkit-mask-image: none;
   }
 
-  .homeCourseTrack { height: 340px; }
+  .homeCourseTrack { height: 470px; }
 
   .homeCourseSlide { width: min(340px, calc(100vw - 44px)); }
 
