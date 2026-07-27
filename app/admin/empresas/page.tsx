@@ -2,14 +2,17 @@ import { getOrganizations } from "@/lib/data";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { requireAdminScope } from "@/lib/admin-scope";
 import { createOrganization } from "./actions";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminCompaniesPage() {
   const scope = await requireAdminScope();
-  const organizationSlug = scope.isSacfAdmin ? undefined : scope.organizationSlug ?? undefined;
+  // Company admins operate their own people, courses and identity. Tenant
+  // provisioning is a SACF-only function and must not be reachable by URL.
+  if (!scope.isSacfAdmin) redirect("/admin");
   const [visibleOrganizations, { dict }] = await Promise.all([
-    getOrganizations(organizationSlug),
+    getOrganizations(),
     getDictionary()
   ]);
   const t = dict.admin.empresas;
