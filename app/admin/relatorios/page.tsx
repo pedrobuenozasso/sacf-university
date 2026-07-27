@@ -68,32 +68,36 @@ export default async function AdminReportsPage() {
         {deadlines.records.length === 0 ? <div className="tableRow tableEmpty"><div><strong>{t.noDeadlines}</strong><p>{t.noDeadlinesBody}</p></div></div> : null}
       </div>
 
-      <div className="sectionHead">
-        <div>
-          <h2>{t.monitoredCompanies}</h2>
-        </div>
-      </div>
-      <div className="tablePanel companiesTable">
-        <div className="tableHead">
-          <span>{t.company}</span>
-          <span>{t.status}</span>
-          <span>{t.users}</span>
-          <span>{t.certificates}</span>
-          <span>{t.expiring}</span>
-        </div>
-        {organizations.map((org) => (
-          <div className="tableRow" key={org.slug}>
+      {scope.isSacfAdmin ? (
+        <>
+          <div className="sectionHead">
             <div>
-              <strong>{org.name}</strong>
-              <p>{org.slug}</p>
+              <h2>{t.monitoredCompanies}</h2>
             </div>
-            <span>{org.status}</span>
-            <span>{org.users}</span>
-            <span>{org.certificates}</span>
-            <span>{org.expiring}</span>
           </div>
-        ))}
-      </div>
+          <div className="tablePanel companiesTable">
+            <div className="tableHead">
+              <span>{t.company}</span>
+              <span>{t.status}</span>
+              <span>{t.users}</span>
+              <span>{t.certificates}</span>
+              <span>{t.expiring}</span>
+            </div>
+            {organizations.map((org) => (
+              <div className="tableRow" key={org.slug}>
+                <div>
+                  <strong>{org.name}</strong>
+                  <p>{org.slug}</p>
+                </div>
+                <span>{org.status}</span>
+                <span>{org.users}</span>
+                <span>{org.certificates}</span>
+                <span>{org.expiring}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : null}
     </>
   );
 }
