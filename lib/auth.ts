@@ -6,6 +6,7 @@ import { clearRateLimit, clientAddress, consumeRateLimit } from "@/lib/rate-limi
 import { consumeVerificationToken } from "@/lib/verification-tokens";
 
 const EMAIL_MFA_ADMIN_ROLES = new Set(["sacf_admin", "org_admin"]);
+const adminEmailMfaEnabled = process.env.ADMIN_EMAIL_MFA_ENABLED !== "false";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
@@ -56,7 +57,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             consumeRateLimit({ namespace: "login-email", identifier: email, max: 8, windowMs: 15 * 60_000 }),
             consumeRateLimit({ namespace: "login-ip", identifier: ip, max: 30, windowMs: 15 * 60_000 })
           ]);
-          if (!emailAllowed || !ipAllowed || isAdmin) return null;
+          if (!emailAllowed || !ipAllowed || (adminEmailMfaEnabled && isAdmin)) return null;
           if (!(await bcrypt.compare(password, user.passwordHash))) return null;
         }
 

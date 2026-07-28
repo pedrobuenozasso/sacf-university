@@ -8,6 +8,7 @@ import { createVerificationCode } from "@/lib/verification-tokens";
 import { sendAdminLoginCodeEmail } from "@/lib/send-verification-email";
 
 const ADMIN_ROLES = new Set(["sacf_admin", "org_admin"]);
+const adminEmailMfaEnabled = process.env.ADMIN_EMAIL_MFA_ENABLED !== "false";
 
 export type LoginCodeResult = { ok: true; requiresCode: boolean } | { ok: false };
 
@@ -35,7 +36,7 @@ export async function requestAdminLoginCode(email: string, password: string): Pr
   if (!user?.emailVerified || !user.passwordHash || !(await bcrypt.compare(password, user.passwordHash))) return { ok: false };
 
   const isAdmin = user.memberships.some((membership) => ADMIN_ROLES.has(membership.role));
-  if (!isAdmin) return { ok: true, requiresCode: false };
+  if (!adminEmailMfaEnabled || !isAdmin) return { ok: true, requiresCode: false };
 
   const [emailCodeAllowed, ipCodeAllowed] = await Promise.all([
     consumeRateLimit({ namespace: "admin-login-code-email", identifier: normalized, max: 3, windowMs: 15 * 60_000 }),
