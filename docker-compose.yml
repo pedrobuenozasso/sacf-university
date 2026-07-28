@@ -17,6 +17,7 @@ services:
       NODE_ENV: production
       NEXT_PUBLIC_BASE_PATH: ${NEXT_PUBLIC_BASE_PATH:-/academy}
       AUTH_SECRET: ${AUTH_SECRET}
+      ADMIN_EMAIL_MFA_ENABLED: ${ADMIN_EMAIL_MFA_ENABLED:-true}
       CRON_SECRET: ${CRON_SECRET}
       # NextAuth must use the public URL behind Traefik for sign-in/sign-out
       # redirects; the container itself listens on 0.0.0.0:3000.
