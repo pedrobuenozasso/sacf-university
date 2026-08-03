@@ -8,6 +8,9 @@ const maxVideoBytes = 500 * 1024 * 1024;
 const maxImageBytes = 8 * 1024 * 1024;
 
 export async function POST(request: Request) {
+  if (process.env.GCS_UPLOADS_ENABLED === "false") {
+    return NextResponse.json({ error: "uploads_temporarily_suspended" }, { status: 503 });
+  }
   const session = await auth();
   const role = session?.user?.role;
   if (!session?.user?.id || !session.user.organizationId) return NextResponse.json({ error: "unauthorized" }, { status: 401 });

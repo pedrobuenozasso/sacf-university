@@ -38,6 +38,14 @@ test -s "$target"
 docker run --rm -v "$backup_dir:/backups:ro" postgres:18-alpine \
   pg_restore --list "/backups/$(basename "$target")" >/dev/null
 
+# The local verified dump remains available even when off-site copies are
+# intentionally paused to control cloud-storage costs.
+if [ "$(docker exec "$container" printenv GCS_BACKUPS_ENABLED 2>/dev/null || true)" = "false" ]; then
+  find "$backup_dir" -type f -name "academy-*.dump" -mtime +"$retention_days" -delete
+  echo "academy local backup completed (off-site storage suspended): $target"
+  exit 0
+fi
+
 # The production image includes the Google Storage SDK. Copy the already
 # verified dump into the app container only for the upload, then remove it.
 docker cp "$target" "$container:/tmp/sacf-academy-backup.dump"
